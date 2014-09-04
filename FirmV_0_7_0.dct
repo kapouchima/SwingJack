@@ -183,6 +183,7 @@ acos
 acss
 acss_bit
 actiontimediff
+activedoors
 adc_get_sample
 adc_get_sample_ptr
 adc_init

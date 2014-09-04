@@ -91,7 +91,7 @@ char ExternalKeys;
 unsigned long ms500=0;
 char msCounter=0,ms20A=0,ms20B,Flag20ms=1,Flag500ms=1,State=0,LCDUpdateFlag=0,LCDFlashFlag=0,RemotePulse1=0,RemotePulse2=0;
 char PrevRemotePulseTime1=0,PrevRemotePulseTime2=0,RemoteAFlag=0,RemoteBFlag=0,Motor1FullSpeed=1,Motor2FullSpeed=1;
-char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0;
+char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0,ActiveDoors=0;
 char OverloadCheckFlag1=0,OverloadCheckFlag2=0,OpenDone=3,CloseDone=3,M1isSlow=0,M2isSlow=0,PassFlag=0;
 char _AC=0,PhotocellCount=0,MenuPointer=0,DebouncingDelay=0,LCDFlash=0,Pressed=0,OverloadSens=5,LearningMode=0;
 char t[11];
@@ -473,11 +473,11 @@ void State1()
   if(Events.Keys==2)
     {State=100;MenuPointer=0;}
 
-  if(Events.Remote.b1==1)
-    State=10;
+  ActiveDoors=3-Events.Remote;
 
 
-  if(Events.Remote.b0==1)
+
+  if(Events.Remote!=0)
   {
 
     ClearTasks(9);
@@ -498,7 +498,7 @@ void State1()
     temp=ms500+Door1OpenTime+delay;
     AddTask(temp,3);//Stop motor
 
-    if(Door2OpenTime!=0)
+    if((Door2OpenTime!=0)&&(ActiveDoors==2))
     {
       temp=ms500+ActionTimeDiff+delay;
       AddTask(temp,2);
@@ -545,11 +545,11 @@ void State2()
 
   Flasher=0;
 
-  if((Events.Remote.b0==1)||(CheckTask(9)==1))
+  if((Events.Remote!=0)||(CheckTask(9)==1))
   {
 
     ClearTasks(9);
-    if(Door2CloseTime==0)
+    if((Door2CloseTime==0)||(ActiveDoors==1))
     {
       temp=ms500+delay;
       AddTask(temp,1);
@@ -570,7 +570,7 @@ void State2()
 
     }
 
-    if(Door2CloseTime!=0)
+    if((Door2CloseTime!=0)&&(ActiveDoors=2))
     {
       temp=ms500+delay;
       AddTask(temp,2);
@@ -683,7 +683,7 @@ void State3()
   if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
     {StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S3 Motor2 Collision");ClearTasks(9);}
 
-  if(Door2OpenTime==0)
+  if((Door2OpenTime==0)||(ActiveDoors==1))
     OpenDone.b1=0;
 
   if((Events.Photocell.b0==1)&&(OpenPhEnable))
@@ -762,7 +762,7 @@ Flasher=1;
   if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
     {StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 M2 Overloaded");ClearTasks(9);}
 
-  if(Door2OpenTime==0)
+  if((Door2OpenTime==0)||(ActiveDoors==1))
     CloseDone.b1=0;
 
   if((Events.Photocell.b0==1))
@@ -799,9 +799,9 @@ void State5()
 {
   char delay=2;
   Flasher=0;
-  if((Events.Remote.b0==1)||(CheckTask(9)==1))
+  if((Events.Remote!=0)||(CheckTask(9)==1))
   {
-    if(Door2CloseTime==0)
+    if((Door2CloseTime==0)||(ActiveDoors==1))
     {
       ClearTasks(9);
       temp=ms500+delay;
@@ -813,7 +813,7 @@ void State5()
       temp=ms500+Door1CloseTime+delay;
       AddTask(temp,3);//Stop motor
     }
-    if(Door2CloseTime!=0)
+    if((Door2CloseTime!=0)&&(ActiveDoors==2))
     {
       ClearTasks(9);
       temp=ms500+delay;
@@ -881,7 +881,7 @@ void State6()
   //unsigned long temp;
   char delay=3;
   Flasher=0;
-  if((Events.Remote.b0==1)||(PhotocellOpenFlag))
+  if((Events.Remote!=0)||(PhotocellOpenFlag))
   {
     PhotocellOpenFlag=0;
     Flasher=1;
@@ -895,7 +895,7 @@ void State6()
     AddTask(temp,10); //overload check
     temp=ms500+Door1OpenTime+delay;
     AddTask(temp,3);//Stop motor
-    if(Door2OpenTime!=0)
+    if((Door2OpenTime!=0)&&(ActiveDoors==2))
     {
       AddTask(ms500+ActionTimeDiff+delay,2);
       AddTask(ms500+ActionTimeDiff+delay,6);
@@ -923,7 +923,7 @@ void State6()
     temp=ms500+Door1CloseTime+delay;
     AddTask(temp,3);//Stop motor
 
-    if(Door2CloseTime!=0)
+    if((Door2CloseTime!=0)&&(ActiveDoors==2))
     {
       AddTask(ms500+ActionTimeDiff+delay,2);
       AddTask(ms500+ActionTimeDiff+delay,6);
@@ -998,7 +998,7 @@ void State7()
   if((CheckTask(4)||((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)))&&(CloseDone.b1))
     {CloseDone.b1=0; StopMotor(2);Logger("S7 M2 Stoped");}
 
-  if(Door2OpenTime==0)
+  if((Door2OpenTime==0)||(ActiveDoors==1))
     CloseDone.b1=0;
 
   if((Events.Photocell.b0==1))
@@ -1065,7 +1065,7 @@ void State8()
   if(CheckTask(12))
     {Lock=1;}
 
-  if(Door2OpenTime==0)
+  if((Door2OpenTime==0)||(ActiveDoors==1))
     OpenDone.b1=0;
 
   if((Events.Photocell.b0==1)&&(OpenPhEnable))
