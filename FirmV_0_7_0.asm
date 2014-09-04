@@ -3186,8 +3186,10 @@ L__State3552:
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
 L_State3124:
-;FirmV_0_7_0.c,706 :: 		if(Events.Remote.b0==1)
-	BTFSS       _Events+4, 0 
+;FirmV_0_7_0.c,706 :: 		if(Events.Remote!=0)
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
 	GOTO        L_State3125
 ;FirmV_0_7_0.c,707 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Remote Stoped");ClearTasks(9);
 	MOVLW       1
@@ -4224,8 +4226,10 @@ L__State4557:
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
 L_State4156:
-;FirmV_0_7_0.c,791 :: 		if((Events.Remote.b0==1))
-	BTFSS       _Events+4, 0 
+;FirmV_0_7_0.c,791 :: 		if((Events.Remote!=0))
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
 	GOTO        L_State4157
 ;FirmV_0_7_0.c,792 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 Remote Pressed");ClearTasks(9);
 	MOVLW       1
@@ -6208,8 +6212,10 @@ L_State7220:
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
 L_State7221:
-;FirmV_0_7_0.c,1026 :: 		if((Events.Remote.b0==1))
-	BTFSS       _Events+4, 0 
+;FirmV_0_7_0.c,1026 :: 		if((Events.Remote!=0))
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
 	GOTO        L_State7222
 ;FirmV_0_7_0.c,1027 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S7 Remote Pressed");ClearTasks(9);
 	MOVLW       1
@@ -6980,8 +6986,10 @@ L__State8582:
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
 L_State8257:
-;FirmV_0_7_0.c,1096 :: 		if((Events.Remote.b0==1))
-	BTFSS       _Events+4, 0 
+;FirmV_0_7_0.c,1096 :: 		if((Events.Remote!=0))
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
 	GOTO        L_State8258
 ;FirmV_0_7_0.c,1097 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0; Logger("S8 Motors Stoped (Remote)");ClearTasks(9);
 	MOVLW       1
