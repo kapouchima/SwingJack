@@ -41,6 +41,8 @@ __spi_lcd8_enable
 __spi_lcd8_rs
 __spi_lcd8_rw
 _ac
+_autoclose
+_blank
 _canspi_config_all_msg
 _canspi_config_all_valid_msg
 _canspi_config_dbl_buffer_bit
@@ -113,11 +115,17 @@ _cf_sec_num
 _cf_status
 _cf_write_sec_cmd
 _ch
+_close
+_closing
 _command
 _doprntf
 _doprnti
 _doprntl
 _doprntout
+_errlimit
+_erroverload
+_errphoto
+_errremote
 _flash_erase
 _flash_write_latch
 _glcd_horizontal
@@ -139,6 +147,8 @@ _lcd_third_row
 _lcd_turn_off
 _lcd_turn_on
 _lcd_underline_on
+_open
+_opening
 _rs485_start_byte
 _rs485_stop_byte
 _s1d13700_horizontal
@@ -168,6 +178,7 @@ _spi_slave_ss_dis
 _spi_slave_ss_enable
 _spi_t6963c_horizontal
 _spi_t6963c_vertical
+_stop
 _t6963c_horizontal
 _t6963c_vertical
 a
