@@ -178,7 +178,7 @@ void Menu3();
 void LearnAuto();
 void LearnManual();
 void AutoLearnCalculator(Learn *);
-void SaveLearnData(Learn *);
+void SaveLearnData(Learn *,char);
 
 void SetMotorSpeed(char,char);
 void OverloadInit(char);
@@ -2102,64 +2102,70 @@ void LearnAuto()
 {
   static unsigned long startT,stopT;
   static Learn RawData;
+  static char DoorNo;
   
   switch(LearnPhase)
   {
-    case 0: //Start D2 and enable overload sensing after 1s
+    case 0:
+      if(Events.Remote.b0==1) {DoorNo=2; LearnPhase=LearnPhase+1;} if(Events.Remote.b1==1) {DoorNo=1;LearnPhase=3;}
+      break;
+    
+    case 1: //Start D2 and enable overload sensing after 1s
       StartMotor(2,_Close);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
       break;
 
-    case 1: //Check if D2 reaches end of its course
+    case 2: //Check if D2 reaches end of its course
       if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
       if(CheckTask(21))OverloadCheckFlag2=1;
       break;
       
-    case 2: //Start D1 and enable overload sensin after 1 s
+    case 3: //Start D1 and enable overload sensin after 1 s
       StartMotor(1,_Close);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;;
       
-    case 3: //Check if D1 reaches end of its course
+    case 4: //Check if D1 reaches end of its course
       if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
       if(CheckTask(20))OverloadCheckFlag1=1;
       break;
       
-    case 4: //Start D1 for opening and save start time and enable overload sensing after 1s
+    case 5: //Start D1 for opening and save start time and enable overload sensing after 1s
       startT=ms500;StartMotor(1,_Open);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;
       break;
       
-    case 5: //Check if D1 reaches end of its course and save the stop time
-      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1OpenTime=(char)(stopT-startT);}
+    case 6: //Check if D1 reaches end of its course and save the stop time
+      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);if(DoorNo==1)LearnPhase=11;else LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1OpenTime=(char)(stopT-startT);}
       if(CheckTask(20))OverloadCheckFlag1=1;
       break;
       
-    case 6: //Start D2 for opening and save start time and enable overload sensing after 1s
+    case 7: //Start D2 for opening and save start time and enable overload sensing after 1s
       startT=ms500;StartMotor(2,_Open);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
       break;
       
-    case 7: //Check if D2 reaches end of its course and save the stop time
+    case 8: //Check if D2 reaches end of its course and save the stop time
       if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2OpenTime=(char)(stopT-startT);}
       if(CheckTask(21))OverloadCheckFlag1=1;
       break;
       
-    case 8: //Start D2 for closing and save start time and enable overload sensing after 1s
+    case 9: //Start D2 for closing and save start time and enable overload sensing after 1s
       startT=ms500;StartMotor(2,_Close);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
       break;
       
-    case 9: //Check if D2 reaches end of its course and save the stop time
+    case 10: //Check if D2 reaches end of its course and save the stop time
       if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2CloseTime=(char)(stopT-startT);}
       if(CheckTask(21))OverloadCheckFlag1=1;
       break;
       
-    case 10: //Start D1 for closing and save start time and enable overload sensing after 1s
+    case 11: //Start D1 for closing and save start time and enable overload sensing after 1s
       startT=ms500;StartMotor(1,_Close);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;
       break;
       
-    case 11: //Check if D1 reaches end of its course and save the stop time
+    case 12: //Check if D1 reaches end of its course and save the stop time
       if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1CloseTime=(char)(stopT-startT);}
       if(CheckTask(20))OverloadCheckFlag1=1;
       break;
       
-    case 12:
+    case 13:
       AutoLearnCalculator(&RawData);
+      SaveLearnData(&RawData,DoorNo);
       memcpy(LCDLine1,"Learn Complete  ",16);
       memcpy(LCDLine2,"     Ready      ",16);
       LCDUpdateFlag=1;
@@ -2193,11 +2199,10 @@ void LearnAuto()
 
 void AutoLearnCalculator(Learn *raw)
 {
+  
   (*raw).D1OpenTime=(*raw).D1OpenTime+16;
   (*raw).D2OpenTime=(*raw).D2OpenTime+16;
-  (*raw).D1CloseTime=(*raw).D1CloseTime+16;
-  (*raw).D2CloseTime=(*raw).D2CloseTime+16;
-  
+
   (*raw).D1OpenSoftStart=4;
   (*raw).D1CloseSoftStart=4;
   (*raw).D2OpenSoftStart=4;
@@ -2207,8 +2212,6 @@ void AutoLearnCalculator(Learn *raw)
   (*raw).D2OpenSoftStop=10;
   (*raw).D1CloseSoftStop=10;
   (*raw).D2CloseSoftStop=10;
-  
-  SaveLearnData(raw);
   
 }
 
@@ -2222,17 +2225,28 @@ void AutoLearnCalculator(Learn *raw)
 
 
 
-void SaveLearnData(Learn *d)
+void SaveLearnData(Learn *d,char DCount)
 {
   Door1OpenTime=(*d).D1OpenTime;
-  Door2OpenTime=(*d).D2OpenTime;
   Door1CloseTime=(*d).D1CloseTime;
-  Door2CloseTime=(*d).D2CloseTime;
-
-  OpenSoftStartTime=((*d).D1OpenSoftStart+(*d).D2OpenSoftStart)/2;
-  OpenSoftStopTime=((*d).D1OpenSoftStop+(*d).D2OpenSoftStop)/2;
-  CloseSoftStartTime=((*d).D1CloseSoftStart+(*d).D2CloseSoftStart)/2;
-  CloseSoftStopTime=((*d).D1CloseSoftStop+(*d).D2CloseSoftStop)/2;
+  if(DCount==2)
+  {
+    Door2OpenTime=(*d).D2OpenTime;
+    Door2CloseTime=(*d).D2CloseTime;
+    OpenSoftStartTime=((*d).D1OpenSoftStart+(*d).D2OpenSoftStart)/2;
+    OpenSoftStopTime=((*d).D1OpenSoftStop+(*d).D2OpenSoftStop)/2;
+    CloseSoftStartTime=((*d).D1CloseSoftStart+(*d).D2CloseSoftStart)/2;
+    CloseSoftStopTime=((*d).D1CloseSoftStop+(*d).D2CloseSoftStop)/2;
+  }
+  else
+  {
+    Door2OpenTime=0;
+    Door2CloseTime=0;
+    OpenSoftStartTime=(*d).D1OpenSoftStart;
+    OpenSoftStopTime=(*d).D1OpenSoftStop;
+    CloseSoftStartTime=(*d).D1CloseSoftStart;
+    CloseSoftStopTime=(*d).D1CloseSoftStop;
+  }
   
   SaveConfigs();
 }
@@ -2252,7 +2266,136 @@ void SaveLearnData(Learn *d)
 
 void LearnManual()
 {
+
+  static Learn RawData;
+  static unsigned long t1,t2,t3,t4;
+  static char DoorNo;
+  
+  switch(LearnPhase)
+  {
+    case 0:
+      if(Events.Remote.b0==1){LearnPhase=LearnPhase+1; DoorNo=2;}if(Events.Remote.b1==1){LearnPhase=3; DoorNo=1;}
+      break;
+    
+    case 1: //Start D2 and enable overload sensing after 1s
+      StartMotor(2,_Close);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
+      break;
+
+    case 2: //Check if D2 reaches end of its course
+      if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
+      if(CheckTask(21))OverloadCheckFlag2=1;
+      break;
+
+    case 3: //Start D1 and enable overload sensin after 1 s
+      StartMotor(1,_Close);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;;
+
+    case 4: //Check if D1 reaches end of its course
+      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
+      if(CheckTask(20))OverloadCheckFlag1=1;
+      break;
+
+    case 5: //Wait for remote to start D1 and slow down
+      if(Events.Remote!=0){t1=ms500;StartMotor(1,_Open);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
+      break;
+
+    case 6: //check for Remote press and fast up
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
+      break;
+
+    case 7: //check for Remote press and slow down
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
+      break;
+      
+    case 8: //check for Remote press and stop
+      if(Events.Remote!=0){if(DoorNo==2)LearnPhase=LearnPhase+1;else LearnPhase=17;t4=ms500;StopMotor(1);
+        RawData.D1OpenTime=(char)(t4-t1);
+        RawData.D1OpenSoftStart=(char)(t2-t1);
+        RawData.D1OpenSoftStop=(char)(t4-t3);
+      }
+      break;
+      
+    case 9: //Wait for remote to start D2 and slow down
+      if(Events.Remote!=0){t1=ms500;StartMotor(2,_Open);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
+      break;
+
+    case 10: //check for Remote press and fast up
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
+      break;
+
+    case 11: //check for Remote press and slow down
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
+      break;
+
+    case 12: //check for Remote press and stop
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
+        RawData.D2OpenTime=(char)(t4-t1);
+        RawData.D2OpenSoftStart=(char)(t2-t1);
+        RawData.D2OpenSoftStop=(char)(t4-t3);
+      }
+      break;
+
+    case 13: //Wait for remote to start D2 and slow down
+      if(Events.Remote!=0){t1=ms500;StartMotor(2,_Close);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
+      break;
+
+    case 14: //check for Remote press and fast up
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
+      break;
+
+    case 15: //check for Remote press and slow down
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
+      break;
+
+    case 16: //check for Remote press and stop
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
+        RawData.D2CloseTime=(char)(t4-t1);
+        RawData.D2CloseSoftStart=(char)(t2-t1);
+        RawData.D2CloseSoftStop=(char)(t4-t3);
+      }
+      break;
+      
+    case 17: //Wait for remote to start D1 and slow down
+      if(Events.Remote!=0){t1=ms500;StartMotor(1,_Close);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
+      break;
+
+    case 18: //check for Remote press and fast up
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
+      break;
+
+    case 19: //check for Remote press and slow down
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
+      break;
+
+    case 20: //check for Remote press and stop
+      if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(1);
+        RawData.D1CloseTime=(char)(t4-t1);
+        RawData.D1CloseSoftStart=(char)(t2-t1);
+        RawData.D1CloseSoftStop=(char)(t4-t3);
+      }
+      break;
+      
+    case 21:
+      SaveLearnData(&RawData,DoorNo);
+      memcpy(LCDLine1,"Learn Complete  ",16);
+      memcpy(LCDLine2,"     Ready      ",16);
+      LCDUpdateFlag=1;
+      State=0;
+      break;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

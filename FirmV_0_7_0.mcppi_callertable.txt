@@ -257,12 +257,24 @@ main
 			StopMotor
 			CheckTask
 			AutoLearnCalculator
-				SaveLearnData
-					SaveConfigs
-						EEPROM_Write
-						SetOverloadParams
+			SaveLearnData
+				SaveConfigs
+					EEPROM_Write
+					SetOverloadParams
 			__CC2DW
 			memcpy
 		LearnManual
+			StartMotor
+			AddTask
+				Mul_16x16_U
+			StopMotor
+			CheckTask
+			SetMotorSpeed
+			SaveLearnData
+				SaveConfigs
+					EEPROM_Write
+					SetOverloadParams
+			__CC2DW
+			memcpy
 interrupt
 	Div_8x8_U

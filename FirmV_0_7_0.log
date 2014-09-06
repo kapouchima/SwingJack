@@ -4,12 +4,12 @@ diagnostics: 0	126	All files Preprocessed in 47 ms
 diagnostics: 0	122	Compilation Started	FirmV_0_7_0.c
 warning: 1239	1509	Generated baud rate is 113636 bps (error = 1.36 percent)	FirmV_0_7_0.c
 hint: 1331	1161	Variable 't' has been declared, but not used	FirmV_0_7_0.c
-diagnostics: 2328	123	Compiled Successfully	FirmV_0_7_0.c
+diagnostics: 2471	123	Compiled Successfully	FirmV_0_7_0.c
 hint: 2103	1162	Variable 'stopT' has been eliminated by optimizer	FirmV_0_7_0.c
-diagnostics: 0	127	All files Compiled in 1779 ms	 
-hint: 0	1143	Used RAM (bytes): 1237 (82%)  Free RAM (bytes): 278 (18%)	Used RAM (bytes): 1237 (82%)  Free RAM (bytes): 278 (18%)
-hint: 0	1143	Used ROM (bytes): 28243 (86%)  Free ROM (bytes): 4525 (14%)	Used ROM (bytes): 28243 (86%)  Free ROM (bytes): 4525 (14%)
+diagnostics: 0	127	All files Compiled in 1841 ms	 
+hint: 0	1143	Used RAM (bytes): 1265 (83%)  Free RAM (bytes): 250 (17%)	Used RAM (bytes): 1265 (83%)  Free RAM (bytes): 250 (17%)
+hint: 0	1143	Used ROM (bytes): 30185 (92%)  Free ROM (bytes): 2583 (8%)	Used ROM (bytes): 30185 (92%)  Free ROM (bytes): 2583 (8%)
 diagnostics: 0	125	Project Linked Successfully	FirmV_0_7_0.mcppi
-diagnostics: 0	128	Linked in 1794 ms	 
-diagnostics: 0	129	Project 'FirmV_0_7_0.mcppi' completed: 4103 ms	 
-diagnostics: 0	103	Finished successfully: 06 Sep 2014, 11:14:05	FirmV_0_7_0.mcppi
+diagnostics: 0	128	Linked in 1856 ms	 
+diagnostics: 0	129	Project 'FirmV_0_7_0.mcppi' completed: 4212 ms	 
+diagnostics: 0	103	Finished successfully: 06 Sep 2014, 13:51:55	FirmV_0_7_0.mcppi
