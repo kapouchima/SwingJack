@@ -83,6 +83,23 @@ char Limiter;
 char ExternalKeys;
 } Eve;
 
+typedef struct
+{
+unsigned char D1CloseTime;
+unsigned char D1OpenTime;
+unsigned char D2CloseTime;
+unsigned char D2OpenTime;
+unsigned char D1OpenSoftStart;
+unsigned char D1OpenSoftStop;
+unsigned char D1CloseSoftStart;
+unsigned char D1CloseSoftStop;
+unsigned char D2OpenSoftStart;
+unsigned char D2OpenSoftStop;
+unsigned char D2CloseSoftStart;
+unsigned char D2CloseSoftStop;
+} Learn;
+
+
 //--------Consts
  char _opening[]="Door Opening    ";
  char _closing[]="Door Closing    ";
@@ -103,7 +120,7 @@ unsigned long ms500=0;
 char msCounter=0,ms20A=0,ms20B,Flag20ms=1,Flag500ms=1,State=0,LCDUpdateFlag=0,LCDFlashFlag=0,RemotePulse1=0,RemotePulse2=0;
 char PrevRemotePulseTime1=0,PrevRemotePulseTime2=0,RemoteAFlag=0,RemoteBFlag=0,Motor1FullSpeed=1,Motor2FullSpeed=1;
 char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0,ActiveDoors=0;
-char OverloadCheckFlag1=0,OverloadCheckFlag2=0,OpenDone=3,CloseDone=3,M1isSlow=0,M2isSlow=0,PassFlag=0;
+char OverloadCheckFlag1=0,OverloadCheckFlag2=0,OpenDone=3,CloseDone=3,M1isSlow=0,M2isSlow=0,PassFlag=0,LearnPhase;
 char _AC=0,PhotocellCount=0,MenuPointer=0,DebouncingDelay=0,LCDFlash=0,Pressed=0,OverloadSens=5,LearningMode=0;
 char t[11];
 unsigned long temp;
@@ -160,6 +177,8 @@ void Menu2();
 void Menu3();
 void LearnAuto();
 void LearnManual();
+void AutoLearnCalculator(Learn *);
+void SaveLearnData(Learn *);
 
 void SetMotorSpeed(char,char);
 void OverloadInit(char);
@@ -1876,6 +1895,7 @@ void Menu2()
       LCDFlash=0;LCDFlashFlag=0;State=101;
       if(MenuPointer==0)
         {
+          LearnPhase=0;
           if(LearningMode==0)
             State=200;
           if(LearningMode==1)
@@ -2080,7 +2100,144 @@ void Menu3()
 
 void LearnAuto()
 {
+  static unsigned long startT,stopT;
+  static Learn RawData;
+  
+  switch(LearnPhase)
+  {
+    case 0: //Start D2 and enable overload sensing after 1s
+      StartMotor(2,_Close);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
+      break;
+
+    case 1: //Check if D2 reaches end of its course
+      if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
+      if(CheckTask(21))OverloadCheckFlag2=1;
+      break;
+      
+    case 2: //Start D1 and enable overload sensin after 1 s
+      StartMotor(1,_Close);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;;
+      
+    case 3: //Check if D1 reaches end of its course
+      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
+      if(CheckTask(20))OverloadCheckFlag1=1;
+      break;
+      
+    case 4: //Start D1 for opening and save start time and enable overload sensing after 1s
+      startT=ms500;StartMotor(1,_Open);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;
+      break;
+      
+    case 5: //Check if D1 reaches end of its course and save the stop time
+      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1OpenTime=(char)(stopT-startT);}
+      if(CheckTask(20))OverloadCheckFlag1=1;
+      break;
+      
+    case 6: //Start D2 for opening and save start time and enable overload sensing after 1s
+      startT=ms500;StartMotor(2,_Open);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
+      break;
+      
+    case 7: //Check if D2 reaches end of its course and save the stop time
+      if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2OpenTime=(char)(stopT-startT);}
+      if(CheckTask(21))OverloadCheckFlag1=1;
+      break;
+      
+    case 8: //Start D2 for closing and save start time and enable overload sensing after 1s
+      startT=ms500;StartMotor(2,_Close);AddTask(ms500+2,21);LearnPhase=LearnPhase+1;
+      break;
+      
+    case 9: //Check if D2 reaches end of its course and save the stop time
+      if(Events.Overload.b1==1){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2CloseTime=(char)(stopT-startT);}
+      if(CheckTask(21))OverloadCheckFlag1=1;
+      break;
+      
+    case 10: //Start D1 for closing and save start time and enable overload sensing after 1s
+      startT=ms500;StartMotor(1,_Close);AddTask(ms500+2,20);LearnPhase=LearnPhase+1;
+      break;
+      
+    case 11: //Check if D1 reaches end of its course and save the stop time
+      if(Events.Overload.b0==1){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1CloseTime=(char)(stopT-startT);}
+      if(CheckTask(20))OverloadCheckFlag1=1;
+      break;
+      
+    case 12:
+      AutoLearnCalculator(&RawData);
+      memcpy(LCDLine1,"Learn Complete  ",16);
+      memcpy(LCDLine2,"     Ready      ",16);
+      LCDUpdateFlag=1;
+      State=0;
+      break;
+    
+
+  }
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void AutoLearnCalculator(Learn *raw)
+{
+  (*raw).D1OpenTime=(*raw).D1OpenTime+16;
+  (*raw).D2OpenTime=(*raw).D2OpenTime+16;
+  (*raw).D1CloseTime=(*raw).D1CloseTime+16;
+  (*raw).D2CloseTime=(*raw).D2CloseTime+16;
+  
+  (*raw).D1OpenSoftStart=4;
+  (*raw).D1CloseSoftStart=4;
+  (*raw).D2OpenSoftStart=4;
+  (*raw).D2CloseSoftStart=4;
+
+  (*raw).D1OpenSoftStop=10;
+  (*raw).D2OpenSoftStop=10;
+  (*raw).D1CloseSoftStop=10;
+  (*raw).D2CloseSoftStop=10;
+  
+  SaveLearnData(raw);
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+void SaveLearnData(Learn *d)
+{
+  Door1OpenTime=(*d).D1OpenTime;
+  Door2OpenTime=(*d).D2OpenTime;
+  Door1CloseTime=(*d).D1CloseTime;
+  Door2CloseTime=(*d).D2CloseTime;
+
+  OpenSoftStartTime=((*d).D1OpenSoftStart+(*d).D2OpenSoftStart)/2;
+  OpenSoftStopTime=((*d).D1OpenSoftStop+(*d).D2OpenSoftStop)/2;
+  CloseSoftStartTime=((*d).D1CloseSoftStart+(*d).D2CloseSoftStart)/2;
+  CloseSoftStopTime=((*d).D1CloseSoftStop+(*d).D2CloseSoftStop)/2;
+  
+  SaveConfigs();
+}
+
+
 
 
 

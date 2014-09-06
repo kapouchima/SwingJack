@@ -247,6 +247,7 @@ atof
 atoi
 atol
 autoclosetime
+autolearncalculator
 b0
 b1
 b2
@@ -795,6 +796,7 @@ ldiv
 learnauto
 learningmode
 learnmanual
+learnphase
 limiter
 limiterenable
 loadconfigs
@@ -1272,6 +1274,7 @@ s1d13700_write_text
 s1d13700_write_text_adv
 s1d13700_write_text_return_pos
 saveconfigs
+savelearndata
 sck
 sck_bit
 scl

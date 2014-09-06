@@ -251,6 +251,18 @@ main
 				EEPROM_Write
 				SetOverloadParams
 		LearnAuto
+			StartMotor
+			AddTask
+				Mul_16x16_U
+			StopMotor
+			CheckTask
+			AutoLearnCalculator
+				SaveLearnData
+					SaveConfigs
+						EEPROM_Write
+						SetOverloadParams
+			__CC2DW
+			memcpy
 		LearnManual
 interrupt
 	Div_8x8_U
