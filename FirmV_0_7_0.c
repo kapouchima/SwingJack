@@ -6,49 +6,37 @@ Version 0.7.0 :
 
 #include "COGLCDDriver.h"
 
-// LCD module connections
-sbit LCD_RS at RE2_bit;
-sbit LCD_EN at RE1_bit;
-sbit LCD_D4 at RB4_bit;
-sbit LCD_D5 at RB5_bit;
-sbit LCD_D6 at RB6_bit;
-sbit LCD_D7 at RB7_bit;
 
-sbit LCD_RS_Direction at TRISE2_bit;
-sbit LCD_EN_Direction at TRISE1_bit;
-sbit LCD_D4_Direction at TRISB4_bit;
-sbit LCD_D5_Direction at TRISB5_bit;
-sbit LCD_D6_Direction at TRISB6_bit;
-sbit LCD_D7_Direction at TRISB7_bit;
-// End LCD module connections
-
-
-#define Flasher portc.b2
+#define Flasher portd.b7
 #define PhotocellRel portc.b5
-#define Key porte.b0
-#define Motor1 portc.b1
-#define Motor2 portc.b0
-#define Motor1Dir portc.b4
-#define Motor2Dir portc.b3
+#define Buzzer portb.b5
+#define Motor1 portb.b4
+#define Motor2 portb.b3
+#define Motor1Dir portc.b0
+#define Motor2Dir portc.b1
 #define OverloadM1 porta.b0
 #define OverloadM2 porta.b1
 #define ZeroCross portb.b0
-#define LCDBackLight portb.b3
-#define MotorTest porta.b4
-#define InputVoltage porta.b5
-#define Lock portd.b7
-#define inp1 portd.b0
-#define inp2 portd.b1
-#define inp3 portd.b2
-#define inp4 portd.b3
-#define inp5 portd.b4
-#define inp6 portd.b5
-#define inp7 portd.b7
-#define Phcell inp1
-#define Limit1 inp2
-#define Limit2 inp3
-#define D1ExKey inp4
-#define D2ExKey inp5
+#define LCDBackLight porta.b4
+#define LCDxReset portb.b6
+#define MotorTest porta.b2
+#define InputVoltage porta.b3
+#define Lock portd.b6
+#define inp1 portd.b5
+#define inp2 portd.b4
+#define inp3 portd.b0
+#define inp4 portd.b1
+#define inp5 portd.b2
+#define inp6 portd.b3
+#define KeyDown inp1
+#define KeyUp inp2
+#define KeyMenu porte.b0
+#define Limit1 inp3
+#define Limit2 inp4
+#define Phcell2 inp5
+#define Phcell1 inp6
+//#define D1ExKey inp4
+//#define D2ExKey inp5
 //---- overload delay in 500ms
 #define OverloadDelay 2
 #define _Open 1
@@ -1183,18 +1171,25 @@ portb=0;
 portc=0;
 portd=0;
 porte=0;
-trisa=0b111111;
-trisb=0b00000111;
-trisc=0b10000000;
-trisd=0b01111111;
+trisa=0b101111;
+trisb=0b10000111;
+trisc=0b10000100;
+trisd=0b00111111;
 trise=0b001;
-adcon1=0b1001;  // an6 and an7 is digital
+adcon1=0b0010;  // an6, an5 and an7 is digital
 
 
 
 //-----LCD Init
-lcd_init();
-lcd_cmd(_LCD_CURSOR_OFF);
+LCDxReset=1;
+LCDBackLight=1;
+I2C1_init(100000);
+
+delay_ms(100);
+
+LCD_init(2);
+delay_ms(300);
+SetContrast(20);
 
 //-----T0Config
 ms500=0;
@@ -1240,6 +1235,8 @@ UART1_init(115200);
 
 //-----Config Init
 LoadConfigs();
+
+
 
 }
 
@@ -1378,9 +1375,9 @@ return fin;
 char GetExternalKeysState()
 {
   char out=0;
-  if(D1ExKey==0)
+  if(KeyUp==0)
     out.b0=1;
-  if(D2ExKey==0)
+  if(KeyDown==0)
     out.b1=1;
   return out;
 }
@@ -1418,8 +1415,8 @@ res.b0=RemoteAFlag.b0;
 res.b1=RemoteBFlag.b0;
 RemoteAFlag=0;
 RemoteBFlag=0;
-res.b0=res.b0|(~D1ExKey);
-res.b1=res.b1|(~D2ExKey);
+res.b0=res.b0|(~KeyUp);
+res.b1=res.b1|(~KeyDown);
 return res;
 }
 
@@ -1495,7 +1492,7 @@ return res;
 
 char GetPhotocellState()
 {
-if(Phcell==0)
+if(Phcell1==0)
   {if(PhotocellCount<=20)PhotocellCount=PhotocellCount+1;}
 else
   {PhotocellCount=0;}

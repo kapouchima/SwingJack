@@ -1,13 +1,17 @@
 main
 	__CC2DW
 	Init
-		Lcd_Init
-			Delay_5500us
-			Delay_1us
-		Lcd_Cmd
-			Delay_1us
-			Delay_5500us
-			Delay_50us
+		I2C1_Init
+		LCD_Init
+			I2C1_Start
+				I2C1_Is_Idle
+			I2C1_Wr
+			I2C1_Stop
+		SetContrast
+			I2C1_Start
+				I2C1_Is_Idle
+			I2C1_Wr
+			I2C1_Stop
 		Mul_16x16_U
 		UART1_Init
 		LoadConfigs
@@ -23,16 +27,11 @@ main
 			UART1_Write
 		UART1_Write
 	LCDUpdater
-		Lcd_Out
-			Lcd_Cmd
-				Delay_1us
-				Delay_5500us
-				Delay_50us
-			Lcd_Chr_CP
-				Lcd_Cmd
-					Delay_1us
-					Delay_5500us
-					Delay_50us
+		LCD_out
+			I2C1_Start
+				I2C1_Is_Idle
+			I2C1_Wr
+			I2C1_Stop
 		__CC2DW
 	ResetTaskEvents
 	TaskManager
