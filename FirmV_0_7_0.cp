@@ -1,4 +1,12 @@
 #line 1 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1 "c:/users/baghi/desktop/sina/swingjack/coglcddriver.h"
+
+
+
+void LCD_Init(unsigned char);
+void SetContrast(unsigned char);
+void LCD_Putch(unsigned char, unsigned char ,unsigned char);
+void LCD_out(unsigned char,unsigned char,unsigned char*);
 #line 10 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 sbit LCD_RS at RE2_bit;
 sbit LCD_EN at RE1_bit;

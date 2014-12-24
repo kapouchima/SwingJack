@@ -4,7 +4,7 @@ Version 0.7.0 :
 
 */
 
-
+#include "COGLCDDriver.h"
 
 // LCD module connections
 sbit LCD_RS at RE2_bit;
