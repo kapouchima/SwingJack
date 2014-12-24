@@ -1329,13 +1329,9 @@ char t[4];
 static unsigned long PressTime;
 static char Repeat,RepeatRate;
 char resch=0,fin;
-res=ADC_Read(5);
-if(((res>>2)>160)&&((res>>2)<185))
-  resch.b2=1;
-if(((res>>2)>100)&&((res>>2)<160))
-  resch.b1=1;
-if((res>>2)<50)
-  resch.b0=1;
+  resch.b2=~KeyDown;
+  resch.b1=~KeyUp;
+  resch.b0=~KeyMenu;
 
 if((resch==0))
 {

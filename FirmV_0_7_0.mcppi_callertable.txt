@@ -40,8 +40,6 @@ main
 		GetExternalKeysState
 		GetLimitSwitchState
 		GetKeysState
-			ADC_Read
-				Delay_22us
 			Div_8x8_U
 		GetRemoteState
 		GetOverloadState
