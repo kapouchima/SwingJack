@@ -26,6 +26,7 @@ main
 		UART1_Write_Text
 			UART1_Write
 		UART1_Write
+	memcpy
 	LCDUpdater
 		LCD_out
 			I2C1_Start

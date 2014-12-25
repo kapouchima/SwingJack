@@ -10,10 +10,10 @@ Version 0.7.0 :
 #define Flasher portd.b7
 #define PhotocellRel portc.b5
 #define Buzzer portb.b5
-#define Motor1 portb.b4
-#define Motor2 portb.b3
-#define Motor1Dir portc.b0
-#define Motor2Dir portc.b1
+#define Motor1 portb.b3
+#define Motor2 portb.b4
+#define Motor1Dir portc.b1
+#define Motor2Dir portc.b0
 #define OverloadM1 porta.b0
 #define OverloadM2 porta.b1
 #define ZeroCross portb.b0
@@ -350,7 +350,14 @@ PhotocellRel=1;
 
 Init();
 
+
+
+Buzzer=1;
 Logger("Start ...");
+memcpy(LCDLine1,"------UTAB------",16);
+memcpy(LCDLine2,"READY           ",16);
+LCDUpdateFlag=1;
+Buzzer=0;
 
 //FactorySettings();
 
@@ -1128,17 +1135,17 @@ void LCDUpdater()
 {
  if(LCDUpdateFlag==1)
  {
-  lcd_out(1,1,LCDLine1);
-  lcd_out(2,1,LCDLine2);
+  lcd_out(1,0,LCDLine1);
+  lcd_out(2,0,LCDLine2);
   LCDUpdateFlag=0;
  }
 
  if(LCDFlash)
    {
    if(LCDFlashFlag)
-     lcd_out(2,1,"               ");
+     lcd_out(2,0,"               ");
    else
-     lcd_out(2,1,LCDLine2);
+     lcd_out(2,0,LCDLine2);
    }
 
 
@@ -1329,10 +1336,10 @@ char t[4];
 static unsigned long PressTime;
 static char Repeat,RepeatRate;
 char resch=0,fin;
-  resch.b2=~KeyDown;
-  resch.b1=~KeyUp;
-  resch.b0=~KeyMenu;
-
+  resch.b0=~KeyDown;
+  resch.b1=~KeyMenu;
+  resch.b2=~KeyUp;
+  
 if((resch==0))
 {
   if(Pressed==0)
@@ -1356,7 +1363,8 @@ if((resch!=0)&&(Pressed==0))
 
 if((Repeat==1)&&(msCounter%10==0))
   RepeatRate=1;
-
+  
+  //fin=resch;
 return fin;
 }
 
@@ -1411,8 +1419,8 @@ res.b0=RemoteAFlag.b0;
 res.b1=RemoteBFlag.b0;
 RemoteAFlag=0;
 RemoteBFlag=0;
-res.b0=res.b0|(~KeyUp);
-res.b1=res.b1|(~KeyDown);
+res.b0=res.b0;//|(~KeyUp);
+res.b1=res.b1;//|(~KeyDown);
 return res;
 }
 
@@ -1427,9 +1435,15 @@ return res;
 char GetOverloadState()
 {
 char res=0;
+//char text[6];
 unsigned VCapM1,VCapM2;
 VCapM1=ADC_Read(0);
 VCapM2=ADC_Read(1);
+//wordtostr(VCapM1,text);
+
+//memcpy(LCDLine2,text,6);
+LCDUpdateFlag=1;
+
 if(Motor1FullSpeed!=0)
 {
   if(VCapM1<OverloadTreshold)
@@ -2442,23 +2456,23 @@ void SetOverloadParams(char p)
   {
     case 0: OverloadTreshold=0;OverloadDuration=255; break;
 
-    case 1: OverloadTreshold=400;OverloadDuration=200; break;
+    case 1: OverloadTreshold=580;OverloadDuration=200; break;
 
-    case 2: OverloadTreshold=450;OverloadDuration=150; break;
+    case 2: OverloadTreshold=600;OverloadDuration=150; break;
 
-    case 3: OverloadTreshold=500;OverloadDuration=100; break;
+    case 3: OverloadTreshold=650;OverloadDuration=100; break;
 
-    case 4: OverloadTreshold=550;OverloadDuration=80; break;
+    case 4: OverloadTreshold=650;OverloadDuration=80; break;
 
-    case 5: OverloadTreshold=600;OverloadDuration=150; break;
+    case 5: OverloadTreshold=680;OverloadDuration=150; break;
 
-    case 6: OverloadTreshold=600;OverloadDuration=100; break;
+    case 6: OverloadTreshold=680;OverloadDuration=100; break;
 
-    case 7: OverloadTreshold=600;OverloadDuration=50; break;
+    case 7: OverloadTreshold=680;OverloadDuration=50; break;
 
-    case 8: OverloadTreshold=700;OverloadDuration=100; break;
+    case 8: OverloadTreshold=720;OverloadDuration=100; break;
 
-    case 9: OverloadTreshold=700;OverloadDuration=50; break;
+    case 9: OverloadTreshold=750;OverloadDuration=50; break;
 
   }
 }
