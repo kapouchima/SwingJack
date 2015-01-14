@@ -101,8 +101,6 @@ main
 			AddTask
 				Mul_16x16_U
 		State4
-			ByteToStr
-				Div_8x8_U
 			CheckTask
 			StartMotor
 			Logger

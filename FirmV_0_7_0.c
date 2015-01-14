@@ -791,15 +791,12 @@ void State4()
 {
 Flasher=1;
 
-  bytetostr(Events.Task1,LCDLine1);
-  bytetostr(Events.Task2,LCDLine2);
-  LCDUpdateFlag=1;
 
   if(CheckTask(1))
-    {StartMotor(1,_Close);Logger("S4 Motor1Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+    {StartMotor(1,_Close);Logger("S4 Motor1Start");}
 
   if(CheckTask(2))
-    {StartMotor(2,_Close);Logger("S4 Motor2Start");}
+    {StartMotor(2,_Close);Logger("S4 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 
   if(CheckTask(10))
     {OverloadCheckFlag1=1; OverloadInit(1);Logger("S4 M1 Overload Check");}
@@ -1049,10 +1046,10 @@ void State7()
   Flasher=1;
 
   if(CheckTask(1))
-    {StartMotor(1,_Close);Logger("S7 Motor1Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+    {StartMotor(1,_Close);Logger("S7 Motor1Start");}
 
   if(CheckTask(2))
-    {StartMotor(2,_Close);Logger("S7 Motor2Start");}
+    {StartMotor(2,_Close);Logger("S7 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 
   if(CheckTask(10))
     {OverloadCheckFlag1=1; OverloadInit(1);Logger("S7 M1 Overload Check");}
