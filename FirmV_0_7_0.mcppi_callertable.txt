@@ -17,6 +17,7 @@ main
 		LoadConfigs
 			EEPROM_Read
 			SetOverloadParams
+	Decrypt
 	Logger
 		LongWordToStrWithZeros
 			Div_32x32_U
@@ -221,6 +222,7 @@ main
 					Div_16x16_U
 				memcpy
 		Menu1
+			memcpy
 		Menu2
 			Menu0
 				__CC2DW
@@ -235,7 +237,6 @@ main
 					WordToStr
 						Div_16x16_U
 					memcpy
-			__CC2DW
 			memcpy
 			FactorySettings
 				SetOverloadParams
@@ -277,6 +278,8 @@ main
 					EEPROM_Write
 					SetOverloadParams
 			__CC2DW
+			memcpy
+		About
 			memcpy
 interrupt
 	Div_8x8_U

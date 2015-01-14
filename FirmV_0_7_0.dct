@@ -165,6 +165,8 @@ _stop
 _t6963c_horizontal
 _t6963c_vertical
 a
+about
+aboutcounter
 abs
 access
 ackdt
@@ -382,6 +384,7 @@ cose3
 cosh
 cren
 cren_bit
+crypto
 cs
 cs_bit
 csrc
@@ -409,6 +412,7 @@ dccpx_bit
 debouncingdelay
 dec2bcd
 dec2bcd16
+decrypt
 delay_100ms
 delay_10ms
 delay_10us
@@ -1273,6 +1277,7 @@ shorttostr
 sin
 sine3
 sinh
+sipher
 smp
 smp_bit
 soft_i2c_break
