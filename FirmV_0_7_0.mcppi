@@ -8,13 +8,13 @@ Value=0
 [ACTIVE_TAB]
 Value=FirmV_0_7_0.c
 [USE_EEPROM]
-Value=0
+Value=1
 [USE_HEAP]
 Value=0
 [HEAP_SIZE]
 Value=2000
 [EEPROM_DEFINITION]
-Value=
+Value=COGLCDDriver.h
 [FILES]
 Count=2
 File0=FirmV_0_7_0.c
@@ -30,7 +30,8 @@ File0=FirmV_0_7_0.c
 File1=COGLCDDriver.c
 File2=COGLCDDriver.h
 [EEPROM]
-Count=0
+Count=1
+File0=FirmV_0_7_0.ihex
 [ACTIVE_COMMENTS_FILES]
 Count=0
 [OTHER_FILES]
@@ -98,5 +99,6 @@ File43=UART
 [EXPANDED NODES]
 Node1=Sources
 Node2=Header Files
-Node3=Output Files
-Count=3
+Node3=EEPROM Files
+Node4=Output Files
+Count=4

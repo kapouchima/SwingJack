@@ -28,12 +28,17 @@ main
 		UART1_Write
 	memcpy
 	LCDUpdater
+		LCD_Init
+			I2C1_Start
+				I2C1_Is_Idle
+			I2C1_Wr
+			I2C1_Stop
 		LCD_out
 			I2C1_Start
 				I2C1_Is_Idle
 			I2C1_Wr
 			I2C1_Stop
-		__CC2DW
+		memcpy
 	ResetTaskEvents
 	TaskManager
 		Mul_16x16_U
@@ -41,7 +46,6 @@ main
 		GetExternalKeysState
 		GetLimitSwitchState
 		GetKeysState
-			Div_8x8_U
 		GetRemoteState
 		GetOverloadState
 			ADC_Read

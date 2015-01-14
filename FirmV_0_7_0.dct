@@ -672,6 +672,7 @@ ispunct
 isspace
 isupper
 isxdigit
+keyflag
 keypad_init
 keypad_key_click
 keypad_key_press
@@ -757,6 +758,7 @@ lcdflash
 lcdflashflag
 lcdline1
 lcdline2
+lcdlines
 lcdupdateflag
 lcdupdater
 ldexp
