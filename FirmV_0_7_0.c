@@ -35,8 +35,6 @@ Version 0.7.0 :
 #define Limit2 inp4
 #define Phcell2 inp5
 #define Phcell1 inp6
-//#define D1ExKey inp4
-//#define D2ExKey inp5
 //---- overload delay in 500ms
 #define OverloadDelay 2
 #define _Open 1
@@ -44,7 +42,7 @@ Version 0.7.0 :
 #define PosErrFix 5
 #define KeyRepeatDelay 2
 #define DebouncingFix 5
-#define LockForceTime 3
+#define LockForceTime 2
 
 #include <built_in.h>
 
@@ -113,8 +111,8 @@ unsigned char D2CloseSoftStop;
 //--------Variables
 unsigned long ms500=0;
 char msCounter=0,ms20A=0,ms20B,Flag20ms=1,Flag500ms=1,State=0,LCDUpdateFlag=0,LCDFlashFlag=0,RemotePulse1=0,RemotePulse2=0;
-char PrevRemotePulseTime1=0,PrevRemotePulseTime2=0,RemoteAFlag=0,RemoteBFlag=0,Motor1FullSpeed=1,Motor2FullSpeed=1;
-char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0,ActiveDoors=0;
+char PrevRemotePulseTime1=0,PrevRemotePulseTime2=0,RemoteAFlag=0,RemoteBFlag=0,Motor1FullSpeed=1,Motor2FullSpeed=1,BuzzCounter=0;
+char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0,ActiveDoors=0,BuzzFlag=0,LongBuzzFlag=0;
 char OverloadCheckFlag1=0,OverloadCheckFlag2=0,OpenDone=3,CloseDone=3,M1isSlow=0,M2isSlow=0,PassFlag=0,LearnPhase,AboutCounter=0;
 char _AC=0,PhotocellCount=0,MenuPointer=0,DebouncingDelay=0,LCDFlash=0,Pressed=0,OverloadSens=5,LearningMode=0,KeyFlag=0,LCDLines=1;
 char t[11];
@@ -382,7 +380,6 @@ void Logger(char* text)
 
 void main() {
 
-//delay_ms(500);
 
 PhotocellRel=1;
 
@@ -397,12 +394,23 @@ LCDLines=1;
 LCDUpdateFlag=1;
 Buzzer=0;
 
-//FactorySettings();
-
 while(1)
 {
   if(Flag20ms==1)
   {
+     if((Buzzer==1)&&(BuzzCounter<100))
+       {BuzzCounter=BuzzCounter+1;}
+     
+     if((Buzzer==1)&&(LongBuzzFlag))
+       if(BuzzCounter>=25){BuzzFlag=0;LongBuzzFlag=0;Buzzer=0;}
+       
+     if((Buzzer==1)&&(BuzzFlag)&&(!LongBuzzFlag))
+       {BuzzFlag=0;LongBuzzFlag=0;Buzzer=0;}
+
+     if(((BuzzFlag)||(LongBuzzFlag))&&(!Buzzer))
+       {Buzzer=1;BuzzCounter=0;}
+       
+       
      if(DebouncingDelay<DebouncingFix)
        DebouncingDelay=DebouncingDelay+1;
      LCDUpdater();
@@ -448,9 +456,6 @@ while(1)
 
 void StateManager()
 {
-
-//bytetostr(Pos1,LCDLine2);
-//LCDUpdateFlag=1;
 
 switch(State)
 {
@@ -1407,9 +1412,6 @@ if((RepeatCount>6)&&(RepeatCount<=20))
 if(RepeatCount>20)
   {RepeatSpeed=5;}
 
-else
-  {RepeatSpeed=10;}
-
 
 if((Repeat==1)&&(KeyFlag>=RepeatSpeed))
   {RepeatRate=1;KeyFlag=0;if(RepeatCount<25)RepeatCount=RepeatCount+1;}
@@ -1430,6 +1432,9 @@ if((resch!=0)&&(Pressed==0))
   {fin=resch; Pressed=1;PressTime=ms500;DebouncingDelay=0;}
 
   //fin=resch;
+  
+if(fin != 0)
+  BuzzFlag=1;
   
 return fin;
 }
@@ -1485,8 +1490,13 @@ res.b0=RemoteAFlag.b0;
 res.b1=RemoteBFlag.b0;
 RemoteAFlag=0;
 RemoteBFlag=0;
-res.b0=res.b0;//|(~KeyUp);
-res.b1=res.b1;//|(~KeyDown);
+res.b0=res.b0;
+res.b1=res.b1;
+if(State<20)
+{
+  res.b0=res.b0|Events.Keys.b2;//up key
+  res.b1=res.b1|Events.Keys.b0;//down key
+}
 return res;
 }
 
@@ -1995,9 +2005,9 @@ void Menu2()
         {
           LearnPhase=0;
           if(LearningMode==0)
-            State=200;
+            {State=200;LongBuzzFlag=1;}
           if(LearningMode==1)
-            State=201;
+            {State=201;LongBuzzFlag=1;}
         }
     }
 
@@ -2109,6 +2119,7 @@ void Menu2()
       LCDLines=1;
       LCDFlash=0; LCDFlashFlag=0;
       LCDUpdateFlag=1;
+      LongBuzzFlag=1;
       FactorySettings();
       SaveConfigs();
     }
@@ -2154,6 +2165,7 @@ void Menu2()
       LCDFlash=0;
       LCDLines=1;
       LCDUpdateFlag=1;
+      LongBuzzFlag=1;
     }
 
   //Exit
@@ -2165,6 +2177,7 @@ void Menu2()
       LCDLines=1;
       LCDUpdateFlag=1;
       LoadConfigs();
+      LongBuzzFlag=1;
     }
 }
 

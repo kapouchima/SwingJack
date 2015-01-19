@@ -1,102 +1,102 @@
 
 _interrupt:
 
-;FirmV_0_7_0.c,207 :: 		void interrupt()
-;FirmV_0_7_0.c,209 :: 		if(TMR0IF_bit)
+;FirmV_0_7_0.c,205 :: 		void interrupt()
+;FirmV_0_7_0.c,207 :: 		if(TMR0IF_bit)
 	BTFSS       TMR0IF_bit+0, 2 
 	GOTO        L_interrupt0
-;FirmV_0_7_0.c,211 :: 		msCounter=msCounter+1;
+;FirmV_0_7_0.c,209 :: 		msCounter=msCounter+1;
 	INCF        _msCounter+0, 1 
-;FirmV_0_7_0.c,212 :: 		LCDBackLight=1;
+;FirmV_0_7_0.c,210 :: 		LCDBackLight=1;
 	BSF         PORTA+0, 4 
-;FirmV_0_7_0.c,213 :: 		Flag20ms=1;
+;FirmV_0_7_0.c,211 :: 		Flag20ms=1;
 	MOVLW       1
 	MOVWF       _Flag20ms+0 
-;FirmV_0_7_0.c,214 :: 		if(ms20A==255)
+;FirmV_0_7_0.c,212 :: 		if(ms20A==255)
 	MOVF        _ms20A+0, 0 
 	XORLW       255
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt1
-;FirmV_0_7_0.c,215 :: 		{ms20A=0;RemotePulse1=0;}
+;FirmV_0_7_0.c,213 :: 		{ms20A=0;RemotePulse1=0;}
 	CLRF        _ms20A+0 
 	CLRF        _RemotePulse1+0 
 	GOTO        L_interrupt2
 L_interrupt1:
-;FirmV_0_7_0.c,217 :: 		ms20A=ms20A+1;
+;FirmV_0_7_0.c,215 :: 		ms20A=ms20A+1;
 	INCF        _ms20A+0, 1 
 L_interrupt2:
-;FirmV_0_7_0.c,219 :: 		if(ms20B==255)
+;FirmV_0_7_0.c,217 :: 		if(ms20B==255)
 	MOVF        _ms20B+0, 0 
 	XORLW       255
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt3
-;FirmV_0_7_0.c,220 :: 		{ms20B=0;RemotePulse2=0;}
+;FirmV_0_7_0.c,218 :: 		{ms20B=0;RemotePulse2=0;}
 	CLRF        _ms20B+0 
 	CLRF        _RemotePulse2+0 
 	GOTO        L_interrupt4
 L_interrupt3:
-;FirmV_0_7_0.c,222 :: 		ms20B=ms20B+1;
+;FirmV_0_7_0.c,220 :: 		ms20B=ms20B+1;
 	INCF        _ms20B+0, 1 
 L_interrupt4:
-;FirmV_0_7_0.c,224 :: 		if(msCounter>=25)
+;FirmV_0_7_0.c,222 :: 		if(msCounter>=25)
 	MOVLW       25
 	SUBWF       _msCounter+0, 0 
 	BTFSS       STATUS+0, 0 
 	GOTO        L_interrupt5
-;FirmV_0_7_0.c,226 :: 		msCounter=0;
+;FirmV_0_7_0.c,224 :: 		msCounter=0;
 	CLRF        _msCounter+0 
-;FirmV_0_7_0.c,227 :: 		ms500=ms500+1;
+;FirmV_0_7_0.c,225 :: 		ms500=ms500+1;
 	MOVLW       1
 	ADDWF       _ms500+0, 1 
 	MOVLW       0
 	ADDWFC      _ms500+1, 1 
 	ADDWFC      _ms500+2, 1 
 	ADDWFC      _ms500+3, 1 
-;FirmV_0_7_0.c,228 :: 		LCDFlashFlag=!LCDFlashFlag;
+;FirmV_0_7_0.c,226 :: 		LCDFlashFlag=!LCDFlashFlag;
 	MOVF        _LCDFlashFlag+0, 1 
 	MOVLW       1
 	BTFSS       STATUS+0, 2 
 	MOVLW       0
 	MOVWF       _LCDFlashFlag+0 
-;FirmV_0_7_0.c,229 :: 		LCDBackLight=0;
+;FirmV_0_7_0.c,227 :: 		LCDBackLight=0;
 	BCF         PORTA+0, 4 
-;FirmV_0_7_0.c,230 :: 		Flag500ms=1;
+;FirmV_0_7_0.c,228 :: 		Flag500ms=1;
 	MOVLW       1
 	MOVWF       _Flag500ms+0 
-;FirmV_0_7_0.c,231 :: 		}
+;FirmV_0_7_0.c,229 :: 		}
 L_interrupt5:
-;FirmV_0_7_0.c,232 :: 		tmr0h=0xF3;
+;FirmV_0_7_0.c,230 :: 		tmr0h=0xF3;
 	MOVLW       243
 	MOVWF       TMR0H+0 
-;FirmV_0_7_0.c,233 :: 		tmr0l=0xCA;
+;FirmV_0_7_0.c,231 :: 		tmr0l=0xCA;
 	MOVLW       202
 	MOVWF       TMR0L+0 
-;FirmV_0_7_0.c,234 :: 		TMR0IF_bit=0;
+;FirmV_0_7_0.c,232 :: 		TMR0IF_bit=0;
 	BCF         TMR0IF_bit+0, 2 
-;FirmV_0_7_0.c,235 :: 		}
+;FirmV_0_7_0.c,233 :: 		}
 L_interrupt0:
-;FirmV_0_7_0.c,238 :: 		if(INT1F_bit)
+;FirmV_0_7_0.c,236 :: 		if(INT1F_bit)
 	BTFSS       INT1F_bit+0, 0 
 	GOTO        L_interrupt6
-;FirmV_0_7_0.c,240 :: 		if(RemotePulse1==0)
+;FirmV_0_7_0.c,238 :: 		if(RemotePulse1==0)
 	MOVF        _RemotePulse1+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt7
-;FirmV_0_7_0.c,241 :: 		{ RemotePulse1=RemotePulse1+1;ms20A=0;}
+;FirmV_0_7_0.c,239 :: 		{ RemotePulse1=RemotePulse1+1;ms20A=0;}
 	INCF        _RemotePulse1+0, 1 
 	CLRF        _ms20A+0 
 	GOTO        L_interrupt8
 L_interrupt7:
-;FirmV_0_7_0.c,243 :: 		{ RemotePulse1=RemotePulse1+1;}
+;FirmV_0_7_0.c,241 :: 		{ RemotePulse1=RemotePulse1+1;}
 	INCF        _RemotePulse1+0, 1 
 L_interrupt8:
-;FirmV_0_7_0.c,244 :: 		if(RemotePulse1>=5)
+;FirmV_0_7_0.c,242 :: 		if(RemotePulse1>=5)
 	MOVLW       5
 	SUBWF       _RemotePulse1+0, 0 
 	BTFSS       STATUS+0, 0 
 	GOTO        L_interrupt9
-;FirmV_0_7_0.c,245 :: 		if((ms20A>=19)&&(ms20A<=21))
+;FirmV_0_7_0.c,243 :: 		if((ms20A>=19)&&(ms20A<=21))
 	MOVLW       19
 	SUBWF       _ms20A+0, 0 
 	BTFSS       STATUS+0, 0 
@@ -105,43 +105,43 @@ L_interrupt8:
 	SUBLW       21
 	BTFSS       STATUS+0, 0 
 	GOTO        L_interrupt12
-L__interrupt659:
-;FirmV_0_7_0.c,246 :: 		{RemoteAFlag=1;RemotePulse1=0;}
+L__interrupt675:
+;FirmV_0_7_0.c,244 :: 		{RemoteAFlag=1;RemotePulse1=0;}
 	MOVLW       1
 	MOVWF       _RemoteAFlag+0 
 	CLRF        _RemotePulse1+0 
 	GOTO        L_interrupt13
 L_interrupt12:
-;FirmV_0_7_0.c,248 :: 		RemotePulse1=0;
+;FirmV_0_7_0.c,246 :: 		RemotePulse1=0;
 	CLRF        _RemotePulse1+0 
 L_interrupt13:
 L_interrupt9:
-;FirmV_0_7_0.c,249 :: 		INT1IF_bit=0;
+;FirmV_0_7_0.c,247 :: 		INT1IF_bit=0;
 	BCF         INT1IF_bit+0, 0 
-;FirmV_0_7_0.c,250 :: 		}
+;FirmV_0_7_0.c,248 :: 		}
 L_interrupt6:
-;FirmV_0_7_0.c,254 :: 		if(INT2IF_bit)
+;FirmV_0_7_0.c,252 :: 		if(INT2IF_bit)
 	BTFSS       INT2IF_bit+0, 1 
 	GOTO        L_interrupt14
-;FirmV_0_7_0.c,256 :: 		if(RemotePulse2==0)
+;FirmV_0_7_0.c,254 :: 		if(RemotePulse2==0)
 	MOVF        _RemotePulse2+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt15
-;FirmV_0_7_0.c,257 :: 		{ RemotePulse2=RemotePulse2+1;ms20B=0;}
+;FirmV_0_7_0.c,255 :: 		{ RemotePulse2=RemotePulse2+1;ms20B=0;}
 	INCF        _RemotePulse2+0, 1 
 	CLRF        _ms20B+0 
 	GOTO        L_interrupt16
 L_interrupt15:
-;FirmV_0_7_0.c,259 :: 		{ RemotePulse2=RemotePulse2+1;}
+;FirmV_0_7_0.c,257 :: 		{ RemotePulse2=RemotePulse2+1;}
 	INCF        _RemotePulse2+0, 1 
 L_interrupt16:
-;FirmV_0_7_0.c,260 :: 		if(RemotePulse2>=5)
+;FirmV_0_7_0.c,258 :: 		if(RemotePulse2>=5)
 	MOVLW       5
 	SUBWF       _RemotePulse2+0, 0 
 	BTFSS       STATUS+0, 0 
 	GOTO        L_interrupt17
-;FirmV_0_7_0.c,261 :: 		if((ms20B>=19)&&(ms20B<=21))
+;FirmV_0_7_0.c,259 :: 		if((ms20B>=19)&&(ms20B<=21))
 	MOVLW       19
 	SUBWF       _ms20B+0, 0 
 	BTFSS       STATUS+0, 0 
@@ -150,35 +150,35 @@ L_interrupt16:
 	SUBLW       21
 	BTFSS       STATUS+0, 0 
 	GOTO        L_interrupt20
-L__interrupt658:
-;FirmV_0_7_0.c,262 :: 		{RemoteBFlag=1;RemotePulse2=0;}
+L__interrupt674:
+;FirmV_0_7_0.c,260 :: 		{RemoteBFlag=1;RemotePulse2=0;}
 	MOVLW       1
 	MOVWF       _RemoteBFlag+0 
 	CLRF        _RemotePulse2+0 
 	GOTO        L_interrupt21
 L_interrupt20:
-;FirmV_0_7_0.c,264 :: 		RemotePulse2=0;
+;FirmV_0_7_0.c,262 :: 		RemotePulse2=0;
 	CLRF        _RemotePulse2+0 
 L_interrupt21:
 L_interrupt17:
-;FirmV_0_7_0.c,265 :: 		INT2IF_bit=0;
+;FirmV_0_7_0.c,263 :: 		INT2IF_bit=0;
 	BCF         INT2IF_bit+0, 1 
-;FirmV_0_7_0.c,266 :: 		}
+;FirmV_0_7_0.c,264 :: 		}
 L_interrupt14:
-;FirmV_0_7_0.c,271 :: 		if(INT0F_bit==1)
+;FirmV_0_7_0.c,269 :: 		if(INT0F_bit==1)
 	BTFSS       INT0F_bit+0, 1 
 	GOTO        L_interrupt22
-;FirmV_0_7_0.c,273 :: 		ZCCounter=ZCCounter+1;
+;FirmV_0_7_0.c,271 :: 		ZCCounter=ZCCounter+1;
 	INCF        _ZCCounter+0, 1 
-;FirmV_0_7_0.c,274 :: 		if(ZCCounter==255)
+;FirmV_0_7_0.c,272 :: 		if(ZCCounter==255)
 	MOVF        _ZCCounter+0, 0 
 	XORLW       255
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt23
-;FirmV_0_7_0.c,275 :: 		ZCCounter=0;
+;FirmV_0_7_0.c,273 :: 		ZCCounter=0;
 	CLRF        _ZCCounter+0 
 L_interrupt23:
-;FirmV_0_7_0.c,276 :: 		if(ZCCounter%3==1)
+;FirmV_0_7_0.c,274 :: 		if(ZCCounter%3==1)
 	MOVLW       3
 	MOVWF       R4 
 	MOVF        _ZCCounter+0, 0 
@@ -190,41 +190,41 @@ L_interrupt23:
 	XORLW       1
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt24
-;FirmV_0_7_0.c,278 :: 		if(Motor1Start)
+;FirmV_0_7_0.c,276 :: 		if(Motor1Start)
 	MOVF        _Motor1Start+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt25
-;FirmV_0_7_0.c,279 :: 		if(Motor1FullSpeed)
+;FirmV_0_7_0.c,277 :: 		if(Motor1FullSpeed)
 	MOVF        _Motor1FullSpeed+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt26
-;FirmV_0_7_0.c,280 :: 		Motor1=1;
+;FirmV_0_7_0.c,278 :: 		Motor1=1;
 	BSF         PORTB+0, 3 
 	GOTO        L_interrupt27
 L_interrupt26:
-;FirmV_0_7_0.c,282 :: 		Motor1=0;
+;FirmV_0_7_0.c,280 :: 		Motor1=0;
 	BCF         PORTB+0, 3 
 L_interrupt27:
 L_interrupt25:
-;FirmV_0_7_0.c,284 :: 		if(Motor2Start)
+;FirmV_0_7_0.c,282 :: 		if(Motor2Start)
 	MOVF        _Motor2Start+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt28
-;FirmV_0_7_0.c,285 :: 		if(Motor2FullSpeed)
+;FirmV_0_7_0.c,283 :: 		if(Motor2FullSpeed)
 	MOVF        _Motor2FullSpeed+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt29
-;FirmV_0_7_0.c,286 :: 		Motor2=1;
+;FirmV_0_7_0.c,284 :: 		Motor2=1;
 	BSF         PORTB+0, 4 
 	GOTO        L_interrupt30
 L_interrupt29:
-;FirmV_0_7_0.c,288 :: 		Motor2=0;
+;FirmV_0_7_0.c,286 :: 		Motor2=0;
 	BCF         PORTB+0, 4 
 L_interrupt30:
 L_interrupt28:
-;FirmV_0_7_0.c,289 :: 		}
+;FirmV_0_7_0.c,287 :: 		}
 L_interrupt24:
-;FirmV_0_7_0.c,290 :: 		if(ZCCounter%3==0)
+;FirmV_0_7_0.c,288 :: 		if(ZCCounter%3==0)
 	MOVLW       3
 	MOVWF       R4 
 	MOVF        _ZCCounter+0, 0 
@@ -236,118 +236,118 @@ L_interrupt24:
 	XORLW       0
 	BTFSS       STATUS+0, 2 
 	GOTO        L_interrupt31
-;FirmV_0_7_0.c,292 :: 		if(Motor1Start)
+;FirmV_0_7_0.c,290 :: 		if(Motor1Start)
 	MOVF        _Motor1Start+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt32
-;FirmV_0_7_0.c,293 :: 		Motor1=1;
+;FirmV_0_7_0.c,291 :: 		Motor1=1;
 	BSF         PORTB+0, 3 
 L_interrupt32:
-;FirmV_0_7_0.c,295 :: 		if(Motor2Start)
+;FirmV_0_7_0.c,293 :: 		if(Motor2Start)
 	MOVF        _Motor2Start+0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_interrupt33
-;FirmV_0_7_0.c,296 :: 		Motor2=1;
+;FirmV_0_7_0.c,294 :: 		Motor2=1;
 	BSF         PORTB+0, 4 
 L_interrupt33:
-;FirmV_0_7_0.c,297 :: 		}
+;FirmV_0_7_0.c,295 :: 		}
 L_interrupt31:
-;FirmV_0_7_0.c,298 :: 		INT0F_bit=0;
+;FirmV_0_7_0.c,296 :: 		INT0F_bit=0;
 	BCF         INT0F_bit+0, 1 
-;FirmV_0_7_0.c,299 :: 		}
+;FirmV_0_7_0.c,297 :: 		}
 L_interrupt22:
-;FirmV_0_7_0.c,300 :: 		}
-L__interrupt760:
+;FirmV_0_7_0.c,298 :: 		}
+L__interrupt781:
 	RETFIE      1
 ; end of _interrupt
 
 _ResetTaskEvents:
 
-;FirmV_0_7_0.c,313 :: 		void ResetTaskEvents()
-;FirmV_0_7_0.c,315 :: 		Events.Task1=0;
+;FirmV_0_7_0.c,311 :: 		void ResetTaskEvents()
+;FirmV_0_7_0.c,313 :: 		Events.Task1=0;
 	CLRF        _Events+1 
-;FirmV_0_7_0.c,316 :: 		Events.Task2=0;
+;FirmV_0_7_0.c,314 :: 		Events.Task2=0;
 	CLRF        _Events+2 
-;FirmV_0_7_0.c,317 :: 		Events.Task3=0;
+;FirmV_0_7_0.c,315 :: 		Events.Task3=0;
 	CLRF        _Events+3 
-;FirmV_0_7_0.c,318 :: 		}
+;FirmV_0_7_0.c,316 :: 		}
 	RETURN      0
 ; end of _ResetTaskEvents
 
 _Decrypt:
 
-;FirmV_0_7_0.c,327 :: 		void Decrypt()
-;FirmV_0_7_0.c,329 :: 		Sipher[0]=Crypto[1][0]+0x0D;
+;FirmV_0_7_0.c,325 :: 		void Decrypt()
+;FirmV_0_7_0.c,327 :: 		Sipher[0]=Crypto[1][0]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+16, 0 
 	MOVWF       _Sipher+0 
-;FirmV_0_7_0.c,330 :: 		Sipher[1]=Crypto[1][1]+0x0D;
+;FirmV_0_7_0.c,328 :: 		Sipher[1]=Crypto[1][1]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+17, 0 
 	MOVWF       _Sipher+1 
-;FirmV_0_7_0.c,331 :: 		Sipher[2]=Crypto[1][2]+0x0D;
+;FirmV_0_7_0.c,329 :: 		Sipher[2]=Crypto[1][2]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+18, 0 
 	MOVWF       _Sipher+2 
-;FirmV_0_7_0.c,332 :: 		Sipher[3]=Crypto[1][3]-0x26;
+;FirmV_0_7_0.c,330 :: 		Sipher[3]=Crypto[1][3]-0x26;
 	MOVLW       38
 	SUBWF       _crypto+19, 0 
 	MOVWF       _Sipher+3 
-;FirmV_0_7_0.c,333 :: 		Sipher[4]=Crypto[1][4]-0x3C;
+;FirmV_0_7_0.c,331 :: 		Sipher[4]=Crypto[1][4]-0x3C;
 	MOVLW       60
 	SUBWF       _crypto+20, 0 
 	MOVWF       _Sipher+4 
-;FirmV_0_7_0.c,334 :: 		Sipher[5]=Crypto[1][5]-0x41;
+;FirmV_0_7_0.c,332 :: 		Sipher[5]=Crypto[1][5]-0x41;
 	MOVLW       65
 	SUBWF       _crypto+21, 0 
 	MOVWF       _Sipher+5 
-;FirmV_0_7_0.c,335 :: 		Sipher[6]=Crypto[1][6]-0x0C;
+;FirmV_0_7_0.c,333 :: 		Sipher[6]=Crypto[1][6]-0x0C;
 	MOVLW       12
 	SUBWF       _crypto+22, 0 
 	MOVWF       _Sipher+6 
-;FirmV_0_7_0.c,336 :: 		Sipher[7]=Crypto[1][7]+0x34;
+;FirmV_0_7_0.c,334 :: 		Sipher[7]=Crypto[1][7]+0x34;
 	MOVLW       52
 	ADDWF       _crypto+23, 0 
 	MOVWF       _Sipher+7 
-;FirmV_0_7_0.c,337 :: 		Sipher[8]=Crypto[1][8]-0x01;
+;FirmV_0_7_0.c,335 :: 		Sipher[8]=Crypto[1][8]-0x01;
 	DECF        _crypto+24, 0 
 	MOVWF       _Sipher+8 
-;FirmV_0_7_0.c,338 :: 		Sipher[9]=Crypto[1][9]-0x1F;
+;FirmV_0_7_0.c,336 :: 		Sipher[9]=Crypto[1][9]-0x1F;
 	MOVLW       31
 	SUBWF       _crypto+25, 0 
 	MOVWF       _Sipher+9 
-;FirmV_0_7_0.c,339 :: 		Sipher[10]=Crypto[1][10]-0x3A;
+;FirmV_0_7_0.c,337 :: 		Sipher[10]=Crypto[1][10]-0x3A;
 	MOVLW       58
 	SUBWF       _crypto+26, 0 
 	MOVWF       _Sipher+10 
-;FirmV_0_7_0.c,340 :: 		Sipher[11]=Crypto[1][11]-0x3B;
+;FirmV_0_7_0.c,338 :: 		Sipher[11]=Crypto[1][11]-0x3B;
 	MOVLW       59
 	SUBWF       _crypto+27, 0 
 	MOVWF       _Sipher+11 
-;FirmV_0_7_0.c,341 :: 		Sipher[12]=Crypto[1][12]-0x3C;
+;FirmV_0_7_0.c,339 :: 		Sipher[12]=Crypto[1][12]-0x3C;
 	MOVLW       60
 	SUBWF       _crypto+28, 0 
 	MOVWF       _Sipher+12 
-;FirmV_0_7_0.c,342 :: 		Sipher[13]=Crypto[1][13]+0x0D;
+;FirmV_0_7_0.c,340 :: 		Sipher[13]=Crypto[1][13]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+29, 0 
 	MOVWF       _Sipher+13 
-;FirmV_0_7_0.c,343 :: 		Sipher[14]=Crypto[1][14]+0x0D;
+;FirmV_0_7_0.c,341 :: 		Sipher[14]=Crypto[1][14]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+30, 0 
 	MOVWF       _Sipher+14 
-;FirmV_0_7_0.c,344 :: 		Sipher[15]=Crypto[1][15]+0x0D;
+;FirmV_0_7_0.c,342 :: 		Sipher[15]=Crypto[1][15]+0x0D;
 	MOVLW       13
 	ADDWF       _crypto+31, 0 
 	MOVWF       _Sipher+15 
-;FirmV_0_7_0.c,345 :: 		}
+;FirmV_0_7_0.c,343 :: 		}
 	RETURN      0
 ; end of _Decrypt
 
 _Logger:
 
-;FirmV_0_7_0.c,357 :: 		void Logger(char* text)
-;FirmV_0_7_0.c,360 :: 		longwordtostrwithzeros(ms500,time);
+;FirmV_0_7_0.c,355 :: 		void Logger(char* text)
+;FirmV_0_7_0.c,358 :: 		longwordtostrwithzeros(ms500,time);
 	MOVF        _ms500+0, 0 
 	MOVWF       FARG_LongWordToStrWithZeros_input+0 
 	MOVF        _ms500+1, 0 
@@ -361,13 +361,13 @@ _Logger:
 	MOVLW       hi_addr(Logger_time_L0+0)
 	MOVWF       FARG_LongWordToStrWithZeros_output+1 
 	CALL        _LongWordToStrWithZeros+0, 0
-;FirmV_0_7_0.c,361 :: 		uart_write_text(time);
+;FirmV_0_7_0.c,359 :: 		uart_write_text(time);
 	MOVLW       Logger_time_L0+0
 	MOVWF       FARG_UART_Write_Text_uart_text+0 
 	MOVLW       hi_addr(Logger_time_L0+0)
 	MOVWF       FARG_UART_Write_Text_uart_text+1 
 	CALL        _UART_Write_Text+0, 0
-;FirmV_0_7_0.c,362 :: 		uart1_write_text(": ");
+;FirmV_0_7_0.c,360 :: 		uart1_write_text(": ");
 	MOVLW       58
 	MOVWF       ?lstr1_FirmV_0_7_0+0 
 	MOVLW       32
@@ -378,36 +378,36 @@ _Logger:
 	MOVLW       hi_addr(?lstr1_FirmV_0_7_0+0)
 	MOVWF       FARG_UART1_Write_Text_uart_text+1 
 	CALL        _UART1_Write_Text+0, 0
-;FirmV_0_7_0.c,363 :: 		uart1_write_text(text);
+;FirmV_0_7_0.c,361 :: 		uart1_write_text(text);
 	MOVF        FARG_Logger_text+0, 0 
 	MOVWF       FARG_UART1_Write_Text_uart_text+0 
 	MOVF        FARG_Logger_text+1, 0 
 	MOVWF       FARG_UART1_Write_Text_uart_text+1 
 	CALL        _UART1_Write_Text+0, 0
-;FirmV_0_7_0.c,364 :: 		uart1_write(10);
+;FirmV_0_7_0.c,362 :: 		uart1_write(10);
 	MOVLW       10
 	MOVWF       FARG_UART1_Write_data_+0 
 	CALL        _UART1_Write+0, 0
-;FirmV_0_7_0.c,365 :: 		uart1_write(13);
+;FirmV_0_7_0.c,363 :: 		uart1_write(13);
 	MOVLW       13
 	MOVWF       FARG_UART1_Write_data_+0 
 	CALL        _UART1_Write+0, 0
-;FirmV_0_7_0.c,366 :: 		}
+;FirmV_0_7_0.c,364 :: 		}
 	RETURN      0
 ; end of _Logger
 
 _main:
 
-;FirmV_0_7_0.c,383 :: 		void main() {
-;FirmV_0_7_0.c,387 :: 		PhotocellRel=1;
+;FirmV_0_7_0.c,381 :: 		void main() {
+;FirmV_0_7_0.c,384 :: 		PhotocellRel=1;
 	BSF         PORTC+0, 5 
-;FirmV_0_7_0.c,389 :: 		Init();
+;FirmV_0_7_0.c,386 :: 		Init();
 	CALL        _Init+0, 0
-;FirmV_0_7_0.c,391 :: 		Decrypt();
+;FirmV_0_7_0.c,388 :: 		Decrypt();
 	CALL        _Decrypt+0, 0
-;FirmV_0_7_0.c,393 :: 		Buzzer=1;
+;FirmV_0_7_0.c,390 :: 		Buzzer=1;
 	BSF         PORTB+0, 5 
-;FirmV_0_7_0.c,394 :: 		Logger("Start ...");
+;FirmV_0_7_0.c,391 :: 		Logger("Start ...");
 	MOVLW       83
 	MOVWF       ?lstr2_FirmV_0_7_0+0 
 	MOVLW       116
@@ -432,7 +432,7 @@ _main:
 	MOVLW       hi_addr(?lstr2_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-;FirmV_0_7_0.c,395 :: 		memcpy(LCDLine1,Sipher,16);
+;FirmV_0_7_0.c,392 :: 		memcpy(LCDLine1,Sipher,16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -446,257 +446,316 @@ _main:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,396 :: 		LCDLines=1;
+;FirmV_0_7_0.c,393 :: 		LCDLines=1;
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,397 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,394 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,398 :: 		Buzzer=0;
+;FirmV_0_7_0.c,395 :: 		Buzzer=0;
 	BCF         PORTB+0, 5 
-;FirmV_0_7_0.c,402 :: 		while(1)
+;FirmV_0_7_0.c,397 :: 		while(1)
 L_main34:
-;FirmV_0_7_0.c,404 :: 		if(Flag20ms==1)
+;FirmV_0_7_0.c,399 :: 		if(Flag20ms==1)
 	MOVF        _Flag20ms+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
 	GOTO        L_main36
-;FirmV_0_7_0.c,406 :: 		if(DebouncingDelay<DebouncingFix)
+;FirmV_0_7_0.c,401 :: 		if((Buzzer==1)&&(BuzzCounter<100))
+	BTFSS       PORTB+0, 5 
+	GOTO        L_main39
+	MOVLW       100
+	SUBWF       _BuzzCounter+0, 0 
+	BTFSC       STATUS+0, 0 
+	GOTO        L_main39
+L__main680:
+;FirmV_0_7_0.c,402 :: 		{BuzzCounter=BuzzCounter+1;}
+	INCF        _BuzzCounter+0, 1 
+L_main39:
+;FirmV_0_7_0.c,404 :: 		if((Buzzer==1)&&(LongBuzzFlag))
+	BTFSS       PORTB+0, 5 
+	GOTO        L_main42
+	MOVF        _LongBuzzFlag+0, 1 
+	BTFSC       STATUS+0, 2 
+	GOTO        L_main42
+L__main679:
+;FirmV_0_7_0.c,405 :: 		if(BuzzCounter>=25){BuzzFlag=0;LongBuzzFlag=0;Buzzer=0;}
+	MOVLW       25
+	SUBWF       _BuzzCounter+0, 0 
+	BTFSS       STATUS+0, 0 
+	GOTO        L_main43
+	CLRF        _BuzzFlag+0 
+	CLRF        _LongBuzzFlag+0 
+	BCF         PORTB+0, 5 
+L_main43:
+L_main42:
+;FirmV_0_7_0.c,407 :: 		if((Buzzer==1)&&(BuzzFlag)&&(!LongBuzzFlag))
+	BTFSS       PORTB+0, 5 
+	GOTO        L_main46
+	MOVF        _BuzzFlag+0, 1 
+	BTFSC       STATUS+0, 2 
+	GOTO        L_main46
+	MOVF        _LongBuzzFlag+0, 1 
+	BTFSS       STATUS+0, 2 
+	GOTO        L_main46
+L__main678:
+;FirmV_0_7_0.c,408 :: 		{BuzzFlag=0;LongBuzzFlag=0;Buzzer=0;}
+	CLRF        _BuzzFlag+0 
+	CLRF        _LongBuzzFlag+0 
+	BCF         PORTB+0, 5 
+L_main46:
+;FirmV_0_7_0.c,410 :: 		if(((BuzzFlag)||(LongBuzzFlag))&&(!Buzzer))
+	MOVF        _BuzzFlag+0, 1 
+	BTFSS       STATUS+0, 2 
+	GOTO        L__main677
+	MOVF        _LongBuzzFlag+0, 1 
+	BTFSS       STATUS+0, 2 
+	GOTO        L__main677
+	GOTO        L_main51
+L__main677:
+	BTFSC       PORTB+0, 5 
+	GOTO        L_main51
+L__main676:
+;FirmV_0_7_0.c,411 :: 		{Buzzer=1;BuzzCounter=0;}
+	BSF         PORTB+0, 5 
+	CLRF        _BuzzCounter+0 
+L_main51:
+;FirmV_0_7_0.c,414 :: 		if(DebouncingDelay<DebouncingFix)
 	MOVLW       5
 	SUBWF       _DebouncingDelay+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_main37
-;FirmV_0_7_0.c,407 :: 		DebouncingDelay=DebouncingDelay+1;
+	GOTO        L_main52
+;FirmV_0_7_0.c,415 :: 		DebouncingDelay=DebouncingDelay+1;
 	INCF        _DebouncingDelay+0, 1 
-L_main37:
-;FirmV_0_7_0.c,408 :: 		LCDUpdater();
+L_main52:
+;FirmV_0_7_0.c,416 :: 		LCDUpdater();
 	CALL        _LCDUpdater+0, 0
-;FirmV_0_7_0.c,409 :: 		if(KeyFlag<200)
+;FirmV_0_7_0.c,417 :: 		if(KeyFlag<200)
 	MOVLW       200
 	SUBWF       _KeyFlag+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_main38
-;FirmV_0_7_0.c,410 :: 		KeyFlag=KeyFlag+1;
+	GOTO        L_main53
+;FirmV_0_7_0.c,418 :: 		KeyFlag=KeyFlag+1;
 	INCF        _KeyFlag+0, 1 
-L_main38:
-;FirmV_0_7_0.c,411 :: 		Flag20ms=0;
+L_main53:
+;FirmV_0_7_0.c,419 :: 		Flag20ms=0;
 	CLRF        _Flag20ms+0 
-;FirmV_0_7_0.c,412 :: 		}
+;FirmV_0_7_0.c,420 :: 		}
 L_main36:
-;FirmV_0_7_0.c,414 :: 		if(Flag500ms==1)
+;FirmV_0_7_0.c,422 :: 		if(Flag500ms==1)
 	MOVF        _Flag500ms+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_main39
-;FirmV_0_7_0.c,416 :: 		ResetTaskEvents();
+	GOTO        L_main54
+;FirmV_0_7_0.c,424 :: 		ResetTaskEvents();
 	CALL        _ResetTaskEvents+0, 0
-;FirmV_0_7_0.c,417 :: 		TaskManager();
+;FirmV_0_7_0.c,425 :: 		TaskManager();
 	CALL        _TaskManager+0, 0
-;FirmV_0_7_0.c,418 :: 		Flag500ms=0;
+;FirmV_0_7_0.c,426 :: 		Flag500ms=0;
 	CLRF        _Flag500ms+0 
-;FirmV_0_7_0.c,419 :: 		}
-L_main39:
-;FirmV_0_7_0.c,420 :: 		EventHandler();
+;FirmV_0_7_0.c,427 :: 		}
+L_main54:
+;FirmV_0_7_0.c,428 :: 		EventHandler();
 	CALL        _EventHandler+0, 0
-;FirmV_0_7_0.c,421 :: 		StateManager();
+;FirmV_0_7_0.c,429 :: 		StateManager();
 	CALL        _StateManager+0, 0
-;FirmV_0_7_0.c,422 :: 		}
+;FirmV_0_7_0.c,430 :: 		}
 	GOTO        L_main34
-;FirmV_0_7_0.c,424 :: 		}
+;FirmV_0_7_0.c,432 :: 		}
 	GOTO        $+0
 ; end of _main
 
 _StateManager:
 
-;FirmV_0_7_0.c,449 :: 		void StateManager()
-;FirmV_0_7_0.c,455 :: 		switch(State)
-	GOTO        L_StateManager40
-;FirmV_0_7_0.c,458 :: 		case 0: State1(); break;
-L_StateManager42:
-	CALL        _State1+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,460 :: 		case 1: State1(); break;
-L_StateManager43:
-	CALL        _State1+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,462 :: 		case 2: State2(); break;
-L_StateManager44:
-	CALL        _State2+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,464 :: 		case 3: State3(); break;
-L_StateManager45:
-	CALL        _State3+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,466 :: 		case 4: State4(); break;
-L_StateManager46:
-	CALL        _State4+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,468 :: 		case 5: State5(); break;
-L_StateManager47:
-	CALL        _State5+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,470 :: 		case 6: State6(); break;
-L_StateManager48:
-	CALL        _State6+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,472 :: 		case 7: State7(); break;
-L_StateManager49:
-	CALL        _State7+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,474 :: 		case 8: State8(); break;
-L_StateManager50:
-	CALL        _State8+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,476 :: 		case 10:State00(); break;
-L_StateManager51:
-	CALL        _State00+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,478 :: 		case 100:Menu0(); break;
-L_StateManager52:
-	CALL        _Menu0+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,480 :: 		case 101:Menu1(); break;
-L_StateManager53:
-	CALL        _Menu1+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,482 :: 		case 102:Menu2(); break;
-L_StateManager54:
-	CALL        _Menu2+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,484 :: 		case 103:Menu3(); break;
-L_StateManager55:
-	CALL        _Menu3+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,486 :: 		case 200:LearnAuto(); break;
-L_StateManager56:
-	CALL        _LearnAuto+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,488 :: 		case 201:LearnManual(); break;
+;FirmV_0_7_0.c,457 :: 		void StateManager()
+;FirmV_0_7_0.c,460 :: 		switch(State)
+	GOTO        L_StateManager55
+;FirmV_0_7_0.c,463 :: 		case 0: State1(); break;
 L_StateManager57:
-	CALL        _LearnManual+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,490 :: 		case 250:About(); break;
+	CALL        _State1+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,465 :: 		case 1: State1(); break;
 L_StateManager58:
+	CALL        _State1+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,467 :: 		case 2: State2(); break;
+L_StateManager59:
+	CALL        _State2+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,469 :: 		case 3: State3(); break;
+L_StateManager60:
+	CALL        _State3+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,471 :: 		case 4: State4(); break;
+L_StateManager61:
+	CALL        _State4+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,473 :: 		case 5: State5(); break;
+L_StateManager62:
+	CALL        _State5+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,475 :: 		case 6: State6(); break;
+L_StateManager63:
+	CALL        _State6+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,477 :: 		case 7: State7(); break;
+L_StateManager64:
+	CALL        _State7+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,479 :: 		case 8: State8(); break;
+L_StateManager65:
+	CALL        _State8+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,481 :: 		case 10:State00(); break;
+L_StateManager66:
+	CALL        _State00+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,483 :: 		case 100:Menu0(); break;
+L_StateManager67:
+	CALL        _Menu0+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,485 :: 		case 101:Menu1(); break;
+L_StateManager68:
+	CALL        _Menu1+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,487 :: 		case 102:Menu2(); break;
+L_StateManager69:
+	CALL        _Menu2+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,489 :: 		case 103:Menu3(); break;
+L_StateManager70:
+	CALL        _Menu3+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,491 :: 		case 200:LearnAuto(); break;
+L_StateManager71:
+	CALL        _LearnAuto+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,493 :: 		case 201:LearnManual(); break;
+L_StateManager72:
+	CALL        _LearnManual+0, 0
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,495 :: 		case 250:About(); break;
+L_StateManager73:
 	CALL        _About+0, 0
-	GOTO        L_StateManager41
-;FirmV_0_7_0.c,492 :: 		}
-L_StateManager40:
+	GOTO        L_StateManager56
+;FirmV_0_7_0.c,497 :: 		}
+L_StateManager55:
 	MOVF        _State+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager42
+	GOTO        L_StateManager57
 	MOVF        _State+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager43
+	GOTO        L_StateManager58
 	MOVF        _State+0, 0 
 	XORLW       2
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager44
+	GOTO        L_StateManager59
 	MOVF        _State+0, 0 
 	XORLW       3
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager45
+	GOTO        L_StateManager60
 	MOVF        _State+0, 0 
 	XORLW       4
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager46
+	GOTO        L_StateManager61
 	MOVF        _State+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager47
+	GOTO        L_StateManager62
 	MOVF        _State+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager48
+	GOTO        L_StateManager63
 	MOVF        _State+0, 0 
 	XORLW       7
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager49
+	GOTO        L_StateManager64
 	MOVF        _State+0, 0 
 	XORLW       8
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager50
+	GOTO        L_StateManager65
 	MOVF        _State+0, 0 
 	XORLW       10
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager51
+	GOTO        L_StateManager66
 	MOVF        _State+0, 0 
 	XORLW       100
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager52
+	GOTO        L_StateManager67
 	MOVF        _State+0, 0 
 	XORLW       101
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager53
+	GOTO        L_StateManager68
 	MOVF        _State+0, 0 
 	XORLW       102
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager54
+	GOTO        L_StateManager69
 	MOVF        _State+0, 0 
 	XORLW       103
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager55
+	GOTO        L_StateManager70
 	MOVF        _State+0, 0 
 	XORLW       200
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager56
+	GOTO        L_StateManager71
 	MOVF        _State+0, 0 
 	XORLW       201
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager57
+	GOTO        L_StateManager72
 	MOVF        _State+0, 0 
 	XORLW       250
 	BTFSC       STATUS+0, 2 
-	GOTO        L_StateManager58
-L_StateManager41:
-;FirmV_0_7_0.c,493 :: 		}
+	GOTO        L_StateManager73
+L_StateManager56:
+;FirmV_0_7_0.c,498 :: 		}
 	RETURN      0
 ; end of _StateManager
 
 _StateTest:
 
-;FirmV_0_7_0.c,497 :: 		void StateTest()
-;FirmV_0_7_0.c,499 :: 		if (Events.Photocell==1)
+;FirmV_0_7_0.c,502 :: 		void StateTest()
+;FirmV_0_7_0.c,504 :: 		if (Events.Photocell==1)
 	MOVF        _Events+6, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_StateTest59
-;FirmV_0_7_0.c,500 :: 		LCDLine1[0]='1';
+	GOTO        L_StateTest74
+;FirmV_0_7_0.c,505 :: 		LCDLine1[0]='1';
 	MOVLW       49
 	MOVWF       _LCDLine1+0 
-	GOTO        L_StateTest60
-L_StateTest59:
-;FirmV_0_7_0.c,502 :: 		LCDLine1[0]='0';
+	GOTO        L_StateTest75
+L_StateTest74:
+;FirmV_0_7_0.c,507 :: 		LCDLine1[0]='0';
 	MOVLW       48
 	MOVWF       _LCDLine1+0 
-L_StateTest60:
-;FirmV_0_7_0.c,504 :: 		LCDUpdateFlag=1;
+L_StateTest75:
+;FirmV_0_7_0.c,509 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,506 :: 		}
+;FirmV_0_7_0.c,511 :: 		}
 	RETURN      0
 ; end of _StateTest
 
 _State00:
 
-;FirmV_0_7_0.c,510 :: 		void State00()
-;FirmV_0_7_0.c,515 :: 		Flasher=1;
+;FirmV_0_7_0.c,515 :: 		void State00()
+;FirmV_0_7_0.c,520 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,516 :: 		StartMotor(1,_Close);
+;FirmV_0_7_0.c,521 :: 		StartMotor(1,_Close);
 	MOVLW       1
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
 	CALL        _StartMotor+0, 0
-;FirmV_0_7_0.c,517 :: 		StartMotor(2,_Close);
+;FirmV_0_7_0.c,522 :: 		StartMotor(2,_Close);
 	MOVLW       2
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
 	CALL        _StartMotor+0, 0
-;FirmV_0_7_0.c,521 :: 		if(Events.Remote.b0==1)
+;FirmV_0_7_0.c,526 :: 		if(Events.Remote.b0==1)
 	BTFSS       _Events+4, 0 
-	GOTO        L_State0061
-;FirmV_0_7_0.c,522 :: 		{Flasher=0;StopMotor(1);StopMotor(2);
+	GOTO        L_State0076
+;FirmV_0_7_0.c,527 :: 		{Flasher=0;StopMotor(1);StopMotor(2);
 	BCF         PORTD+0, 7 
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
@@ -704,48 +763,48 @@ _State00:
 	MOVLW       2
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
-;FirmV_0_7_0.c,523 :: 		State=1;                }
+;FirmV_0_7_0.c,528 :: 		State=1;                }
 	MOVLW       1
 	MOVWF       _State+0 
-L_State0061:
-;FirmV_0_7_0.c,524 :: 		}
+L_State0076:
+;FirmV_0_7_0.c,529 :: 		}
 	RETURN      0
 ; end of _State00
 
 _State1:
 
-;FirmV_0_7_0.c,533 :: 		void State1()
-;FirmV_0_7_0.c,535 :: 		char delay=3;
+;FirmV_0_7_0.c,538 :: 		void State1()
+;FirmV_0_7_0.c,540 :: 		char delay=3;
 	MOVLW       3
 	MOVWF       State1_delay_L0+0 
-;FirmV_0_7_0.c,538 :: 		Flasher=0;
+;FirmV_0_7_0.c,543 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,540 :: 		if(Events.Keys==2)
+;FirmV_0_7_0.c,545 :: 		if(Events.Keys==2)
 	MOVF        _Events+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State162
-;FirmV_0_7_0.c,541 :: 		{State=100;MenuPointer=0;}
+	GOTO        L_State177
+;FirmV_0_7_0.c,546 :: 		{State=100;MenuPointer=0;}
 	MOVLW       100
 	MOVWF       _State+0 
 	CLRF        _MenuPointer+0 
-L_State162:
-;FirmV_0_7_0.c,543 :: 		ActiveDoors=3-Events.Remote;
+L_State177:
+;FirmV_0_7_0.c,548 :: 		ActiveDoors=3-Events.Remote;
 	MOVF        _Events+4, 0 
 	SUBLW       3
 	MOVWF       _ActiveDoors+0 
-;FirmV_0_7_0.c,547 :: 		if(Events.Remote!=0)
+;FirmV_0_7_0.c,552 :: 		if(Events.Remote!=0)
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State163
-;FirmV_0_7_0.c,550 :: 		ClearTasks(9);
+	GOTO        L_State178
+;FirmV_0_7_0.c,555 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,551 :: 		Flasher=1;
+;FirmV_0_7_0.c,556 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,552 :: 		AddTask(ms500+1,12);
+;FirmV_0_7_0.c,557 :: 		AddTask(ms500+1,12);
 	MOVLW       1
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -761,7 +820,7 @@ L_State162:
 	MOVLW       12
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,553 :: 		temp=ms500+delay;
+;FirmV_0_7_0.c,558 :: 		temp=ms500+delay;
 	MOVF        State1_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -782,7 +841,7 @@ L_State162:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,554 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,559 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -794,12 +853,12 @@ L_State162:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,555 :: 		if(OpenSoftStartTime!=0)
+;FirmV_0_7_0.c,560 :: 		if(OpenSoftStartTime!=0)
 	MOVF        _OpenSoftStartTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State164
-;FirmV_0_7_0.c,556 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
+	GOTO        L_State179
+;FirmV_0_7_0.c,561 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -813,9 +872,9 @@ L_State162:
 	CALL        _AddTask+0, 0
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
-	GOTO        L_State165
-L_State164:
-;FirmV_0_7_0.c,558 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
+	GOTO        L_State180
+L_State179:
+;FirmV_0_7_0.c,563 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -828,8 +887,8 @@ L_State164:
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
 	CLRF        _M1isSlow+0 
-L_State165:
-;FirmV_0_7_0.c,559 :: 		temp=ms500+OpenSoftStartTime+OverloadDelay+delay;
+L_State180:
+;FirmV_0_7_0.c,564 :: 		temp=ms500+OpenSoftStartTime+OverloadDelay+delay;
 	MOVF        _OpenSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -862,7 +921,7 @@ L_State165:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,560 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,565 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -874,7 +933,7 @@ L_State165:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,561 :: 		temp=ms500+OpenSoftStartTime+delay;
+;FirmV_0_7_0.c,566 :: 		temp=ms500+OpenSoftStartTime+delay;
 	MOVF        _OpenSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -901,7 +960,7 @@ L_State165:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,562 :: 		AddTask(temp,5);//Speed up after soft start
+;FirmV_0_7_0.c,567 :: 		AddTask(temp,5);//Speed up after soft start
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -913,12 +972,12 @@ L_State165:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,563 :: 		if(OpenSoftStopTime!=0)
+;FirmV_0_7_0.c,568 :: 		if(OpenSoftStopTime!=0)
 	MOVF        _OpenSoftStopTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State166
-;FirmV_0_7_0.c,564 :: 		{temp=ms500+Door1OpenTime-OpenSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
+	GOTO        L_State181
+;FirmV_0_7_0.c,569 :: 		{temp=ms500+Door1OpenTime-OpenSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
 	MOVF        _Door1OpenTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -962,8 +1021,8 @@ L_State165:
 	MOVLW       7
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State166:
-;FirmV_0_7_0.c,565 :: 		temp=ms500+Door1OpenTime+delay;
+L_State181:
+;FirmV_0_7_0.c,570 :: 		temp=ms500+Door1OpenTime+delay;
 	MOVF        _Door1OpenTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -990,7 +1049,7 @@ L_State166:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,566 :: 		AddTask(temp,3);//Stop motor
+;FirmV_0_7_0.c,571 :: 		AddTask(temp,3);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1002,17 +1061,17 @@ L_State166:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,568 :: 		if((Door2OpenTime!=0)&&(ActiveDoors==2))
+;FirmV_0_7_0.c,573 :: 		if((Door2OpenTime!=0)&&(ActiveDoors==2))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State169
+	GOTO        L_State184
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State169
-L__State1660:
-;FirmV_0_7_0.c,570 :: 		temp=ms500+ActionTimeDiff+delay;
+	GOTO        L_State184
+L__State1681:
+;FirmV_0_7_0.c,575 :: 		temp=ms500+ActionTimeDiff+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1039,7 +1098,7 @@ L__State1660:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,571 :: 		AddTask(temp,2);
+;FirmV_0_7_0.c,576 :: 		AddTask(temp,2);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1051,12 +1110,12 @@ L__State1660:
 	MOVLW       2
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,572 :: 		if(OpenSoftStartTime!=0)
+;FirmV_0_7_0.c,577 :: 		if(OpenSoftStartTime!=0)
 	MOVF        _OpenSoftStartTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State170
-;FirmV_0_7_0.c,573 :: 		{temp=ms500+ActionTimeDiff+delay;AddTask(temp,8); M2isSlow=1;}//speed down
+	GOTO        L_State185
+;FirmV_0_7_0.c,578 :: 		{temp=ms500+ActionTimeDiff+delay;AddTask(temp,8); M2isSlow=1;}//speed down
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1096,9 +1155,9 @@ L__State1660:
 	CALL        _AddTask+0, 0
 	MOVLW       1
 	MOVWF       _M2isSlow+0 
-	GOTO        L_State171
-L_State170:
-;FirmV_0_7_0.c,575 :: 		{temp=ms500+ActionTimeDiff+delay;AddTask(temp,6); M2isSlow=0;}//speed up
+	GOTO        L_State186
+L_State185:
+;FirmV_0_7_0.c,580 :: 		{temp=ms500+ActionTimeDiff+delay;AddTask(temp,6); M2isSlow=0;}//speed up
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1137,8 +1196,8 @@ L_State170:
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
 	CLRF        _M2isSlow+0 
-L_State171:
-;FirmV_0_7_0.c,576 :: 		temp=ms500+ActionTimeDiff+OpenSoftStartTime+OverloadDelay+delay;
+L_State186:
+;FirmV_0_7_0.c,581 :: 		temp=ms500+ActionTimeDiff+OpenSoftStartTime+OverloadDelay+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1177,7 +1236,7 @@ L_State171:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,577 :: 		AddTask(temp,11); //overload check
+;FirmV_0_7_0.c,582 :: 		AddTask(temp,11); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1189,7 +1248,7 @@ L_State171:
 	MOVLW       11
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,578 :: 		temp=ms500+ActionTimeDiff+OpenSoftStartTime+delay;
+;FirmV_0_7_0.c,583 :: 		temp=ms500+ActionTimeDiff+OpenSoftStartTime+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1222,7 +1281,7 @@ L_State171:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,579 :: 		AddTask(temp,6);//Speed up after soft start
+;FirmV_0_7_0.c,584 :: 		AddTask(temp,6);//Speed up after soft start
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1234,12 +1293,12 @@ L_State171:
 	MOVLW       6
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,580 :: 		if(OpenSoftStopTime!=0)
+;FirmV_0_7_0.c,585 :: 		if(OpenSoftStopTime!=0)
 	MOVF        _OpenSoftStopTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State172
-;FirmV_0_7_0.c,581 :: 		{temp=ms500+ActionTimeDiff+Door2OpenTime-OpenSoftStopTime+delay;AddTask(temp,8);}//Speed down for soft stop
+	GOTO        L_State187
+;FirmV_0_7_0.c,586 :: 		{temp=ms500+ActionTimeDiff+Door2OpenTime-OpenSoftStopTime+delay;AddTask(temp,8);}//Speed down for soft stop
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1289,8 +1348,8 @@ L_State171:
 	MOVLW       8
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State172:
-;FirmV_0_7_0.c,582 :: 		temp=ms500+Door2OpenTime+ActionTimeDiff+delay;
+L_State187:
+;FirmV_0_7_0.c,587 :: 		temp=ms500+Door2OpenTime+ActionTimeDiff+delay;
 	MOVF        _Door2OpenTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1323,7 +1382,7 @@ L_State172:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,583 :: 		AddTask(temp,4);//Stop motor
+;FirmV_0_7_0.c,588 :: 		AddTask(temp,4);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1335,19 +1394,19 @@ L_State172:
 	MOVLW       4
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,584 :: 		}
-L_State169:
-;FirmV_0_7_0.c,586 :: 		if(AutoCloseTime!=0)
+;FirmV_0_7_0.c,589 :: 		}
+L_State184:
+;FirmV_0_7_0.c,591 :: 		if(AutoCloseTime!=0)
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State1761
+	GOTO        L__State1782
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State1761:
+L__State1782:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State173
-;FirmV_0_7_0.c,587 :: 		{temp=ms500+AutoCloseTime+delay;AddTask(ms500+AutoCloseTime+delay,9);}
+	GOTO        L_State188
+;FirmV_0_7_0.c,592 :: 		{temp=ms500+AutoCloseTime+delay;AddTask(ms500+AutoCloseTime+delay,9);}
 	MOVF        _AutoCloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1385,63 +1444,63 @@ L__State1761:
 	MOVLW       9
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State173:
-;FirmV_0_7_0.c,589 :: 		OpenDone=3;
+L_State188:
+;FirmV_0_7_0.c,594 :: 		OpenDone=3;
 	MOVLW       3
 	MOVWF       _OpenDone+0 
-;FirmV_0_7_0.c,590 :: 		OverloadCheckFlag1=0;
+;FirmV_0_7_0.c,595 :: 		OverloadCheckFlag1=0;
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,591 :: 		OverloadCheckFlag2=0;
+;FirmV_0_7_0.c,596 :: 		OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,592 :: 		State=3;
+;FirmV_0_7_0.c,597 :: 		State=3;
 	MOVLW       3
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,593 :: 		PassFlag=0;
+;FirmV_0_7_0.c,598 :: 		PassFlag=0;
 	CLRF        _PassFlag+0 
-;FirmV_0_7_0.c,594 :: 		}
-L_State163:
-;FirmV_0_7_0.c,595 :: 		}
+;FirmV_0_7_0.c,599 :: 		}
+L_State178:
+;FirmV_0_7_0.c,600 :: 		}
 	RETURN      0
 ; end of _State1
 
 _State2:
 
-;FirmV_0_7_0.c,609 :: 		void State2()
-;FirmV_0_7_0.c,611 :: 		char delay=2;
+;FirmV_0_7_0.c,614 :: 		void State2()
+;FirmV_0_7_0.c,616 :: 		char delay=2;
 	MOVLW       2
 	MOVWF       State2_delay_L0+0 
-;FirmV_0_7_0.c,613 :: 		Flasher=0;
+;FirmV_0_7_0.c,618 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,615 :: 		if((Events.Remote!=0)||(CheckTask(9)==1))
+;FirmV_0_7_0.c,620 :: 		if((Events.Remote!=0)||(CheckTask(9)==1))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State2665
+	GOTO        L__State2686
 	MOVLW       9
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State2665
-	GOTO        L_State276
-L__State2665:
-;FirmV_0_7_0.c,618 :: 		ClearTasks(9);
+	GOTO        L__State2686
+	GOTO        L_State291
+L__State2686:
+;FirmV_0_7_0.c,623 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,619 :: 		if((Door2CloseTime==0)||(ActiveDoors==1))
+;FirmV_0_7_0.c,624 :: 		if((Door2CloseTime==0)||(ActiveDoors==1))
 	MOVF        _Door2CloseTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State2664
+	GOTO        L__State2685
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State2664
-	GOTO        L_State279
-L__State2664:
-;FirmV_0_7_0.c,621 :: 		temp=ms500+delay;
+	GOTO        L__State2685
+	GOTO        L_State294
+L__State2685:
+;FirmV_0_7_0.c,626 :: 		temp=ms500+delay;
 	MOVF        State2_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1462,7 +1521,7 @@ L__State2664:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,622 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,627 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1474,12 +1533,12 @@ L__State2664:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,623 :: 		if(CloseSoftStartTime!=0)
+;FirmV_0_7_0.c,628 :: 		if(CloseSoftStartTime!=0)
 	MOVF        _CloseSoftStartTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State280
-;FirmV_0_7_0.c,624 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
+	GOTO        L_State295
+;FirmV_0_7_0.c,629 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -1493,9 +1552,9 @@ L__State2664:
 	CALL        _AddTask+0, 0
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
-	GOTO        L_State281
-L_State280:
-;FirmV_0_7_0.c,626 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
+	GOTO        L_State296
+L_State295:
+;FirmV_0_7_0.c,631 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -1508,8 +1567,8 @@ L_State280:
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
 	CLRF        _M1isSlow+0 
-L_State281:
-;FirmV_0_7_0.c,627 :: 		temp=ms500+CloseSoftStartTime+OverloadDelay+delay;
+L_State296:
+;FirmV_0_7_0.c,632 :: 		temp=ms500+CloseSoftStartTime+OverloadDelay+delay;
 	MOVF        _CloseSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1542,7 +1601,7 @@ L_State281:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,628 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,633 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1554,7 +1613,7 @@ L_State281:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,629 :: 		temp=ms500+CloseSoftStartTime+delay;
+;FirmV_0_7_0.c,634 :: 		temp=ms500+CloseSoftStartTime+delay;
 	MOVF        _CloseSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1581,7 +1640,7 @@ L_State281:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,630 :: 		AddTask(temp,5);//Speed up after soft start
+;FirmV_0_7_0.c,635 :: 		AddTask(temp,5);//Speed up after soft start
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1593,12 +1652,12 @@ L_State281:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,631 :: 		if(CloseSoftStopTime!=0)
+;FirmV_0_7_0.c,636 :: 		if(CloseSoftStopTime!=0)
 	MOVF        _CloseSoftStopTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State282
-;FirmV_0_7_0.c,632 :: 		{temp=ms500+Door1CloseTime-CloseSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
+	GOTO        L_State297
+;FirmV_0_7_0.c,637 :: 		{temp=ms500+Door1CloseTime-CloseSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1642,13 +1701,13 @@ L_State281:
 	MOVLW       7
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State282:
-;FirmV_0_7_0.c,633 :: 		if(LockForce!=0)
+L_State297:
+;FirmV_0_7_0.c,638 :: 		if(LockForce!=0)
 	MOVF        _LockForce+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State283
-;FirmV_0_7_0.c,634 :: 		{temp=ms500+Door1CloseTime+delay;AddTask(temp,5);AddTask(temp+LockForceTime,3);}
+	GOTO        L_State298
+;FirmV_0_7_0.c,639 :: 		{temp=ms500+Door1CloseTime+delay;AddTask(temp,5);AddTask(temp+LockForceTime,3);}
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1686,7 +1745,7 @@ L_State282:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-	MOVLW       3
+	MOVLW       2
 	ADDWF       _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVLW       0
@@ -1701,9 +1760,9 @@ L_State282:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-	GOTO        L_State284
-L_State283:
-;FirmV_0_7_0.c,636 :: 		{temp=ms500+Door1CloseTime+delay;AddTask(temp,3);}
+	GOTO        L_State299
+L_State298:
+;FirmV_0_7_0.c,641 :: 		{temp=ms500+Door1CloseTime+delay;AddTask(temp,3);}
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1741,20 +1800,20 @@ L_State283:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State284:
-;FirmV_0_7_0.c,638 :: 		}
-L_State279:
-;FirmV_0_7_0.c,640 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
+L_State299:
+;FirmV_0_7_0.c,643 :: 		}
+L_State294:
+;FirmV_0_7_0.c,645 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
 	MOVF        _Door2CloseTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State287
+	GOTO        L_State2102
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State287
-L__State2663:
-;FirmV_0_7_0.c,642 :: 		temp=ms500+delay;
+	GOTO        L_State2102
+L__State2684:
+;FirmV_0_7_0.c,647 :: 		temp=ms500+delay;
 	MOVF        State2_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1775,7 +1834,7 @@ L__State2663:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,643 :: 		AddTask(temp,2);
+;FirmV_0_7_0.c,648 :: 		AddTask(temp,2);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1787,12 +1846,12 @@ L__State2663:
 	MOVLW       2
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,644 :: 		if(CloseSoftStartTime!=0)
+;FirmV_0_7_0.c,649 :: 		if(CloseSoftStartTime!=0)
 	MOVF        _CloseSoftStartTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State288
-;FirmV_0_7_0.c,645 :: 		{AddTask(temp,8); M2isSlow=1;}//speed down
+	GOTO        L_State2103
+;FirmV_0_7_0.c,650 :: 		{AddTask(temp,8); M2isSlow=1;}//speed down
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -1806,9 +1865,9 @@ L__State2663:
 	CALL        _AddTask+0, 0
 	MOVLW       1
 	MOVWF       _M2isSlow+0 
-	GOTO        L_State289
-L_State288:
-;FirmV_0_7_0.c,647 :: 		{AddTask(temp,6); M2isSlow=0;}//speed up
+	GOTO        L_State2104
+L_State2103:
+;FirmV_0_7_0.c,652 :: 		{AddTask(temp,6); M2isSlow=0;}//speed up
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -1821,8 +1880,8 @@ L_State288:
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
 	CLRF        _M2isSlow+0 
-L_State289:
-;FirmV_0_7_0.c,648 :: 		temp=ms500+CloseSoftStartTime+OverloadDelay+delay;
+L_State2104:
+;FirmV_0_7_0.c,653 :: 		temp=ms500+CloseSoftStartTime+OverloadDelay+delay;
 	MOVF        _CloseSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1855,7 +1914,7 @@ L_State289:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,649 :: 		AddTask(temp,11); //overload check
+;FirmV_0_7_0.c,654 :: 		AddTask(temp,11); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1867,7 +1926,7 @@ L_State289:
 	MOVLW       11
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,650 :: 		temp=ms500+CloseSoftStartTime+delay;
+;FirmV_0_7_0.c,655 :: 		temp=ms500+CloseSoftStartTime+delay;
 	MOVF        _CloseSoftStartTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1894,7 +1953,7 @@ L_State289:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,651 :: 		AddTask(temp,6);//Speed up after soft start
+;FirmV_0_7_0.c,656 :: 		AddTask(temp,6);//Speed up after soft start
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1906,12 +1965,12 @@ L_State289:
 	MOVLW       6
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,652 :: 		if(CloseSoftStopTime!=0)
+;FirmV_0_7_0.c,657 :: 		if(CloseSoftStopTime!=0)
 	MOVF        _CloseSoftStopTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State290
-;FirmV_0_7_0.c,653 :: 		{temp=ms500+Door2CloseTime-CloseSoftStopTime+delay;AddTask(temp,8);}//Speed down for soft stop
+	GOTO        L_State2105
+;FirmV_0_7_0.c,658 :: 		{temp=ms500+Door2CloseTime-CloseSoftStopTime+delay;AddTask(temp,8);}//Speed down for soft stop
 	MOVF        _Door2CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1955,8 +2014,8 @@ L_State289:
 	MOVLW       8
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State290:
-;FirmV_0_7_0.c,655 :: 		temp=ms500+Door2CloseTime+delay;
+L_State2105:
+;FirmV_0_7_0.c,660 :: 		temp=ms500+Door2CloseTime+delay;
 	MOVF        _Door2CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -1983,7 +2042,7 @@ L_State290:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,656 :: 		AddTask(temp,4);//Stop motor
+;FirmV_0_7_0.c,661 :: 		AddTask(temp,4);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -1995,7 +2054,7 @@ L_State290:
 	MOVLW       4
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,660 :: 		temp=ms500+ActionTimeDiff+delay;
+;FirmV_0_7_0.c,665 :: 		temp=ms500+ActionTimeDiff+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2022,7 +2081,7 @@ L_State290:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,661 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,666 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -2034,12 +2093,12 @@ L_State290:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,662 :: 		if(CloseSoftStartTime!=0)
+;FirmV_0_7_0.c,667 :: 		if(CloseSoftStartTime!=0)
 	MOVF        _CloseSoftStartTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State291
-;FirmV_0_7_0.c,663 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
+	GOTO        L_State2106
+;FirmV_0_7_0.c,668 :: 		{AddTask(temp,7); M1isSlow=1;}//speed down
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -2053,9 +2112,9 @@ L_State290:
 	CALL        _AddTask+0, 0
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
-	GOTO        L_State292
-L_State291:
-;FirmV_0_7_0.c,665 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
+	GOTO        L_State2107
+L_State2106:
+;FirmV_0_7_0.c,670 :: 		{AddTask(temp,5); M1isSlow=0;}//speed up
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -2068,8 +2127,8 @@ L_State291:
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
 	CLRF        _M1isSlow+0 
-L_State292:
-;FirmV_0_7_0.c,666 :: 		temp=ms500+ActionTimeDiff+CloseSoftStartTime+OverloadDelay+delay;
+L_State2107:
+;FirmV_0_7_0.c,671 :: 		temp=ms500+ActionTimeDiff+CloseSoftStartTime+OverloadDelay+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2108,7 +2167,7 @@ L_State292:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,667 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,672 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -2120,7 +2179,7 @@ L_State292:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,668 :: 		temp=ms500+ActionTimeDiff+CloseSoftStartTime+delay;
+;FirmV_0_7_0.c,673 :: 		temp=ms500+ActionTimeDiff+CloseSoftStartTime+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2153,7 +2212,7 @@ L_State292:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,669 :: 		AddTask(temp,5);//Speed up after soft start
+;FirmV_0_7_0.c,674 :: 		AddTask(temp,5);//Speed up after soft start
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -2165,12 +2224,12 @@ L_State292:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,670 :: 		if(CloseSoftStopTime!=0)
+;FirmV_0_7_0.c,675 :: 		if(CloseSoftStopTime!=0)
 	MOVF        _CloseSoftStopTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State293
-;FirmV_0_7_0.c,671 :: 		{temp=ms500+ActionTimeDiff+Door1CloseTime-CloseSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
+	GOTO        L_State2108
+;FirmV_0_7_0.c,676 :: 		{temp=ms500+ActionTimeDiff+Door1CloseTime-CloseSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2220,13 +2279,13 @@ L_State292:
 	MOVLW       7
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State293:
-;FirmV_0_7_0.c,672 :: 		if(LockForce!=0)
+L_State2108:
+;FirmV_0_7_0.c,677 :: 		if(LockForce!=0)
 	MOVF        _LockForce+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State294
-;FirmV_0_7_0.c,673 :: 		{temp=ms500+Door1CloseTime+ActionTimeDiff+delay;AddTask(temp,5);AddTask(temp+LockForceTime,3);}
+	GOTO        L_State2109
+;FirmV_0_7_0.c,678 :: 		{temp=ms500+Door1CloseTime+ActionTimeDiff+delay;AddTask(temp,5);AddTask(temp+LockForceTime,3);}
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2270,7 +2329,7 @@ L_State293:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-	MOVLW       3
+	MOVLW       2
 	ADDWF       _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVLW       0
@@ -2285,9 +2344,9 @@ L_State293:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-	GOTO        L_State295
-L_State294:
-;FirmV_0_7_0.c,675 :: 		{temp=ms500+Door1CloseTime+ActionTimeDiff+delay;AddTask(temp,3);}
+	GOTO        L_State2110
+L_State2109:
+;FirmV_0_7_0.c,680 :: 		{temp=ms500+Door1CloseTime+ActionTimeDiff+delay;AddTask(temp,3);}
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2331,39 +2390,39 @@ L_State294:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-L_State295:
-;FirmV_0_7_0.c,677 :: 		}
-L_State287:
-;FirmV_0_7_0.c,680 :: 		CloseDone=3;
+L_State2110:
+;FirmV_0_7_0.c,682 :: 		}
+L_State2102:
+;FirmV_0_7_0.c,685 :: 		CloseDone=3;
 	MOVLW       3
 	MOVWF       _CloseDone+0 
-;FirmV_0_7_0.c,681 :: 		OverloadCheckFlag1=0;
+;FirmV_0_7_0.c,686 :: 		OverloadCheckFlag1=0;
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,682 :: 		OverloadCheckFlag2=0;
+;FirmV_0_7_0.c,687 :: 		OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,683 :: 		State=4;
+;FirmV_0_7_0.c,688 :: 		State=4;
 	MOVLW       4
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,684 :: 		}
-L_State276:
-;FirmV_0_7_0.c,686 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
+;FirmV_0_7_0.c,689 :: 		}
+L_State291:
+;FirmV_0_7_0.c,691 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State298
+	GOTO        L_State2113
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State2762
+	GOTO        L__State2783
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State2762:
+L__State2783:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State298
+	GOTO        L_State2113
 	MOVF        _PassFlag+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State298
-L__State2662:
-;FirmV_0_7_0.c,687 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S2 Auto Close Deleted");}
+	GOTO        L_State2113
+L__State2683:
+;FirmV_0_7_0.c,692 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S2 Auto Close Deleted");}
 	MOVLW       1
 	MOVWF       _PassFlag+0 
 	CALL        _GetAutocloseTime+0, 0
@@ -2389,30 +2448,30 @@ L__State2662:
 	MOVLW       hi_addr(?lstr3_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State298:
-;FirmV_0_7_0.c,689 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
+L_State2113:
+;FirmV_0_7_0.c,694 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
 	MOVF        _PassFlag+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State2101
+	GOTO        L_State2116
 	BTFSC       _Events+6, 0 
-	GOTO        L_State2101
+	GOTO        L_State2116
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State2763
+	GOTO        L__State2784
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State2763:
+L__State2784:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State2101
-L__State2661:
-;FirmV_0_7_0.c,690 :: 		if(CloseAfterPass==0)
+	GOTO        L_State2116
+L__State2682:
+;FirmV_0_7_0.c,695 :: 		if(CloseAfterPass==0)
 	MOVF        _CloseAfterPass+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State2102
-;FirmV_0_7_0.c,691 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S2 Insert 9 at:");Logger(t);}
+	GOTO        L_State2117
+;FirmV_0_7_0.c,696 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S2 Insert 9 at:");Logger(t);}
 	MOVF        __AC+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2483,9 +2542,9 @@ L__State2661:
 	MOVLW       hi_addr(_t+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-	GOTO        L_State2103
-L_State2102:
-;FirmV_0_7_0.c,693 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S2 Insert 9 at:");Logger(t);}
+	GOTO        L_State2118
+L_State2117:
+;FirmV_0_7_0.c,698 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S2 Insert 9 at:");Logger(t);}
 	MOVF        _CloseAfterPass+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -2556,25 +2615,25 @@ L_State2102:
 	MOVLW       hi_addr(_t+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State2103:
-L_State2101:
-;FirmV_0_7_0.c,695 :: 		}
+L_State2118:
+L_State2116:
+;FirmV_0_7_0.c,700 :: 		}
 	RETURN      0
 ; end of _State2
 
 _State3:
 
-;FirmV_0_7_0.c,710 :: 		void State3()
-;FirmV_0_7_0.c,712 :: 		Flasher=1;
+;FirmV_0_7_0.c,715 :: 		void State3()
+;FirmV_0_7_0.c,717 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,714 :: 		if(CheckTask(1))
+;FirmV_0_7_0.c,719 :: 		if(CheckTask(1))
 	MOVLW       1
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3104
-;FirmV_0_7_0.c,715 :: 		{StartMotor(1,_Open);Logger("S3 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State3119
+;FirmV_0_7_0.c,720 :: 		{StartMotor(1,_Open);Logger("S3 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       1
 	MOVWF       FARG_StartMotor+0 
 	MOVLW       1
@@ -2645,15 +2704,15 @@ _State3:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State3104:
-;FirmV_0_7_0.c,717 :: 		if(CheckTask(2))
+L_State3119:
+;FirmV_0_7_0.c,722 :: 		if(CheckTask(2))
 	MOVLW       2
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3105
-;FirmV_0_7_0.c,718 :: 		{StartMotor(2,_Open);Logger("S3 Motor2Start"); Lock=0;}
+	GOTO        L_State3120
+;FirmV_0_7_0.c,723 :: 		{StartMotor(2,_Open);Logger("S3 Motor2Start"); Lock=0;}
 	MOVLW       2
 	MOVWF       FARG_StartMotor+0 
 	MOVLW       1
@@ -2694,15 +2753,15 @@ L_State3104:
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
 	BCF         PORTD+0, 6 
-L_State3105:
-;FirmV_0_7_0.c,720 :: 		if(CheckTask(5))
+L_State3120:
+;FirmV_0_7_0.c,725 :: 		if(CheckTask(5))
 	MOVLW       5
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3106
-;FirmV_0_7_0.c,721 :: 		{SetMotorSpeed(1,Motor2FullSpeed);OverloadCheckFlag1=0; M1isSlow=0;Logger("S3 Motor1 Fast");}
+	GOTO        L_State3121
+;FirmV_0_7_0.c,726 :: 		{SetMotorSpeed(1,Motor2FullSpeed);OverloadCheckFlag1=0; M1isSlow=0;Logger("S3 Motor1 Fast");}
 	MOVLW       1
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
@@ -2744,15 +2803,15 @@ L_State3105:
 	MOVLW       hi_addr(?lstr8_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3106:
-;FirmV_0_7_0.c,723 :: 		if(CheckTask(7))
+L_State3121:
+;FirmV_0_7_0.c,728 :: 		if(CheckTask(7))
 	MOVLW       7
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3107
-;FirmV_0_7_0.c,724 :: 		{SetMotorSpeed(0,Motor2FullSpeed); M1isSlow=1;Logger("S3 Motor1 Slow");}
+	GOTO        L_State3122
+;FirmV_0_7_0.c,729 :: 		{SetMotorSpeed(0,Motor2FullSpeed); M1isSlow=1;Logger("S3 Motor1 Slow");}
 	CLRF        FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
@@ -2793,15 +2852,15 @@ L_State3106:
 	MOVLW       hi_addr(?lstr9_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3107:
-;FirmV_0_7_0.c,726 :: 		if(CheckTask(6))
+L_State3122:
+;FirmV_0_7_0.c,731 :: 		if(CheckTask(6))
 	MOVLW       6
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3108
-;FirmV_0_7_0.c,727 :: 		{SetMotorSpeed(Motor1FullSpeed,1);OverloadCheckFlag2=0; M2isSlow=0;Logger("S3 Motor2 Fast");}
+	GOTO        L_State3123
+;FirmV_0_7_0.c,732 :: 		{SetMotorSpeed(Motor1FullSpeed,1);OverloadCheckFlag2=0; M2isSlow=0;Logger("S3 Motor2 Fast");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVLW       1
@@ -2843,15 +2902,15 @@ L_State3107:
 	MOVLW       hi_addr(?lstr10_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3108:
-;FirmV_0_7_0.c,729 :: 		if(CheckTask(8))
+L_State3123:
+;FirmV_0_7_0.c,734 :: 		if(CheckTask(8))
 	MOVLW       8
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3109
-;FirmV_0_7_0.c,730 :: 		{SetMotorSpeed(Motor1FullSpeed,0); M2isSlow=1;Logger("S3 Motor2 Slow");}
+	GOTO        L_State3124
+;FirmV_0_7_0.c,735 :: 		{SetMotorSpeed(Motor1FullSpeed,0); M2isSlow=1;Logger("S3 Motor2 Slow");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	CLRF        FARG_SetMotorSpeed+0 
@@ -2892,15 +2951,15 @@ L_State3108:
 	MOVLW       hi_addr(?lstr11_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3109:
-;FirmV_0_7_0.c,732 :: 		if(CheckTask(10))
+L_State3124:
+;FirmV_0_7_0.c,737 :: 		if(CheckTask(10))
 	MOVLW       10
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3110
-;FirmV_0_7_0.c,733 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S3 Overflow Flag1 Set");}
+	GOTO        L_State3125
+;FirmV_0_7_0.c,738 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S3 Overflow Flag1 Set");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
 	MOVLW       1
@@ -2926,15 +2985,15 @@ L_State3109:
 	MOVLW       hi_addr(?lstr12_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3110:
-;FirmV_0_7_0.c,735 :: 		if(CheckTask(11))
+L_State3125:
+;FirmV_0_7_0.c,740 :: 		if(CheckTask(11))
 	MOVLW       11
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3111
-;FirmV_0_7_0.c,736 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S3 Overflow Flag2 Set");}
+	GOTO        L_State3126
+;FirmV_0_7_0.c,741 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S3 Overflow Flag2 Set");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
 	MOVLW       2
@@ -2960,15 +3019,15 @@ L_State3110:
 	MOVLW       hi_addr(?lstr13_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3111:
-;FirmV_0_7_0.c,738 :: 		if(CheckTask(3))
+L_State3126:
+;FirmV_0_7_0.c,743 :: 		if(CheckTask(3))
 	MOVLW       3
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3112
-;FirmV_0_7_0.c,739 :: 		{OpenDone.b0=0; StopMotor(1);Logger("S3 Motor1 Stop");}
+	GOTO        L_State3127
+;FirmV_0_7_0.c,744 :: 		{OpenDone.b0=0; StopMotor(1);Logger("S3 Motor1 Stop");}
 	BCF         _OpenDone+0, 0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
@@ -3007,15 +3066,15 @@ L_State3111:
 	MOVLW       hi_addr(?lstr14_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3112:
-;FirmV_0_7_0.c,741 :: 		if(CheckTask(4))
+L_State3127:
+;FirmV_0_7_0.c,746 :: 		if(CheckTask(4))
 	MOVLW       4
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3113
-;FirmV_0_7_0.c,742 :: 		{OpenDone.b1=0; StopMotor(2);Logger("S3 Motor2 Stop");}
+	GOTO        L_State3128
+;FirmV_0_7_0.c,747 :: 		{OpenDone.b1=0; StopMotor(2);Logger("S3 Motor2 Stop");}
 	BCF         _OpenDone+0, 1 
 	MOVLW       2
 	MOVWF       FARG_StopMotor+0 
@@ -3054,30 +3113,30 @@ L_State3112:
 	MOVLW       hi_addr(?lstr15_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State3113:
-;FirmV_0_7_0.c,744 :: 		if(CheckTask(12))
+L_State3128:
+;FirmV_0_7_0.c,749 :: 		if(CheckTask(12))
 	MOVLW       12
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3114
-;FirmV_0_7_0.c,745 :: 		{Lock=1;}
+	GOTO        L_State3129
+;FirmV_0_7_0.c,750 :: 		{Lock=1;}
 	BSF         PORTD+0, 6 
-L_State3114:
-;FirmV_0_7_0.c,747 :: 		if((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)&&(M1isSlow==0))
+L_State3129:
+;FirmV_0_7_0.c,752 :: 		if((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)&&(M1isSlow==0))
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3117
+	GOTO        L_State3132
 	BTFSS       _Events+5, 0 
-	GOTO        L_State3117
+	GOTO        L_State3132
 	MOVF        _M1isSlow+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3117
-L__State3671:
-;FirmV_0_7_0.c,748 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S3 Motor1 Collision");ClearTasks(9);
+	GOTO        L_State3132
+L__State3692:
+;FirmV_0_7_0.c,753 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S3 Motor1 Collision");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -3111,7 +3170,7 @@ L__State3671:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,749 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,754 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -3142,20 +3201,20 @@ L__State3671:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3117:
-;FirmV_0_7_0.c,751 :: 		if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
+L_State3132:
+;FirmV_0_7_0.c,756 :: 		if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3120
+	GOTO        L_State3135
 	BTFSS       _Events+5, 1 
-	GOTO        L_State3120
+	GOTO        L_State3135
 	MOVF        _M2isSlow+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3120
-L__State3670:
-;FirmV_0_7_0.c,752 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S3 Motor2 Collision");ClearTasks(9);
+	GOTO        L_State3135
+L__State3691:
+;FirmV_0_7_0.c,757 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S3 Motor2 Collision");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -3189,7 +3248,7 @@ L__State3670:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,753 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,758 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -3220,29 +3279,29 @@ L__State3670:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3120:
-;FirmV_0_7_0.c,755 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
+L_State3135:
+;FirmV_0_7_0.c,760 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State3669
+	GOTO        L__State3690
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State3669
-	GOTO        L_State3123
-L__State3669:
-;FirmV_0_7_0.c,756 :: 		OpenDone.b1=0;
+	GOTO        L__State3690
+	GOTO        L_State3138
+L__State3690:
+;FirmV_0_7_0.c,761 :: 		OpenDone.b1=0;
 	BCF         _OpenDone+0, 1 
-L_State3123:
-;FirmV_0_7_0.c,758 :: 		if((Events.Photocell.b0==1)&&(OpenPhEnable))
+L_State3138:
+;FirmV_0_7_0.c,763 :: 		if((Events.Photocell.b0==1)&&(OpenPhEnable))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State3126
+	GOTO        L_State3141
 	MOVF        _OpenPhEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3126
-L__State3668:
-;FirmV_0_7_0.c,759 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Photocell Int");ClearTasks(9);
+	GOTO        L_State3141
+L__State3689:
+;FirmV_0_7_0.c,764 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Photocell Int");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -3276,7 +3335,7 @@ L__State3668:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,760 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,765 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -3307,13 +3366,13 @@ L__State3668:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3126:
-;FirmV_0_7_0.c,762 :: 		if(Events.Remote!=0)
+L_State3141:
+;FirmV_0_7_0.c,767 :: 		if(Events.Remote!=0)
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3127
-;FirmV_0_7_0.c,763 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Remote Stoped");ClearTasks(9);
+	GOTO        L_State3142
+;FirmV_0_7_0.c,768 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Remote Stoped");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -3347,7 +3406,7 @@ L_State3126:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,764 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,769 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -3378,17 +3437,17 @@ L_State3126:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3127:
-;FirmV_0_7_0.c,766 :: 		if((Events.Limiter==1)&&(LimiterEnable))
+L_State3142:
+;FirmV_0_7_0.c,771 :: 		if((Events.Limiter==1)&&(LimiterEnable))
 	MOVF        _Events+7, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3130
+	GOTO        L_State3145
 	MOVF        _LimiterEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3130
-L__State3667:
-;FirmV_0_7_0.c,767 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Limit Switch Stoped");ClearTasks(9);
+	GOTO        L_State3145
+L__State3688:
+;FirmV_0_7_0.c,772 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S3 Limit Switch Stoped");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -3422,7 +3481,7 @@ L__State3667:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,768 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,773 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -3453,13 +3512,13 @@ L__State3667:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3130:
-;FirmV_0_7_0.c,770 :: 		if(OpenDone==0)
+L_State3145:
+;FirmV_0_7_0.c,775 :: 		if(OpenDone==0)
 	MOVF        _OpenDone+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State3131
-;FirmV_0_7_0.c,771 :: 		{State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State3146
+;FirmV_0_7_0.c,776 :: 		{State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       2
 	MOVWF       _State+0 
 	CLRF        _PassFlag+0 
@@ -3496,30 +3555,30 @@ L_State3130:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State3131:
-;FirmV_0_7_0.c,773 :: 		if((State==5)||(State==6))
+L_State3146:
+;FirmV_0_7_0.c,778 :: 		if((State==5)||(State==6))
 	MOVF        _State+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State3666
+	GOTO        L__State3687
 	MOVF        _State+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State3666
-	GOTO        L_State3134
-L__State3666:
-;FirmV_0_7_0.c,774 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S3 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
+	GOTO        L__State3687
+	GOTO        L_State3149
+L__State3687:
+;FirmV_0_7_0.c,779 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S3 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 	CLRF        FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State3764
+	GOTO        L__State3785
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State3764:
+L__State3785:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State3135
+	GOTO        L_State3150
 	MOVF        _AutoCloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -3572,25 +3631,25 @@ L__State3764:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State3135:
-L_State3134:
-;FirmV_0_7_0.c,776 :: 		}
+L_State3150:
+L_State3149:
+;FirmV_0_7_0.c,781 :: 		}
 	RETURN      0
 ; end of _State3
 
 _State4:
 
-;FirmV_0_7_0.c,790 :: 		void State4()
-;FirmV_0_7_0.c,792 :: 		Flasher=1;
+;FirmV_0_7_0.c,795 :: 		void State4()
+;FirmV_0_7_0.c,797 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,795 :: 		if(CheckTask(1))
+;FirmV_0_7_0.c,800 :: 		if(CheckTask(1))
 	MOVLW       1
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4136
-;FirmV_0_7_0.c,796 :: 		{StartMotor(1,_Close);Logger("S4 Motor1Start");}
+	GOTO        L_State4151
+;FirmV_0_7_0.c,801 :: 		{StartMotor(1,_Close);Logger("S4 Motor1Start");}
 	MOVLW       1
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
@@ -3629,15 +3688,15 @@ _State4:
 	MOVLW       hi_addr(?lstr22_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4136:
-;FirmV_0_7_0.c,798 :: 		if(CheckTask(2))
+L_State4151:
+;FirmV_0_7_0.c,803 :: 		if(CheckTask(2))
 	MOVLW       2
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4137
-;FirmV_0_7_0.c,799 :: 		{StartMotor(2,_Close);Logger("S4 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State4152
+;FirmV_0_7_0.c,804 :: 		{StartMotor(2,_Close);Logger("S4 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       2
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
@@ -3706,15 +3765,15 @@ L_State4136:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State4137:
-;FirmV_0_7_0.c,801 :: 		if(CheckTask(10))
+L_State4152:
+;FirmV_0_7_0.c,806 :: 		if(CheckTask(10))
 	MOVLW       10
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4138
-;FirmV_0_7_0.c,802 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S4 M1 Overload Check");}
+	GOTO        L_State4153
+;FirmV_0_7_0.c,807 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S4 M1 Overload Check");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
 	MOVLW       1
@@ -3740,15 +3799,15 @@ L_State4137:
 	MOVLW       hi_addr(?lstr24_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4138:
-;FirmV_0_7_0.c,804 :: 		if(CheckTask(11))
+L_State4153:
+;FirmV_0_7_0.c,809 :: 		if(CheckTask(11))
 	MOVLW       11
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4139
-;FirmV_0_7_0.c,805 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S4 M2 Overload Check");}
+	GOTO        L_State4154
+;FirmV_0_7_0.c,810 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S4 M2 Overload Check");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
 	MOVLW       2
@@ -3774,15 +3833,15 @@ L_State4138:
 	MOVLW       hi_addr(?lstr25_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4139:
-;FirmV_0_7_0.c,807 :: 		if(CheckTask(5))
+L_State4154:
+;FirmV_0_7_0.c,812 :: 		if(CheckTask(5))
 	MOVLW       5
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4140
-;FirmV_0_7_0.c,808 :: 		{SetMotorSpeed(1,Motor2FullSpeed); OverloadCheckFlag1=0; M1isSlow=0;Logger("S4 M1 Speed UP");}
+	GOTO        L_State4155
+;FirmV_0_7_0.c,813 :: 		{SetMotorSpeed(1,Motor2FullSpeed); OverloadCheckFlag1=0; M1isSlow=0;Logger("S4 M1 Speed UP");}
 	MOVLW       1
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
@@ -3824,15 +3883,15 @@ L_State4139:
 	MOVLW       hi_addr(?lstr26_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4140:
-;FirmV_0_7_0.c,810 :: 		if(CheckTask(7))
+L_State4155:
+;FirmV_0_7_0.c,815 :: 		if(CheckTask(7))
 	MOVLW       7
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4141
-;FirmV_0_7_0.c,811 :: 		{SetMotorSpeed(0,Motor2FullSpeed); OverloadCheckFlag2=0; M1isSlow=1;Logger("S4 M1 Speed Down");}
+	GOTO        L_State4156
+;FirmV_0_7_0.c,816 :: 		{SetMotorSpeed(0,Motor2FullSpeed); OverloadCheckFlag2=0; M1isSlow=1;Logger("S4 M1 Speed Down");}
 	CLRF        FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
@@ -3860,15 +3919,15 @@ L_State4140:
 	MOVLW       hi_addr(?lstr27_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4141:
-;FirmV_0_7_0.c,813 :: 		if(CheckTask(6))
+L_State4156:
+;FirmV_0_7_0.c,818 :: 		if(CheckTask(6))
 	MOVLW       6
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4142
-;FirmV_0_7_0.c,814 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S4 M2 Speed UP");}
+	GOTO        L_State4157
+;FirmV_0_7_0.c,819 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S4 M2 Speed UP");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVLW       1
@@ -3909,15 +3968,15 @@ L_State4141:
 	MOVLW       hi_addr(?lstr28_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4142:
-;FirmV_0_7_0.c,816 :: 		if(CheckTask(8))
+L_State4157:
+;FirmV_0_7_0.c,821 :: 		if(CheckTask(8))
 	MOVLW       8
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4143
-;FirmV_0_7_0.c,817 :: 		{SetMotorSpeed(Motor1FullSpeed,0); M2isSlow=1;Logger("S4 M2 Speed Down");}
+	GOTO        L_State4158
+;FirmV_0_7_0.c,822 :: 		{SetMotorSpeed(Motor1FullSpeed,0); M2isSlow=1;Logger("S4 M2 Speed Down");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	CLRF        FARG_SetMotorSpeed+0 
@@ -3944,15 +4003,15 @@ L_State4142:
 	MOVLW       hi_addr(?lstr29_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4143:
-;FirmV_0_7_0.c,819 :: 		if(CheckTask(3))
+L_State4158:
+;FirmV_0_7_0.c,824 :: 		if(CheckTask(3))
 	MOVLW       3
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4144
-;FirmV_0_7_0.c,820 :: 		{CloseDone.b0=0; StopMotor(1);Logger("S4 M1 Stoped");}
+	GOTO        L_State4159
+;FirmV_0_7_0.c,825 :: 		{CloseDone.b0=0; StopMotor(1);Logger("S4 M1 Stoped");}
 	BCF         _CloseDone+0, 0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
@@ -3987,15 +4046,15 @@ L_State4143:
 	MOVLW       hi_addr(?lstr30_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4144:
-;FirmV_0_7_0.c,822 :: 		if(CheckTask(4))
+L_State4159:
+;FirmV_0_7_0.c,827 :: 		if(CheckTask(4))
 	MOVLW       4
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4145
-;FirmV_0_7_0.c,823 :: 		{CloseDone.b1=0; StopMotor(2);Logger("S4 M2 Stoped");}
+	GOTO        L_State4160
+;FirmV_0_7_0.c,828 :: 		{CloseDone.b1=0; StopMotor(2);Logger("S4 M2 Stoped");}
 	BCF         _CloseDone+0, 1 
 	MOVLW       2
 	MOVWF       FARG_StopMotor+0 
@@ -4030,20 +4089,20 @@ L_State4144:
 	MOVLW       hi_addr(?lstr31_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State4145:
-;FirmV_0_7_0.c,825 :: 		if((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)&&(M1isSlow==0))
+L_State4160:
+;FirmV_0_7_0.c,830 :: 		if((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)&&(M1isSlow==0))
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4148
+	GOTO        L_State4163
 	BTFSS       _Events+5, 0 
-	GOTO        L_State4148
+	GOTO        L_State4163
 	MOVF        _M1isSlow+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4148
-L__State4676:
-;FirmV_0_7_0.c,826 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 M1 Overloaded");ClearTasks(9);
+	GOTO        L_State4163
+L__State4697:
+;FirmV_0_7_0.c,831 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 M1 Overloaded");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -4077,7 +4136,7 @@ L__State4676:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,827 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,832 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -4108,20 +4167,20 @@ L__State4676:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4148:
-;FirmV_0_7_0.c,829 :: 		if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
+L_State4163:
+;FirmV_0_7_0.c,834 :: 		if((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)&&(M2isSlow==0))
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4151
+	GOTO        L_State4166
 	BTFSS       _Events+5, 1 
-	GOTO        L_State4151
+	GOTO        L_State4166
 	MOVF        _M2isSlow+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4151
-L__State4675:
-;FirmV_0_7_0.c,830 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 M2 Overloaded");ClearTasks(9);
+	GOTO        L_State4166
+L__State4696:
+;FirmV_0_7_0.c,835 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 M2 Overloaded");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -4155,7 +4214,7 @@ L__State4675:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,831 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,836 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrOverload,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -4186,25 +4245,25 @@ L__State4675:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4151:
-;FirmV_0_7_0.c,833 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
+L_State4166:
+;FirmV_0_7_0.c,838 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State4674
+	GOTO        L__State4695
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State4674
-	GOTO        L_State4154
-L__State4674:
-;FirmV_0_7_0.c,834 :: 		CloseDone.b1=0;
+	GOTO        L__State4695
+	GOTO        L_State4169
+L__State4695:
+;FirmV_0_7_0.c,839 :: 		CloseDone.b1=0;
 	BCF         _CloseDone+0, 1 
-L_State4154:
-;FirmV_0_7_0.c,836 :: 		if((Events.Photocell.b0==1))
+L_State4169:
+;FirmV_0_7_0.c,841 :: 		if((Events.Photocell.b0==1))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State4155
-;FirmV_0_7_0.c,837 :: 		{StopMotor(1); StopMotor(2); OverloadCheckFlag1=0;OverloadCheckFlag2=0;State=6;PhotocellOpenFlag=1;Logger("S4 Photocell Int");ClearTasks(9);
+	GOTO        L_State4170
+;FirmV_0_7_0.c,842 :: 		{StopMotor(1); StopMotor(2); OverloadCheckFlag1=0;OverloadCheckFlag2=0;State=6;PhotocellOpenFlag=1;Logger("S4 Photocell Int");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -4240,7 +4299,7 @@ L_State4154:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,838 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,843 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -4271,17 +4330,17 @@ L_State4154:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4155:
-;FirmV_0_7_0.c,840 :: 		if((Events.Limiter==1)&&(LimiterEnable))
+L_State4170:
+;FirmV_0_7_0.c,845 :: 		if((Events.Limiter==1)&&(LimiterEnable))
 	MOVF        _Events+7, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4158
+	GOTO        L_State4173
 	MOVF        _LimiterEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4158
-L__State4673:
-;FirmV_0_7_0.c,841 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 Limit Switch Stop");ClearTasks(9);
+	GOTO        L_State4173
+L__State4694:
+;FirmV_0_7_0.c,846 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 Limit Switch Stop");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -4315,7 +4374,7 @@ L__State4673:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,842 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,847 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -4346,13 +4405,13 @@ L__State4673:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4158:
-;FirmV_0_7_0.c,844 :: 		if((Events.Remote!=0))
+L_State4173:
+;FirmV_0_7_0.c,849 :: 		if((Events.Remote!=0))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4159
-;FirmV_0_7_0.c,845 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 Remote Pressed");ClearTasks(9);
+	GOTO        L_State4174
+;FirmV_0_7_0.c,850 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S4 Remote Pressed");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -4386,7 +4445,7 @@ L_State4158:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,846 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,851 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -4417,13 +4476,13 @@ L_State4158:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4159:
-;FirmV_0_7_0.c,848 :: 		if(CloseDone==0)
+L_State4174:
+;FirmV_0_7_0.c,853 :: 		if(CloseDone==0)
 	MOVF        _CloseDone+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State4160
-;FirmV_0_7_0.c,849 :: 		{State=1; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_close,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State4175
+;FirmV_0_7_0.c,854 :: 		{State=1; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_close,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       1
 	MOVWF       _State+0 
 	CLRF        _PassFlag+0 
@@ -4460,30 +4519,30 @@ L_State4159:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State4160:
-;FirmV_0_7_0.c,851 :: 		if((State==5)||(State==6))
+L_State4175:
+;FirmV_0_7_0.c,856 :: 		if((State==5)||(State==6))
 	MOVF        _State+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State4672
+	GOTO        L__State4693
 	MOVF        _State+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State4672
-	GOTO        L_State4163
-L__State4672:
-;FirmV_0_7_0.c,852 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S4 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
+	GOTO        L__State4693
+	GOTO        L_State4178
+L__State4693:
+;FirmV_0_7_0.c,857 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S4 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 	CLRF        FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State4765
+	GOTO        L__State4786
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State4765:
+L__State4786:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State4164
+	GOTO        L_State4179
 	MOVF        _AutoCloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -4536,50 +4595,50 @@ L__State4765:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State4164:
-L_State4163:
-;FirmV_0_7_0.c,854 :: 		}
+L_State4179:
+L_State4178:
+;FirmV_0_7_0.c,859 :: 		}
 	RETURN      0
 ; end of _State4
 
 _State5:
 
-;FirmV_0_7_0.c,869 :: 		void State5()
-;FirmV_0_7_0.c,871 :: 		char delay=2;
+;FirmV_0_7_0.c,874 :: 		void State5()
+;FirmV_0_7_0.c,876 :: 		char delay=2;
 	MOVLW       2
 	MOVWF       State5_delay_L0+0 
-;FirmV_0_7_0.c,872 :: 		Flasher=0;
+;FirmV_0_7_0.c,877 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,873 :: 		if((Events.Remote!=0)||(CheckTask(9)==1))
+;FirmV_0_7_0.c,878 :: 		if((Events.Remote!=0)||(CheckTask(9)==1))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State5681
+	GOTO        L__State5702
 	MOVLW       9
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State5681
-	GOTO        L_State5167
-L__State5681:
-;FirmV_0_7_0.c,875 :: 		if((Door2CloseTime==0)||(ActiveDoors==1))
+	GOTO        L__State5702
+	GOTO        L_State5182
+L__State5702:
+;FirmV_0_7_0.c,880 :: 		if((Door2CloseTime==0)||(ActiveDoors==1))
 	MOVF        _Door2CloseTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State5680
+	GOTO        L__State5701
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State5680
-	GOTO        L_State5170
-L__State5680:
-;FirmV_0_7_0.c,877 :: 		ClearTasks(9);
+	GOTO        L__State5701
+	GOTO        L_State5185
+L__State5701:
+;FirmV_0_7_0.c,882 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,878 :: 		temp=ms500+delay;
+;FirmV_0_7_0.c,883 :: 		temp=ms500+delay;
 	MOVF        State5_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4600,7 +4659,7 @@ L__State5680:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,879 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,884 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4612,7 +4671,7 @@ L__State5680:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,880 :: 		AddTask(temp,5);
+;FirmV_0_7_0.c,885 :: 		AddTask(temp,5);
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -4624,9 +4683,9 @@ L__State5680:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,881 :: 		M1isSlow=0;//speed up
+;FirmV_0_7_0.c,886 :: 		M1isSlow=0;//speed up
 	CLRF        _M1isSlow+0 
-;FirmV_0_7_0.c,882 :: 		temp=ms500+OverloadDelay+delay;
+;FirmV_0_7_0.c,887 :: 		temp=ms500+OverloadDelay+delay;
 	MOVLW       2
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4653,7 +4712,7 @@ L__State5680:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,883 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,888 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4665,7 +4724,7 @@ L__State5680:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,884 :: 		temp=ms500+Door1CloseTime+delay;
+;FirmV_0_7_0.c,889 :: 		temp=ms500+Door1CloseTime+delay;
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4692,7 +4751,7 @@ L__State5680:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,885 :: 		AddTask(temp,3);//Stop motor
+;FirmV_0_7_0.c,890 :: 		AddTask(temp,3);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4704,23 +4763,23 @@ L__State5680:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,886 :: 		}
-L_State5170:
-;FirmV_0_7_0.c,887 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
+;FirmV_0_7_0.c,891 :: 		}
+L_State5185:
+;FirmV_0_7_0.c,892 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
 	MOVF        _Door2CloseTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State5173
+	GOTO        L_State5188
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State5173
-L__State5679:
-;FirmV_0_7_0.c,889 :: 		ClearTasks(9);
+	GOTO        L_State5188
+L__State5700:
+;FirmV_0_7_0.c,894 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,890 :: 		temp=ms500+delay;
+;FirmV_0_7_0.c,895 :: 		temp=ms500+delay;
 	MOVF        State5_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4741,7 +4800,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,891 :: 		AddTask(temp,2);
+;FirmV_0_7_0.c,896 :: 		AddTask(temp,2);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4753,7 +4812,7 @@ L__State5679:
 	MOVLW       2
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,892 :: 		AddTask(temp,6);
+;FirmV_0_7_0.c,897 :: 		AddTask(temp,6);
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -4765,9 +4824,9 @@ L__State5679:
 	MOVLW       6
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,893 :: 		M1isSlow=0;//speed up
+;FirmV_0_7_0.c,898 :: 		M1isSlow=0;//speed up
 	CLRF        _M1isSlow+0 
-;FirmV_0_7_0.c,894 :: 		temp=ms500+OverloadDelay+delay;
+;FirmV_0_7_0.c,899 :: 		temp=ms500+OverloadDelay+delay;
 	MOVLW       2
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4794,7 +4853,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,895 :: 		AddTask(temp,11); //overload check
+;FirmV_0_7_0.c,900 :: 		AddTask(temp,11); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4806,7 +4865,7 @@ L__State5679:
 	MOVLW       11
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,896 :: 		temp=ms500+Door1CloseTime+delay;
+;FirmV_0_7_0.c,901 :: 		temp=ms500+Door1CloseTime+delay;
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4833,7 +4892,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,897 :: 		AddTask(temp,4);//Stop motor
+;FirmV_0_7_0.c,902 :: 		AddTask(temp,4);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4845,7 +4904,7 @@ L__State5679:
 	MOVLW       4
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,902 :: 		temp=ms500+ActionTimeDiff+delay;
+;FirmV_0_7_0.c,907 :: 		temp=ms500+ActionTimeDiff+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4872,7 +4931,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,903 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,908 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4884,7 +4943,7 @@ L__State5679:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,904 :: 		temp=ms500+ActionTimeDiff+delay;
+;FirmV_0_7_0.c,909 :: 		temp=ms500+ActionTimeDiff+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4911,7 +4970,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,905 :: 		AddTask(temp,5);
+;FirmV_0_7_0.c,910 :: 		AddTask(temp,5);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4923,9 +4982,9 @@ L__State5679:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,906 :: 		M2isSlow=0;//speed up
+;FirmV_0_7_0.c,911 :: 		M2isSlow=0;//speed up
 	CLRF        _M2isSlow+0 
-;FirmV_0_7_0.c,907 :: 		temp=ms500+ActionTimeDiff+OverloadDelay+delay;
+;FirmV_0_7_0.c,912 :: 		temp=ms500+ActionTimeDiff+OverloadDelay+delay;
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -4958,7 +5017,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,908 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,913 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -4970,7 +5029,7 @@ L__State5679:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,909 :: 		temp=ms500+Door2CloseTime+delay+ActionTimeDiff;
+;FirmV_0_7_0.c,914 :: 		temp=ms500+Door2CloseTime+delay+ActionTimeDiff;
 	MOVF        _Door2CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5003,7 +5062,7 @@ L__State5679:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,910 :: 		AddTask(temp,3);//Stop motor
+;FirmV_0_7_0.c,915 :: 		AddTask(temp,3);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5015,38 +5074,38 @@ L__State5679:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,911 :: 		}
-L_State5173:
-;FirmV_0_7_0.c,912 :: 		CloseDone=3;
+;FirmV_0_7_0.c,916 :: 		}
+L_State5188:
+;FirmV_0_7_0.c,917 :: 		CloseDone=3;
 	MOVLW       3
 	MOVWF       _CloseDone+0 
-;FirmV_0_7_0.c,913 :: 		OverloadCheckFlag1=0;
+;FirmV_0_7_0.c,918 :: 		OverloadCheckFlag1=0;
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,914 :: 		OverloadCheckFlag2=0;
+;FirmV_0_7_0.c,919 :: 		OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,915 :: 		State=7;
+;FirmV_0_7_0.c,920 :: 		State=7;
 	MOVLW       7
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,916 :: 		}
-L_State5167:
-;FirmV_0_7_0.c,918 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
+;FirmV_0_7_0.c,921 :: 		}
+L_State5182:
+;FirmV_0_7_0.c,923 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State5176
+	GOTO        L_State5191
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State5766
+	GOTO        L__State5787
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State5766:
+L__State5787:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State5176
+	GOTO        L_State5191
 	MOVF        _PassFlag+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State5176
-L__State5678:
-;FirmV_0_7_0.c,919 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S5 Auto Close Deleted");}
+	GOTO        L_State5191
+L__State5699:
+;FirmV_0_7_0.c,924 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S5 Auto Close Deleted");}
 	MOVLW       1
 	MOVWF       _PassFlag+0 
 	CALL        _GetAutocloseTime+0, 0
@@ -5072,25 +5131,25 @@ L__State5678:
 	MOVLW       hi_addr(?lstr38_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State5176:
-;FirmV_0_7_0.c,921 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
+L_State5191:
+;FirmV_0_7_0.c,926 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
 	MOVF        _PassFlag+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State5179
+	GOTO        L_State5194
 	BTFSC       _Events+6, 0 
-	GOTO        L_State5179
+	GOTO        L_State5194
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State5767
+	GOTO        L__State5788
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State5767:
+L__State5788:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State5179
-L__State5677:
-;FirmV_0_7_0.c,924 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S5 Insert 9 at:");Logger(t);}
+	GOTO        L_State5194
+L__State5698:
+;FirmV_0_7_0.c,929 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S5 Insert 9 at:");Logger(t);}
 	MOVF        __AC+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5161,41 +5220,41 @@ L__State5677:
 	MOVLW       hi_addr(_t+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-;FirmV_0_7_0.c,926 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S5 Insert 9 at:");Logger(t);}
-L_State5181:
-;FirmV_0_7_0.c,927 :: 		}
-L_State5179:
-;FirmV_0_7_0.c,929 :: 		}
+;FirmV_0_7_0.c,931 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S5 Insert 9 at:");Logger(t);}
+L_State5196:
+;FirmV_0_7_0.c,932 :: 		}
+L_State5194:
+;FirmV_0_7_0.c,934 :: 		}
 	RETURN      0
 ; end of _State5
 
 _State6:
 
-;FirmV_0_7_0.c,949 :: 		void State6()
-;FirmV_0_7_0.c,953 :: 		char delay=3;
+;FirmV_0_7_0.c,954 :: 		void State6()
+;FirmV_0_7_0.c,958 :: 		char delay=3;
 	MOVLW       3
 	MOVWF       State6_delay_L0+0 
-;FirmV_0_7_0.c,954 :: 		Flasher=0;
+;FirmV_0_7_0.c,959 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,955 :: 		if((Events.Remote!=0)||(PhotocellOpenFlag))
+;FirmV_0_7_0.c,960 :: 		if((Events.Remote!=0)||(PhotocellOpenFlag))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State6686
+	GOTO        L__State6707
 	MOVF        _PhotocellOpenFlag+0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State6686
-	GOTO        L_State6184
-L__State6686:
-;FirmV_0_7_0.c,957 :: 		PhotocellOpenFlag=0;
+	GOTO        L__State6707
+	GOTO        L_State6199
+L__State6707:
+;FirmV_0_7_0.c,962 :: 		PhotocellOpenFlag=0;
 	CLRF        _PhotocellOpenFlag+0 
-;FirmV_0_7_0.c,958 :: 		Flasher=1;
+;FirmV_0_7_0.c,963 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,959 :: 		ClearTasks(9);
+;FirmV_0_7_0.c,964 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,960 :: 		AddTask(ms500+1,12);
+;FirmV_0_7_0.c,965 :: 		AddTask(ms500+1,12);
 	MOVLW       1
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5211,7 +5270,7 @@ L__State6686:
 	MOVLW       12
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,961 :: 		temp=ms500+delay;
+;FirmV_0_7_0.c,966 :: 		temp=ms500+delay;
 	MOVF        State6_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5232,7 +5291,7 @@ L__State6686:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,962 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,967 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5244,7 +5303,7 @@ L__State6686:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,963 :: 		AddTask(temp,5);
+;FirmV_0_7_0.c,968 :: 		AddTask(temp,5);
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -5256,9 +5315,9 @@ L__State6686:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,964 :: 		M1isSlow=0;//speed up
+;FirmV_0_7_0.c,969 :: 		M1isSlow=0;//speed up
 	CLRF        _M1isSlow+0 
-;FirmV_0_7_0.c,965 :: 		temp=ms500+OverloadDelay+delay;
+;FirmV_0_7_0.c,970 :: 		temp=ms500+OverloadDelay+delay;
 	MOVLW       2
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5285,7 +5344,7 @@ L__State6686:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,966 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,971 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5297,7 +5356,7 @@ L__State6686:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,967 :: 		temp=ms500+Door1OpenTime+delay;
+;FirmV_0_7_0.c,972 :: 		temp=ms500+Door1OpenTime+delay;
 	MOVF        _Door1OpenTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5324,7 +5383,7 @@ L__State6686:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,968 :: 		AddTask(temp,3);//Stop motor
+;FirmV_0_7_0.c,973 :: 		AddTask(temp,3);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5336,17 +5395,17 @@ L__State6686:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,969 :: 		if((Door2OpenTime!=0)&&(ActiveDoors==2))
+;FirmV_0_7_0.c,974 :: 		if((Door2OpenTime!=0)&&(ActiveDoors==2))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State6187
+	GOTO        L_State6202
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State6187
-L__State6685:
-;FirmV_0_7_0.c,971 :: 		AddTask(ms500+ActionTimeDiff+delay,2);
+	GOTO        L_State6202
+L__State6706:
+;FirmV_0_7_0.c,976 :: 		AddTask(ms500+ActionTimeDiff+delay,2);
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5368,7 +5427,7 @@ L__State6685:
 	MOVLW       2
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,972 :: 		AddTask(ms500+ActionTimeDiff+delay,6);
+;FirmV_0_7_0.c,977 :: 		AddTask(ms500+ActionTimeDiff+delay,6);
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5390,9 +5449,9 @@ L__State6685:
 	MOVLW       6
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,973 :: 		M2isSlow=0;//speed up
+;FirmV_0_7_0.c,978 :: 		M2isSlow=0;//speed up
 	CLRF        _M2isSlow+0 
-;FirmV_0_7_0.c,974 :: 		AddTask(ms500+ActionTimeDiff+OverloadDelay+delay,11); //overload check
+;FirmV_0_7_0.c,979 :: 		AddTask(ms500+ActionTimeDiff+OverloadDelay+delay,11); //overload check
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5420,7 +5479,7 @@ L__State6685:
 	MOVLW       11
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,975 :: 		AddTask(ms500+Door2OpenTime+ActionTimeDiff+delay,4);//Stop motor
+;FirmV_0_7_0.c,980 :: 		AddTask(ms500+Door2OpenTime+ActionTimeDiff+delay,4);//Stop motor
 	MOVF        _Door2OpenTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5448,35 +5507,35 @@ L__State6685:
 	MOVLW       4
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,976 :: 		}
-L_State6187:
-;FirmV_0_7_0.c,977 :: 		OpenDone=3;
+;FirmV_0_7_0.c,981 :: 		}
+L_State6202:
+;FirmV_0_7_0.c,982 :: 		OpenDone=3;
 	MOVLW       3
 	MOVWF       _OpenDone+0 
-;FirmV_0_7_0.c,978 :: 		OverloadCheckFlag1=0;
+;FirmV_0_7_0.c,983 :: 		OverloadCheckFlag1=0;
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,979 :: 		OverloadCheckFlag2=0;
+;FirmV_0_7_0.c,984 :: 		OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,980 :: 		PassFlag=0;
+;FirmV_0_7_0.c,985 :: 		PassFlag=0;
 	CLRF        _PassFlag+0 
-;FirmV_0_7_0.c,981 :: 		State=8;
+;FirmV_0_7_0.c,986 :: 		State=8;
 	MOVLW       8
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,982 :: 		}
-L_State6184:
-;FirmV_0_7_0.c,985 :: 		if(CheckTask(9)==1)
+;FirmV_0_7_0.c,987 :: 		}
+L_State6199:
+;FirmV_0_7_0.c,990 :: 		if(CheckTask(9)==1)
 	MOVLW       9
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State6188
-;FirmV_0_7_0.c,987 :: 		ClearTasks(9);
+	GOTO        L_State6203
+;FirmV_0_7_0.c,992 :: 		ClearTasks(9);
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,988 :: 		temp=ms500+delay;
+;FirmV_0_7_0.c,993 :: 		temp=ms500+delay;
 	MOVF        State6_delay_L0+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5497,7 +5556,7 @@ L_State6184:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,989 :: 		AddTask(temp,1);
+;FirmV_0_7_0.c,994 :: 		AddTask(temp,1);
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5509,7 +5568,7 @@ L_State6184:
 	MOVLW       1
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,990 :: 		AddTask(temp,5);
+;FirmV_0_7_0.c,995 :: 		AddTask(temp,5);
 	MOVF        _temp+0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        _temp+1, 0 
@@ -5521,9 +5580,9 @@ L_State6184:
 	MOVLW       5
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,991 :: 		M1isSlow=0;//speed up
+;FirmV_0_7_0.c,996 :: 		M1isSlow=0;//speed up
 	CLRF        _M1isSlow+0 
-;FirmV_0_7_0.c,992 :: 		temp=ms500+OverloadDelay+delay;
+;FirmV_0_7_0.c,997 :: 		temp=ms500+OverloadDelay+delay;
 	MOVLW       2
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5550,7 +5609,7 @@ L_State6184:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,993 :: 		AddTask(temp,10); //overload check
+;FirmV_0_7_0.c,998 :: 		AddTask(temp,10); //overload check
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5562,7 +5621,7 @@ L_State6184:
 	MOVLW       10
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,994 :: 		temp=ms500+Door1CloseTime+delay;
+;FirmV_0_7_0.c,999 :: 		temp=ms500+Door1CloseTime+delay;
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5589,7 +5648,7 @@ L_State6184:
 	MOVWF       _temp+2 
 	MOVF        R3, 0 
 	MOVWF       _temp+3 
-;FirmV_0_7_0.c,995 :: 		AddTask(temp,3);//Stop motor
+;FirmV_0_7_0.c,1000 :: 		AddTask(temp,3);//Stop motor
 	MOVF        R0, 0 
 	MOVWF       FARG_AddTask+0 
 	MOVF        R1, 0 
@@ -5601,17 +5660,17 @@ L_State6184:
 	MOVLW       3
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,997 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
+;FirmV_0_7_0.c,1002 :: 		if((Door2CloseTime!=0)&&(ActiveDoors==2))
 	MOVF        _Door2CloseTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State6191
+	GOTO        L_State6206
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State6191
-L__State6684:
-;FirmV_0_7_0.c,999 :: 		AddTask(ms500+ActionTimeDiff+delay,2);
+	GOTO        L_State6206
+L__State6705:
+;FirmV_0_7_0.c,1004 :: 		AddTask(ms500+ActionTimeDiff+delay,2);
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5633,7 +5692,7 @@ L__State6684:
 	MOVLW       2
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,1000 :: 		AddTask(ms500+ActionTimeDiff+delay,6);
+;FirmV_0_7_0.c,1005 :: 		AddTask(ms500+ActionTimeDiff+delay,6);
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5655,9 +5714,9 @@ L__State6684:
 	MOVLW       6
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,1001 :: 		M2isSlow=0;//speed up
+;FirmV_0_7_0.c,1006 :: 		M2isSlow=0;//speed up
 	CLRF        _M2isSlow+0 
-;FirmV_0_7_0.c,1002 :: 		AddTask(ms500+ActionTimeDiff+OverloadDelay+delay,11); //overload check
+;FirmV_0_7_0.c,1007 :: 		AddTask(ms500+ActionTimeDiff+OverloadDelay+delay,11); //overload check
 	MOVF        _ActionTimeDiff+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5685,7 +5744,7 @@ L__State6684:
 	MOVLW       11
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,1003 :: 		AddTask(ms500+Door1CloseTime+ActionTimeDiff+delay,4);//Stop motor
+;FirmV_0_7_0.c,1008 :: 		AddTask(ms500+Door1CloseTime+ActionTimeDiff+delay,4);//Stop motor
 	MOVF        _Door1CloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -5713,40 +5772,40 @@ L__State6684:
 	MOVLW       4
 	MOVWF       FARG_AddTask+0 
 	CALL        _AddTask+0, 0
-;FirmV_0_7_0.c,1004 :: 		}
-L_State6191:
-;FirmV_0_7_0.c,1005 :: 		CloseDone=3;
+;FirmV_0_7_0.c,1009 :: 		}
+L_State6206:
+;FirmV_0_7_0.c,1010 :: 		CloseDone=3;
 	MOVLW       3
 	MOVWF       _CloseDone+0 
-;FirmV_0_7_0.c,1006 :: 		OverloadCheckFlag1=0;
+;FirmV_0_7_0.c,1011 :: 		OverloadCheckFlag1=0;
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,1007 :: 		OverloadCheckFlag2=0;
+;FirmV_0_7_0.c,1012 :: 		OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,1008 :: 		PassFlag=0;
+;FirmV_0_7_0.c,1013 :: 		PassFlag=0;
 	CLRF        _PassFlag+0 
-;FirmV_0_7_0.c,1009 :: 		State=7;
+;FirmV_0_7_0.c,1014 :: 		State=7;
 	MOVLW       7
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,1010 :: 		}
-L_State6188:
-;FirmV_0_7_0.c,1012 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
+;FirmV_0_7_0.c,1015 :: 		}
+L_State6203:
+;FirmV_0_7_0.c,1017 :: 		if((Events.Photocell.b0==1)&&(AutoCloseTime!=0)&&(PassFlag==0))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State6194
+	GOTO        L_State6209
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State6768
+	GOTO        L__State6789
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State6768:
+L__State6789:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State6194
+	GOTO        L_State6209
 	MOVF        _PassFlag+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State6194
-L__State6683:
-;FirmV_0_7_0.c,1013 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S6 Auto Close Deleted");}
+	GOTO        L_State6209
+L__State6704:
+;FirmV_0_7_0.c,1018 :: 		{PassFlag=1; _AC=GetAutocloseTime();Logger("S6 Auto Close Deleted");}
 	MOVLW       1
 	MOVWF       _PassFlag+0 
 	CALL        _GetAutocloseTime+0, 0
@@ -5772,25 +5831,25 @@ L__State6683:
 	MOVLW       hi_addr(?lstr41_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State6194:
-;FirmV_0_7_0.c,1015 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
+L_State6209:
+;FirmV_0_7_0.c,1020 :: 		if((PassFlag==1)&&(Events.Photocell.b0==0)&&(AutoCloseTime!=0))
 	MOVF        _PassFlag+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State6197
+	GOTO        L_State6212
 	BTFSC       _Events+6, 0 
-	GOTO        L_State6197
+	GOTO        L_State6212
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State6769
+	GOTO        L__State6790
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State6769:
+L__State6790:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State6197
-L__State6682:
-;FirmV_0_7_0.c,1017 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S6 Insert 9 at:");Logger(t);}
+	GOTO        L_State6212
+L__State6703:
+;FirmV_0_7_0.c,1022 :: 		{temp=ms500+_AC;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S6 Insert 9 at:");Logger(t);}
 	MOVF        __AC+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       R0 
@@ -5861,27 +5920,27 @@ L__State6682:
 	MOVLW       hi_addr(_t+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-;FirmV_0_7_0.c,1019 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S6 Insert 9 at:");Logger(t);}
-L_State6199:
-;FirmV_0_7_0.c,1020 :: 		}
-L_State6197:
-;FirmV_0_7_0.c,1022 :: 		}
+;FirmV_0_7_0.c,1024 :: 		{temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S6 Insert 9 at:");Logger(t);}
+L_State6214:
+;FirmV_0_7_0.c,1025 :: 		}
+L_State6212:
+;FirmV_0_7_0.c,1027 :: 		}
 	RETURN      0
 ; end of _State6
 
 _State7:
 
-;FirmV_0_7_0.c,1044 :: 		void State7()
-;FirmV_0_7_0.c,1046 :: 		Flasher=1;
+;FirmV_0_7_0.c,1049 :: 		void State7()
+;FirmV_0_7_0.c,1051 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,1048 :: 		if(CheckTask(1))
+;FirmV_0_7_0.c,1053 :: 		if(CheckTask(1))
 	MOVLW       1
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7200
-;FirmV_0_7_0.c,1049 :: 		{StartMotor(1,_Close);Logger("S7 Motor1Start");}
+	GOTO        L_State7215
+;FirmV_0_7_0.c,1054 :: 		{StartMotor(1,_Close);Logger("S7 Motor1Start");}
 	MOVLW       1
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
@@ -5920,15 +5979,15 @@ _State7:
 	MOVLW       hi_addr(?lstr44_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7200:
-;FirmV_0_7_0.c,1051 :: 		if(CheckTask(2))
+L_State7215:
+;FirmV_0_7_0.c,1056 :: 		if(CheckTask(2))
 	MOVLW       2
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7201
-;FirmV_0_7_0.c,1052 :: 		{StartMotor(2,_Close);Logger("S7 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State7216
+;FirmV_0_7_0.c,1057 :: 		{StartMotor(2,_Close);Logger("S7 Motor2Start");memcpy(LCDLine1,_closing,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       2
 	MOVWF       FARG_StartMotor+0 
 	CLRF        FARG_StartMotor+0 
@@ -5997,15 +6056,15 @@ L_State7200:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State7201:
-;FirmV_0_7_0.c,1054 :: 		if(CheckTask(10))
+L_State7216:
+;FirmV_0_7_0.c,1059 :: 		if(CheckTask(10))
 	MOVLW       10
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7202
-;FirmV_0_7_0.c,1055 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S7 M1 Overload Check");}
+	GOTO        L_State7217
+;FirmV_0_7_0.c,1060 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S7 M1 Overload Check");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
 	MOVLW       1
@@ -6031,15 +6090,15 @@ L_State7201:
 	MOVLW       hi_addr(?lstr46_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7202:
-;FirmV_0_7_0.c,1057 :: 		if(CheckTask(11))
+L_State7217:
+;FirmV_0_7_0.c,1062 :: 		if(CheckTask(11))
 	MOVLW       11
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7203
-;FirmV_0_7_0.c,1058 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S7 M2 Overload Check");}
+	GOTO        L_State7218
+;FirmV_0_7_0.c,1063 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S7 M2 Overload Check");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
 	MOVLW       2
@@ -6065,15 +6124,15 @@ L_State7202:
 	MOVLW       hi_addr(?lstr47_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7203:
-;FirmV_0_7_0.c,1060 :: 		if(CheckTask(5))
+L_State7218:
+;FirmV_0_7_0.c,1065 :: 		if(CheckTask(5))
 	MOVLW       5
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7204
-;FirmV_0_7_0.c,1061 :: 		{SetMotorSpeed(1,Motor2FullSpeed); M1isSlow=0;Logger("S7 M1 Speed UP");}
+	GOTO        L_State7219
+;FirmV_0_7_0.c,1066 :: 		{SetMotorSpeed(1,Motor2FullSpeed); M1isSlow=0;Logger("S7 M1 Speed UP");}
 	MOVLW       1
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
@@ -6114,15 +6173,15 @@ L_State7203:
 	MOVLW       hi_addr(?lstr48_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7204:
-;FirmV_0_7_0.c,1063 :: 		if(CheckTask(6))
+L_State7219:
+;FirmV_0_7_0.c,1068 :: 		if(CheckTask(6))
 	MOVLW       6
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7205
-;FirmV_0_7_0.c,1064 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S7 M2 Speed UP");}
+	GOTO        L_State7220
+;FirmV_0_7_0.c,1069 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S7 M2 Speed UP");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVLW       1
@@ -6163,28 +6222,28 @@ L_State7204:
 	MOVLW       hi_addr(?lstr49_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7205:
-;FirmV_0_7_0.c,1066 :: 		if((CheckTask(3)||((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)))&&(CloseDone.b0))
+L_State7220:
+;FirmV_0_7_0.c,1071 :: 		if((CheckTask(3)||((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)))&&(CloseDone.b0))
 	MOVLW       3
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State7694
+	GOTO        L__State7715
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State7695
+	GOTO        L__State7716
 	BTFSS       _Events+5, 0 
-	GOTO        L__State7695
-	GOTO        L__State7694
-L__State7695:
-	GOTO        L_State7212
-L__State7694:
+	GOTO        L__State7716
+	GOTO        L__State7715
+L__State7716:
+	GOTO        L_State7227
+L__State7715:
 	BTFSS       _CloseDone+0, 0 
-	GOTO        L_State7212
-L__State7693:
-;FirmV_0_7_0.c,1067 :: 		{CloseDone.b0=0; StopMotor(1);Logger("S7 M1 Stoped");}
+	GOTO        L_State7227
+L__State7714:
+;FirmV_0_7_0.c,1072 :: 		{CloseDone.b0=0; StopMotor(1);Logger("S7 M1 Stoped");}
 	BCF         _CloseDone+0, 0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
@@ -6219,28 +6278,28 @@ L__State7693:
 	MOVLW       hi_addr(?lstr50_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7212:
-;FirmV_0_7_0.c,1069 :: 		if((CheckTask(4)||((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)))&&(CloseDone.b1))
+L_State7227:
+;FirmV_0_7_0.c,1074 :: 		if((CheckTask(4)||((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)))&&(CloseDone.b1))
 	MOVLW       4
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State7691
+	GOTO        L__State7712
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State7692
+	GOTO        L__State7713
 	BTFSS       _Events+5, 1 
-	GOTO        L__State7692
-	GOTO        L__State7691
-L__State7692:
-	GOTO        L_State7219
-L__State7691:
+	GOTO        L__State7713
+	GOTO        L__State7712
+L__State7713:
+	GOTO        L_State7234
+L__State7712:
 	BTFSS       _CloseDone+0, 1 
-	GOTO        L_State7219
-L__State7690:
-;FirmV_0_7_0.c,1070 :: 		{CloseDone.b1=0; StopMotor(2);Logger("S7 M2 Stoped");}
+	GOTO        L_State7234
+L__State7711:
+;FirmV_0_7_0.c,1075 :: 		{CloseDone.b1=0; StopMotor(2);Logger("S7 M2 Stoped");}
 	BCF         _CloseDone+0, 1 
 	MOVLW       2
 	MOVWF       FARG_StopMotor+0 
@@ -6275,25 +6334,25 @@ L__State7690:
 	MOVLW       hi_addr(?lstr51_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State7219:
-;FirmV_0_7_0.c,1072 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
+L_State7234:
+;FirmV_0_7_0.c,1077 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State7689
+	GOTO        L__State7710
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State7689
-	GOTO        L_State7222
-L__State7689:
-;FirmV_0_7_0.c,1073 :: 		CloseDone.b1=0;
+	GOTO        L__State7710
+	GOTO        L_State7237
+L__State7710:
+;FirmV_0_7_0.c,1078 :: 		CloseDone.b1=0;
 	BCF         _CloseDone+0, 1 
-L_State7222:
-;FirmV_0_7_0.c,1075 :: 		if((Events.Photocell.b0==1))
+L_State7237:
+;FirmV_0_7_0.c,1080 :: 		if((Events.Photocell.b0==1))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State7223
-;FirmV_0_7_0.c,1076 :: 		{StopMotor(1); StopMotor(2); OverloadCheckFlag1=0;OverloadCheckFlag2=0;State=6;PhotocellOpenFlag=1;Logger("S7 Photocell Int");ClearTasks(9);
+	GOTO        L_State7238
+;FirmV_0_7_0.c,1081 :: 		{StopMotor(1); StopMotor(2); OverloadCheckFlag1=0;OverloadCheckFlag2=0;State=6;PhotocellOpenFlag=1;Logger("S7 Photocell Int");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -6329,7 +6388,7 @@ L_State7222:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1077 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1082 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -6360,13 +6419,13 @@ L_State7222:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State7223:
-;FirmV_0_7_0.c,1079 :: 		if((Events.Remote!=0))
+L_State7238:
+;FirmV_0_7_0.c,1084 :: 		if((Events.Remote!=0))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7224
-;FirmV_0_7_0.c,1080 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S7 Remote Pressed");ClearTasks(9);
+	GOTO        L_State7239
+;FirmV_0_7_0.c,1085 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S7 Remote Pressed");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -6400,7 +6459,7 @@ L_State7223:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1081 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1086 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -6431,17 +6490,17 @@ L_State7223:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State7224:
-;FirmV_0_7_0.c,1083 :: 		if((Events.Limiter==1)&&(LimiterEnable))
+L_State7239:
+;FirmV_0_7_0.c,1088 :: 		if((Events.Limiter==1)&&(LimiterEnable))
 	MOVF        _Events+7, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State7227
+	GOTO        L_State7242
 	MOVF        _LimiterEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7227
-L__State7688:
-;FirmV_0_7_0.c,1084 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S7 Limit Switch Stop");ClearTasks(9);
+	GOTO        L_State7242
+L__State7709:
+;FirmV_0_7_0.c,1089 :: 		{StopMotor(1); StopMotor(2); State=6;OverloadCheckFlag1=0;OverloadCheckFlag2=0;Logger("S7 Limit Switch Stop");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -6475,7 +6534,7 @@ L__State7688:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1085 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1090 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -6506,13 +6565,13 @@ L__State7688:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State7227:
-;FirmV_0_7_0.c,1087 :: 		if(CloseDone==0)
+L_State7242:
+;FirmV_0_7_0.c,1092 :: 		if(CloseDone==0)
 	MOVF        _CloseDone+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State7228
-;FirmV_0_7_0.c,1088 :: 		{State=1; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_close,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State7243
+;FirmV_0_7_0.c,1093 :: 		{State=1; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_close,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       1
 	MOVWF       _State+0 
 	CLRF        _PassFlag+0 
@@ -6549,30 +6608,30 @@ L_State7227:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State7228:
-;FirmV_0_7_0.c,1090 :: 		if((State==5)||(State==6))
+L_State7243:
+;FirmV_0_7_0.c,1095 :: 		if((State==5)||(State==6))
 	MOVF        _State+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State7687
+	GOTO        L__State7708
 	MOVF        _State+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State7687
-	GOTO        L_State7231
-L__State7687:
-;FirmV_0_7_0.c,1091 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S7 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
+	GOTO        L__State7708
+	GOTO        L_State7246
+L__State7708:
+;FirmV_0_7_0.c,1096 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S7 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 	CLRF        FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State7770
+	GOTO        L__State7791
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State7770:
+L__State7791:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State7232
+	GOTO        L_State7247
 	MOVF        _AutoCloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -6625,25 +6684,25 @@ L__State7770:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State7232:
-L_State7231:
-;FirmV_0_7_0.c,1094 :: 		}
+L_State7247:
+L_State7246:
+;FirmV_0_7_0.c,1099 :: 		}
 	RETURN      0
 ; end of _State7
 
 _State8:
 
-;FirmV_0_7_0.c,1111 :: 		void State8()
-;FirmV_0_7_0.c,1113 :: 		Flasher=1;
+;FirmV_0_7_0.c,1116 :: 		void State8()
+;FirmV_0_7_0.c,1118 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,1115 :: 		if(CheckTask(1))
+;FirmV_0_7_0.c,1120 :: 		if(CheckTask(1))
 	MOVLW       1
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8233
-;FirmV_0_7_0.c,1116 :: 		{StartMotor(1,_Open);Logger("S8 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State8248
+;FirmV_0_7_0.c,1121 :: 		{StartMotor(1,_Open);Logger("S8 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       1
 	MOVWF       FARG_StartMotor+0 
 	MOVLW       1
@@ -6714,15 +6773,15 @@ _State8:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State8233:
-;FirmV_0_7_0.c,1118 :: 		if(CheckTask(2))
+L_State8248:
+;FirmV_0_7_0.c,1123 :: 		if(CheckTask(2))
 	MOVLW       2
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8234
-;FirmV_0_7_0.c,1119 :: 		{StartMotor(2,_Open);Logger("S8 Motor2Start"); Lock=0;}
+	GOTO        L_State8249
+;FirmV_0_7_0.c,1124 :: 		{StartMotor(2,_Open);Logger("S8 Motor2Start"); Lock=0;}
 	MOVLW       2
 	MOVWF       FARG_StartMotor+0 
 	MOVLW       1
@@ -6763,15 +6822,15 @@ L_State8233:
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
 	BCF         PORTD+0, 6 
-L_State8234:
-;FirmV_0_7_0.c,1121 :: 		if(CheckTask(10))
+L_State8249:
+;FirmV_0_7_0.c,1126 :: 		if(CheckTask(10))
 	MOVLW       10
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8235
-;FirmV_0_7_0.c,1122 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S8 Overflow Flag1 Set");}
+	GOTO        L_State8250
+;FirmV_0_7_0.c,1127 :: 		{OverloadCheckFlag1=1; OverloadInit(1);Logger("S8 Overflow Flag1 Set");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
 	MOVLW       1
@@ -6797,15 +6856,15 @@ L_State8234:
 	MOVLW       hi_addr(?lstr58_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8235:
-;FirmV_0_7_0.c,1124 :: 		if(CheckTask(11))
+L_State8250:
+;FirmV_0_7_0.c,1129 :: 		if(CheckTask(11))
 	MOVLW       11
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8236
-;FirmV_0_7_0.c,1125 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S8 Overflow Flag2 Set");}
+	GOTO        L_State8251
+;FirmV_0_7_0.c,1130 :: 		{OverloadCheckFlag2=1; OverloadInit(2);Logger("S8 Overflow Flag2 Set");}
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
 	MOVLW       2
@@ -6831,15 +6890,15 @@ L_State8235:
 	MOVLW       hi_addr(?lstr59_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8236:
-;FirmV_0_7_0.c,1127 :: 		if(CheckTask(5))
+L_State8251:
+;FirmV_0_7_0.c,1132 :: 		if(CheckTask(5))
 	MOVLW       5
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8237
-;FirmV_0_7_0.c,1128 :: 		{SetMotorSpeed(1,Motor2FullSpeed); M1isSlow=0;Logger("S8 Motor1 Fast");}
+	GOTO        L_State8252
+;FirmV_0_7_0.c,1133 :: 		{SetMotorSpeed(1,Motor2FullSpeed); M1isSlow=0;Logger("S8 Motor1 Fast");}
 	MOVLW       1
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
@@ -6880,15 +6939,15 @@ L_State8236:
 	MOVLW       hi_addr(?lstr60_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8237:
-;FirmV_0_7_0.c,1130 :: 		if(CheckTask(6))
+L_State8252:
+;FirmV_0_7_0.c,1135 :: 		if(CheckTask(6))
 	MOVLW       6
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8238
-;FirmV_0_7_0.c,1131 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S8 Motor2 Fast");}
+	GOTO        L_State8253
+;FirmV_0_7_0.c,1136 :: 		{SetMotorSpeed(Motor1FullSpeed,1); M2isSlow=0;Logger("S8 Motor2 Fast");}
 	MOVF        _Motor1FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	MOVLW       1
@@ -6929,28 +6988,28 @@ L_State8237:
 	MOVLW       hi_addr(?lstr61_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8238:
-;FirmV_0_7_0.c,1133 :: 		if((CheckTask(3)||((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)))&&(OpenDone.b0))
+L_State8253:
+;FirmV_0_7_0.c,1138 :: 		if((CheckTask(3)||((OverloadCheckFlag1==1)&&(Events.Overload.b0==1)))&&(OpenDone.b0))
 	MOVLW       3
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State8704
+	GOTO        L__State8725
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State8705
+	GOTO        L__State8726
 	BTFSS       _Events+5, 0 
-	GOTO        L__State8705
-	GOTO        L__State8704
-L__State8705:
-	GOTO        L_State8245
-L__State8704:
+	GOTO        L__State8726
+	GOTO        L__State8725
+L__State8726:
+	GOTO        L_State8260
+L__State8725:
 	BTFSS       _OpenDone+0, 0 
-	GOTO        L_State8245
-L__State8703:
-;FirmV_0_7_0.c,1134 :: 		{OpenDone.b0=0; StopMotor(1);Logger("S8 Motor1 Stop");}
+	GOTO        L_State8260
+L__State8724:
+;FirmV_0_7_0.c,1139 :: 		{OpenDone.b0=0; StopMotor(1);Logger("S8 Motor1 Stop");}
 	BCF         _OpenDone+0, 0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
@@ -6989,28 +7048,28 @@ L__State8703:
 	MOVLW       hi_addr(?lstr62_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8245:
-;FirmV_0_7_0.c,1136 :: 		if((CheckTask(4)||((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)))&&(OpenDone.b1))
+L_State8260:
+;FirmV_0_7_0.c,1141 :: 		if((CheckTask(4)||((OverloadCheckFlag2==1)&&(Events.Overload.b1==1)))&&(OpenDone.b1))
 	MOVLW       4
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State8701
+	GOTO        L__State8722
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State8702
+	GOTO        L__State8723
 	BTFSS       _Events+5, 1 
-	GOTO        L__State8702
-	GOTO        L__State8701
-L__State8702:
-	GOTO        L_State8252
-L__State8701:
+	GOTO        L__State8723
+	GOTO        L__State8722
+L__State8723:
+	GOTO        L_State8267
+L__State8722:
 	BTFSS       _OpenDone+0, 1 
-	GOTO        L_State8252
-L__State8700:
-;FirmV_0_7_0.c,1137 :: 		{OpenDone.b1=0; StopMotor(2);Logger("S8 Motor2 Stop");}
+	GOTO        L_State8267
+L__State8721:
+;FirmV_0_7_0.c,1142 :: 		{OpenDone.b1=0; StopMotor(2);Logger("S8 Motor2 Stop");}
 	BCF         _OpenDone+0, 1 
 	MOVLW       2
 	MOVWF       FARG_StopMotor+0 
@@ -7049,39 +7108,39 @@ L__State8700:
 	MOVLW       hi_addr(?lstr63_FirmV_0_7_0+0)
 	MOVWF       FARG_Logger_text+1 
 	CALL        _Logger+0, 0
-L_State8252:
-;FirmV_0_7_0.c,1139 :: 		if(CheckTask(12))
+L_State8267:
+;FirmV_0_7_0.c,1144 :: 		if(CheckTask(12))
 	MOVLW       12
 	MOVWF       FARG_CheckTask+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8253
-;FirmV_0_7_0.c,1140 :: 		{Lock=1;}
+	GOTO        L_State8268
+;FirmV_0_7_0.c,1145 :: 		{Lock=1;}
 	BSF         PORTD+0, 6 
-L_State8253:
-;FirmV_0_7_0.c,1142 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
+L_State8268:
+;FirmV_0_7_0.c,1147 :: 		if((Door2OpenTime==0)||(ActiveDoors==1))
 	MOVF        _Door2OpenTime+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State8699
+	GOTO        L__State8720
 	MOVF        _ActiveDoors+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State8699
-	GOTO        L_State8256
-L__State8699:
-;FirmV_0_7_0.c,1143 :: 		OpenDone.b1=0;
+	GOTO        L__State8720
+	GOTO        L_State8271
+L__State8720:
+;FirmV_0_7_0.c,1148 :: 		OpenDone.b1=0;
 	BCF         _OpenDone+0, 1 
-L_State8256:
-;FirmV_0_7_0.c,1145 :: 		if((Events.Photocell.b0==1)&&(OpenPhEnable))
+L_State8271:
+;FirmV_0_7_0.c,1150 :: 		if((Events.Photocell.b0==1)&&(OpenPhEnable))
 	BTFSS       _Events+6, 0 
-	GOTO        L_State8259
+	GOTO        L_State8274
 	MOVF        _OpenPhEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8259
-L__State8698:
-;FirmV_0_7_0.c,1146 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S8 Photocell Int");ClearTasks(9);
+	GOTO        L_State8274
+L__State8719:
+;FirmV_0_7_0.c,1151 :: 		{StopMotor(1); StopMotor(2);OverloadCheckFlag1=0;OverloadCheckFlag2=0; State=5;Logger("S8 Photocell Int");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -7115,7 +7174,7 @@ L__State8698:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1147 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1152 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrPhoto,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -7146,13 +7205,13 @@ L__State8698:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State8259:
-;FirmV_0_7_0.c,1149 :: 		if((Events.Remote!=0))
+L_State8274:
+;FirmV_0_7_0.c,1154 :: 		if((Events.Remote!=0))
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8260
-;FirmV_0_7_0.c,1150 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0; Logger("S8 Motors Stoped (Remote)");ClearTasks(9);
+	GOTO        L_State8275
+;FirmV_0_7_0.c,1155 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0; Logger("S8 Motors Stoped (Remote)");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -7186,7 +7245,7 @@ L_State8259:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1151 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1156 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrRemote,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -7217,17 +7276,17 @@ L_State8259:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State8260:
-;FirmV_0_7_0.c,1153 :: 		if((Events.Limiter==1)&&(LimiterEnable))
+L_State8275:
+;FirmV_0_7_0.c,1158 :: 		if((Events.Limiter==1)&&(LimiterEnable))
 	MOVF        _Events+7, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State8263
+	GOTO        L_State8278
 	MOVF        _LimiterEnable+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8263
-L__State8697:
-;FirmV_0_7_0.c,1154 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0; Logger("S8 Limit Switch Stop");ClearTasks(9);
+	GOTO        L_State8278
+L__State8718:
+;FirmV_0_7_0.c,1159 :: 		{StopMotor(1); StopMotor(2); State=5;OverloadCheckFlag1=0;OverloadCheckFlag2=0; Logger("S8 Limit Switch Stop");ClearTasks(9);
 	MOVLW       1
 	MOVWF       FARG_StopMotor+0 
 	CALL        _StopMotor+0, 0
@@ -7261,7 +7320,7 @@ L__State8697:
 	MOVLW       9
 	MOVWF       FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
-;FirmV_0_7_0.c,1155 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
+;FirmV_0_7_0.c,1160 :: 		memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -7292,13 +7351,13 @@ L__State8697:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State8263:
-;FirmV_0_7_0.c,1157 :: 		if(OpenDone==0)
+L_State8278:
+;FirmV_0_7_0.c,1162 :: 		if(OpenDone==0)
 	MOVF        _OpenDone+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_State8264
-;FirmV_0_7_0.c,1158 :: 		{State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
+	GOTO        L_State8279
+;FirmV_0_7_0.c,1163 :: 		{State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
 	MOVLW       2
 	MOVWF       _State+0 
 	CLRF        _PassFlag+0 
@@ -7335,30 +7394,30 @@ L_State8263:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-L_State8264:
-;FirmV_0_7_0.c,1160 :: 		if((State==5)||(State==6))
+L_State8279:
+;FirmV_0_7_0.c,1165 :: 		if((State==5)||(State==6))
 	MOVF        _State+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State8696
+	GOTO        L__State8717
 	MOVF        _State+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L__State8696
-	GOTO        L_State8267
-L__State8696:
-;FirmV_0_7_0.c,1161 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S8 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
+	GOTO        L__State8717
+	GOTO        L_State8282
+L__State8717:
+;FirmV_0_7_0.c,1166 :: 		{ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S8 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 	CLRF        FARG_ClearTasks+0 
 	CALL        _ClearTasks+0, 0
 	MOVLW       0
 	XORWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__State8771
+	GOTO        L__State8792
 	MOVLW       0
 	XORWF       _AutoCloseTime+0, 0 
-L__State8771:
+L__State8792:
 	BTFSC       STATUS+0, 2 
-	GOTO        L_State8268
+	GOTO        L_State8283
 	MOVF        _AutoCloseTime+0, 0 
 	ADDWF       _ms500+0, 0 
 	MOVWF       FARG_AddTask+0 
@@ -7411,51 +7470,51 @@ L__State8771:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-L_State8268:
-L_State8267:
-;FirmV_0_7_0.c,1164 :: 		}
+L_State8283:
+L_State8282:
+;FirmV_0_7_0.c,1169 :: 		}
 	RETURN      0
 ; end of _State8
 
 _LCDUpdater:
 
-;FirmV_0_7_0.c,1173 :: 		void LCDUpdater()
-;FirmV_0_7_0.c,1178 :: 		if(LCDUpdateFlag==1)
+;FirmV_0_7_0.c,1178 :: 		void LCDUpdater()
+;FirmV_0_7_0.c,1183 :: 		if(LCDUpdateFlag==1)
 	MOVF        _LCDUpdateFlag+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LCDUpdater269
-;FirmV_0_7_0.c,1180 :: 		if(LCDLines!=line)
+	GOTO        L_LCDUpdater284
+;FirmV_0_7_0.c,1185 :: 		if(LCDLines!=line)
 	MOVF        _LCDLines+0, 0 
 	XORWF       LCDUpdater_line_L0+0, 0 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LCDUpdater270
-;FirmV_0_7_0.c,1182 :: 		line=LCDLines;
+	GOTO        L_LCDUpdater285
+;FirmV_0_7_0.c,1187 :: 		line=LCDLines;
 	MOVF        _LCDLines+0, 0 
 	MOVWF       LCDUpdater_line_L0+0 
-;FirmV_0_7_0.c,1183 :: 		LCD_init(LCDLines);
+;FirmV_0_7_0.c,1188 :: 		LCD_init(LCDLines);
 	MOVF        _LCDLines+0, 0 
 	MOVWF       FARG_LCD_Init+0 
 	CALL        _LCD_Init+0, 0
-;FirmV_0_7_0.c,1184 :: 		delay_ms(50);
+;FirmV_0_7_0.c,1189 :: 		delay_ms(50);
 	MOVLW       3
 	MOVWF       R11, 0
 	MOVLW       138
 	MOVWF       R12, 0
 	MOVLW       85
 	MOVWF       R13, 0
-L_LCDUpdater271:
+L_LCDUpdater286:
 	DECFSZ      R13, 1, 0
-	BRA         L_LCDUpdater271
+	BRA         L_LCDUpdater286
 	DECFSZ      R12, 1, 0
-	BRA         L_LCDUpdater271
+	BRA         L_LCDUpdater286
 	DECFSZ      R11, 1, 0
-	BRA         L_LCDUpdater271
+	BRA         L_LCDUpdater286
 	NOP
 	NOP
-;FirmV_0_7_0.c,1185 :: 		}
-L_LCDUpdater270:
-;FirmV_0_7_0.c,1186 :: 		lcd_out(1,0,LCDLine1);
+;FirmV_0_7_0.c,1190 :: 		}
+L_LCDUpdater285:
+;FirmV_0_7_0.c,1191 :: 		lcd_out(1,0,LCDLine1);
 	MOVLW       1
 	MOVWF       FARG_LCD_out+0 
 	CLRF        FARG_LCD_out+0 
@@ -7464,11 +7523,11 @@ L_LCDUpdater270:
 	MOVLW       hi_addr(_LCDLine1+0)
 	MOVWF       FARG_LCD_out+1 
 	CALL        _LCD_out+0, 0
-;FirmV_0_7_0.c,1187 :: 		if(!LCDFlash)
+;FirmV_0_7_0.c,1192 :: 		if(!LCDFlash)
 	MOVF        _LCDFlash+0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LCDUpdater272
-;FirmV_0_7_0.c,1188 :: 		lcd_out(2,0,LCDLine2);
+	GOTO        L_LCDUpdater287
+;FirmV_0_7_0.c,1193 :: 		lcd_out(2,0,LCDLine2);
 	MOVLW       2
 	MOVWF       FARG_LCD_out+0 
 	CLRF        FARG_LCD_out+0 
@@ -7477,25 +7536,25 @@ L_LCDUpdater270:
 	MOVLW       hi_addr(_LCDLine2+0)
 	MOVWF       FARG_LCD_out+1 
 	CALL        _LCD_out+0, 0
-L_LCDUpdater272:
-;FirmV_0_7_0.c,1189 :: 		LCDUpdateFlag=0;
+L_LCDUpdater287:
+;FirmV_0_7_0.c,1194 :: 		LCDUpdateFlag=0;
 	CLRF        _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1190 :: 		}
-L_LCDUpdater269:
-;FirmV_0_7_0.c,1192 :: 		if(LCDFlash)
+;FirmV_0_7_0.c,1195 :: 		}
+L_LCDUpdater284:
+;FirmV_0_7_0.c,1197 :: 		if(LCDFlash)
 	MOVF        _LCDFlash+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LCDUpdater273
-;FirmV_0_7_0.c,1194 :: 		if((LCDFlashFlag)&&(LastLCDFlashState==0))
+	GOTO        L_LCDUpdater288
+;FirmV_0_7_0.c,1199 :: 		if((LCDFlashFlag)&&(LastLCDFlashState==0))
 	MOVF        _LCDFlashFlag+0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LCDUpdater276
+	GOTO        L_LCDUpdater291
 	MOVF        LCDUpdater_LastLCDFlashState_L0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LCDUpdater276
-L__LCDUpdater707:
-;FirmV_0_7_0.c,1195 :: 		{memcpy(LCDLineTemp,LCDLine2,16);LCDLineTemp[0]='>';LCDLineTemp[1]='>';LCDLineTemp[2]='>';LCDLineTemp[13]='<';LCDLineTemp[14]='<';LCDLineTemp[15]='<';lcd_out(2,0,LCDLineTemp);LastLCDFlashState=1;}
+	GOTO        L_LCDUpdater291
+L__LCDUpdater728:
+;FirmV_0_7_0.c,1200 :: 		{memcpy(LCDLineTemp,LCDLine2,16);LCDLineTemp[0]='>';LCDLineTemp[1]='>';LCDLineTemp[2]='>';LCDLineTemp[13]='<';LCDLineTemp[14]='<';LCDLineTemp[15]='<';lcd_out(2,0,LCDLineTemp);LastLCDFlashState=1;}
 	MOVLW       LCDUpdater_LCDLineTemp_L0+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(LCDUpdater_LCDLineTemp_L0+0)
@@ -7531,17 +7590,17 @@ L__LCDUpdater707:
 	CALL        _LCD_out+0, 0
 	MOVLW       1
 	MOVWF       LCDUpdater_LastLCDFlashState_L0+0 
-L_LCDUpdater276:
-;FirmV_0_7_0.c,1196 :: 		if((!LCDFlashFlag)&&(LastLCDFlashState!=0))
+L_LCDUpdater291:
+;FirmV_0_7_0.c,1201 :: 		if((!LCDFlashFlag)&&(LastLCDFlashState!=0))
 	MOVF        _LCDFlashFlag+0, 1 
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LCDUpdater279
+	GOTO        L_LCDUpdater294
 	MOVF        LCDUpdater_LastLCDFlashState_L0+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LCDUpdater279
-L__LCDUpdater706:
-;FirmV_0_7_0.c,1197 :: 		{lcd_out(2,0,LCDLine2);LastLCDFlashState=0;}
+	GOTO        L_LCDUpdater294
+L__LCDUpdater727:
+;FirmV_0_7_0.c,1202 :: 		{lcd_out(2,0,LCDLine2);LastLCDFlashState=0;}
 	MOVLW       2
 	MOVWF       FARG_LCD_out+0 
 	CLRF        FARG_LCD_out+0 
@@ -7551,143 +7610,143 @@ L__LCDUpdater706:
 	MOVWF       FARG_LCD_out+1 
 	CALL        _LCD_out+0, 0
 	CLRF        LCDUpdater_LastLCDFlashState_L0+0 
-L_LCDUpdater279:
-;FirmV_0_7_0.c,1198 :: 		}
-L_LCDUpdater273:
-;FirmV_0_7_0.c,1201 :: 		}
+L_LCDUpdater294:
+;FirmV_0_7_0.c,1203 :: 		}
+L_LCDUpdater288:
+;FirmV_0_7_0.c,1206 :: 		}
 	RETURN      0
 ; end of _LCDUpdater
 
 _Init:
 
-;FirmV_0_7_0.c,1221 :: 		void Init()
-;FirmV_0_7_0.c,1223 :: 		char i=0;
+;FirmV_0_7_0.c,1226 :: 		void Init()
+;FirmV_0_7_0.c,1228 :: 		char i=0;
 	CLRF        Init_i_L0+0 
-;FirmV_0_7_0.c,1225 :: 		porta=0;
+;FirmV_0_7_0.c,1230 :: 		porta=0;
 	CLRF        PORTA+0 
-;FirmV_0_7_0.c,1226 :: 		portb=0;
+;FirmV_0_7_0.c,1231 :: 		portb=0;
 	CLRF        PORTB+0 
-;FirmV_0_7_0.c,1227 :: 		portc=0;
+;FirmV_0_7_0.c,1232 :: 		portc=0;
 	CLRF        PORTC+0 
-;FirmV_0_7_0.c,1228 :: 		portd=0;
+;FirmV_0_7_0.c,1233 :: 		portd=0;
 	CLRF        PORTD+0 
-;FirmV_0_7_0.c,1229 :: 		porte=0;
+;FirmV_0_7_0.c,1234 :: 		porte=0;
 	CLRF        PORTE+0 
-;FirmV_0_7_0.c,1230 :: 		trisa=0b101111;
+;FirmV_0_7_0.c,1235 :: 		trisa=0b101111;
 	MOVLW       47
 	MOVWF       TRISA+0 
-;FirmV_0_7_0.c,1231 :: 		trisb=0b10000111;
+;FirmV_0_7_0.c,1236 :: 		trisb=0b10000111;
 	MOVLW       135
 	MOVWF       TRISB+0 
-;FirmV_0_7_0.c,1232 :: 		trisc=0b10000100;
+;FirmV_0_7_0.c,1237 :: 		trisc=0b10000100;
 	MOVLW       132
 	MOVWF       TRISC+0 
-;FirmV_0_7_0.c,1233 :: 		trisd=0b00111111;
+;FirmV_0_7_0.c,1238 :: 		trisd=0b00111111;
 	MOVLW       63
 	MOVWF       TRISD+0 
-;FirmV_0_7_0.c,1234 :: 		trise=0b001;
+;FirmV_0_7_0.c,1239 :: 		trise=0b001;
 	MOVLW       1
 	MOVWF       TRISE+0 
-;FirmV_0_7_0.c,1235 :: 		adcon1=0b0010;  // an6, an5 and an7 is digital
+;FirmV_0_7_0.c,1240 :: 		adcon1=0b0010;  // an6, an5 and an7 is digital
 	MOVLW       2
 	MOVWF       ADCON1+0 
-;FirmV_0_7_0.c,1241 :: 		LCDBackLight=1;
+;FirmV_0_7_0.c,1246 :: 		LCDBackLight=1;
 	BSF         PORTA+0, 4 
-;FirmV_0_7_0.c,1242 :: 		I2C1_init(100000);
+;FirmV_0_7_0.c,1247 :: 		I2C1_init(100000);
 	MOVLW       100
 	MOVWF       SSPADD+0 
 	CALL        _I2C1_Init+0, 0
-;FirmV_0_7_0.c,1244 :: 		delay_ms(100);
+;FirmV_0_7_0.c,1249 :: 		delay_ms(100);
 	MOVLW       6
 	MOVWF       R11, 0
 	MOVLW       19
 	MOVWF       R12, 0
 	MOVLW       173
 	MOVWF       R13, 0
-L_Init280:
+L_Init295:
 	DECFSZ      R13, 1, 0
-	BRA         L_Init280
+	BRA         L_Init295
 	DECFSZ      R12, 1, 0
-	BRA         L_Init280
+	BRA         L_Init295
 	DECFSZ      R11, 1, 0
-	BRA         L_Init280
+	BRA         L_Init295
 	NOP
 	NOP
-;FirmV_0_7_0.c,1246 :: 		LCD_init(1);
+;FirmV_0_7_0.c,1251 :: 		LCD_init(1);
 	MOVLW       1
 	MOVWF       FARG_LCD_Init+0 
 	CALL        _LCD_Init+0, 0
-;FirmV_0_7_0.c,1247 :: 		LCDLines=1;
+;FirmV_0_7_0.c,1252 :: 		LCDLines=1;
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,1248 :: 		delay_ms(300);
+;FirmV_0_7_0.c,1253 :: 		delay_ms(300);
 	MOVLW       16
 	MOVWF       R11, 0
 	MOVLW       57
 	MOVWF       R12, 0
 	MOVLW       13
 	MOVWF       R13, 0
-L_Init281:
+L_Init296:
 	DECFSZ      R13, 1, 0
-	BRA         L_Init281
+	BRA         L_Init296
 	DECFSZ      R12, 1, 0
-	BRA         L_Init281
+	BRA         L_Init296
 	DECFSZ      R11, 1, 0
-	BRA         L_Init281
+	BRA         L_Init296
 	NOP
 	NOP
-;FirmV_0_7_0.c,1249 :: 		SetContrast(20);
+;FirmV_0_7_0.c,1254 :: 		SetContrast(20);
 	MOVLW       20
 	MOVWF       FARG_SetContrast+0 
 	CALL        _SetContrast+0, 0
-;FirmV_0_7_0.c,1252 :: 		ms500=0;
+;FirmV_0_7_0.c,1257 :: 		ms500=0;
 	CLRF        _ms500+0 
 	CLRF        _ms500+1 
 	CLRF        _ms500+2 
 	CLRF        _ms500+3 
-;FirmV_0_7_0.c,1253 :: 		t0con=0b10000101; //enable tmr0 and prescalar
+;FirmV_0_7_0.c,1258 :: 		t0con=0b10000101; //enable tmr0 and prescalar
 	MOVLW       133
 	MOVWF       T0CON+0 
-;FirmV_0_7_0.c,1254 :: 		intcon.b7=1;   //global int enable
+;FirmV_0_7_0.c,1259 :: 		intcon.b7=1;   //global int enable
 	BSF         INTCON+0, 7 
-;FirmV_0_7_0.c,1255 :: 		intcon.b5=1;  //tmr0 int enable
+;FirmV_0_7_0.c,1260 :: 		intcon.b5=1;  //tmr0 int enable
 	BSF         INTCON+0, 5 
-;FirmV_0_7_0.c,1256 :: 		intcon.b2=0; //tmr0 flag
+;FirmV_0_7_0.c,1261 :: 		intcon.b2=0; //tmr0 flag
 	BCF         INTCON+0, 2 
-;FirmV_0_7_0.c,1257 :: 		tmr0h=0xF3;
+;FirmV_0_7_0.c,1262 :: 		tmr0h=0xF3;
 	MOVLW       243
 	MOVWF       TMR0H+0 
-;FirmV_0_7_0.c,1258 :: 		tmr0l=0xCA;
+;FirmV_0_7_0.c,1263 :: 		tmr0l=0xCA;
 	MOVLW       202
 	MOVWF       TMR0L+0 
-;FirmV_0_7_0.c,1261 :: 		INT1IP_bit=1;
+;FirmV_0_7_0.c,1266 :: 		INT1IP_bit=1;
 	BSF         INT1IP_bit+0, 6 
-;FirmV_0_7_0.c,1262 :: 		INT1E_bit=1;
+;FirmV_0_7_0.c,1267 :: 		INT1E_bit=1;
 	BSF         INT1E_bit+0, 3 
-;FirmV_0_7_0.c,1263 :: 		INT1F_bit=0;
+;FirmV_0_7_0.c,1268 :: 		INT1F_bit=0;
 	BCF         INT1F_bit+0, 0 
-;FirmV_0_7_0.c,1264 :: 		INT2IP_bit=1;
+;FirmV_0_7_0.c,1269 :: 		INT2IP_bit=1;
 	BSF         INT2IP_bit+0, 7 
-;FirmV_0_7_0.c,1265 :: 		INT2E_bit=1;
+;FirmV_0_7_0.c,1270 :: 		INT2E_bit=1;
 	BSF         INT2E_bit+0, 4 
-;FirmV_0_7_0.c,1266 :: 		INT2F_bit=0;
+;FirmV_0_7_0.c,1271 :: 		INT2F_bit=0;
 	BCF         INT2F_bit+0, 1 
-;FirmV_0_7_0.c,1267 :: 		INTEDG1_bit=1;
+;FirmV_0_7_0.c,1272 :: 		INTEDG1_bit=1;
 	BSF         INTEDG1_bit+0, 5 
-;FirmV_0_7_0.c,1268 :: 		INTEDG2_bit=1;
+;FirmV_0_7_0.c,1273 :: 		INTEDG2_bit=1;
 	BSF         INTEDG2_bit+0, 4 
-;FirmV_0_7_0.c,1271 :: 		INT0F_bit=0;
+;FirmV_0_7_0.c,1276 :: 		INT0F_bit=0;
 	BCF         INT0F_bit+0, 1 
-;FirmV_0_7_0.c,1272 :: 		INT0E_bit=0;
+;FirmV_0_7_0.c,1277 :: 		INT0E_bit=0;
 	BCF         INT0E_bit+0, 4 
-;FirmV_0_7_0.c,1275 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1280 :: 		for(i=0;i<20;i++)
 	CLRF        Init_i_L0+0 
-L_Init282:
+L_Init297:
 	MOVLW       20
 	SUBWF       Init_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Init283
-;FirmV_0_7_0.c,1276 :: 		Tasks[i].Expired=1;
+	GOTO        L_Init298
+;FirmV_0_7_0.c,1281 :: 		Tasks[i].Expired=1;
 	MOVF        Init_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7709,51 +7768,51 @@ L_Init282:
 	MOVWF       FSR1H 
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,1275 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1280 :: 		for(i=0;i<20;i++)
 	INCF        Init_i_L0+0, 1 
-;FirmV_0_7_0.c,1276 :: 		Tasks[i].Expired=1;
-	GOTO        L_Init282
-L_Init283:
-;FirmV_0_7_0.c,1279 :: 		Events.Keys=0;
+;FirmV_0_7_0.c,1281 :: 		Tasks[i].Expired=1;
+	GOTO        L_Init297
+L_Init298:
+;FirmV_0_7_0.c,1284 :: 		Events.Keys=0;
 	CLRF        _Events+0 
-;FirmV_0_7_0.c,1280 :: 		Events.Task1=0;
+;FirmV_0_7_0.c,1285 :: 		Events.Task1=0;
 	CLRF        _Events+1 
-;FirmV_0_7_0.c,1281 :: 		Events.Task2=0;
+;FirmV_0_7_0.c,1286 :: 		Events.Task2=0;
 	CLRF        _Events+2 
-;FirmV_0_7_0.c,1282 :: 		Events.Task3=0;
+;FirmV_0_7_0.c,1287 :: 		Events.Task3=0;
 	CLRF        _Events+3 
-;FirmV_0_7_0.c,1283 :: 		Events.Remote=0;
+;FirmV_0_7_0.c,1288 :: 		Events.Remote=0;
 	CLRF        _Events+4 
-;FirmV_0_7_0.c,1284 :: 		Events.Overload=0;
+;FirmV_0_7_0.c,1289 :: 		Events.Overload=0;
 	CLRF        _Events+5 
-;FirmV_0_7_0.c,1285 :: 		Events.Photocell=0;
+;FirmV_0_7_0.c,1290 :: 		Events.Photocell=0;
 	CLRF        _Events+6 
-;FirmV_0_7_0.c,1288 :: 		State=0;
+;FirmV_0_7_0.c,1293 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,1291 :: 		UART1_init(115200);
+;FirmV_0_7_0.c,1296 :: 		UART1_init(115200);
 	MOVLW       21
 	MOVWF       SPBRG+0 
 	BSF         TXSTA+0, 2, 0
 	CALL        _UART1_Init+0, 0
-;FirmV_0_7_0.c,1294 :: 		LoadConfigs();
+;FirmV_0_7_0.c,1299 :: 		LoadConfigs();
 	CALL        _LoadConfigs+0, 0
-;FirmV_0_7_0.c,1298 :: 		}
+;FirmV_0_7_0.c,1303 :: 		}
 	RETURN      0
 ; end of _Init
 
 _TaskManager:
 
-;FirmV_0_7_0.c,1312 :: 		void TaskManager()
-;FirmV_0_7_0.c,1314 :: 		char i=0;
+;FirmV_0_7_0.c,1317 :: 		void TaskManager()
+;FirmV_0_7_0.c,1319 :: 		char i=0;
 	CLRF        TaskManager_i_L0+0 
-;FirmV_0_7_0.c,1315 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1320 :: 		for(i=0;i<20;i++)
 	CLRF        TaskManager_i_L0+0 
-L_TaskManager285:
+L_TaskManager300:
 	MOVLW       20
 	SUBWF       TaskManager_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_TaskManager286
-;FirmV_0_7_0.c,1316 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].Time==ms500)&&(Tasks[i].Fired==0))
+	GOTO        L_TaskManager301
+;FirmV_0_7_0.c,1321 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].Time==ms500)&&(Tasks[i].Fired==0))
 	MOVF        TaskManager_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7776,7 +7835,7 @@ L_TaskManager285:
 	MOVF        POSTINC0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_TaskManager290
+	GOTO        L_TaskManager305
 	MOVF        TaskManager_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7807,20 +7866,20 @@ L_TaskManager285:
 	MOVF        R4, 0 
 	XORWF       _ms500+3, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__TaskManager772
+	GOTO        L__TaskManager793
 	MOVF        R3, 0 
 	XORWF       _ms500+2, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__TaskManager772
+	GOTO        L__TaskManager793
 	MOVF        R2, 0 
 	XORWF       _ms500+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__TaskManager772
+	GOTO        L__TaskManager793
 	MOVF        R1, 0 
 	XORWF       _ms500+0, 0 
-L__TaskManager772:
+L__TaskManager793:
 	BTFSS       STATUS+0, 2 
-	GOTO        L_TaskManager290
+	GOTO        L_TaskManager305
 	MOVF        TaskManager_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7843,9 +7902,9 @@ L__TaskManager772:
 	MOVF        POSTINC0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_TaskManager290
-L__TaskManager708:
-;FirmV_0_7_0.c,1317 :: 		Tasks[i].Fired=1;
+	GOTO        L_TaskManager305
+L__TaskManager729:
+;FirmV_0_7_0.c,1322 :: 		Tasks[i].Fired=1;
 	MOVF        TaskManager_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7867,27 +7926,27 @@ L__TaskManager708:
 	MOVWF       FSR1H 
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-L_TaskManager290:
-;FirmV_0_7_0.c,1315 :: 		for(i=0;i<20;i++)
+L_TaskManager305:
+;FirmV_0_7_0.c,1320 :: 		for(i=0;i<20;i++)
 	INCF        TaskManager_i_L0+0, 1 
-;FirmV_0_7_0.c,1317 :: 		Tasks[i].Fired=1;
-	GOTO        L_TaskManager285
-L_TaskManager286:
-;FirmV_0_7_0.c,1318 :: 		}
+;FirmV_0_7_0.c,1322 :: 		Tasks[i].Fired=1;
+	GOTO        L_TaskManager300
+L_TaskManager301:
+;FirmV_0_7_0.c,1323 :: 		}
 	RETURN      0
 ; end of _TaskManager
 
 _AddTask:
 
-;FirmV_0_7_0.c,1330 :: 		void AddTask(unsigned long OccTime,char tcode)
-;FirmV_0_7_0.c,1333 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1335 :: 		void AddTask(unsigned long OccTime,char tcode)
+;FirmV_0_7_0.c,1338 :: 		for(i=0;i<20;i++)
 	CLRF        AddTask_i_L0+0 
-L_AddTask291:
+L_AddTask306:
 	MOVLW       20
 	SUBWF       AddTask_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_AddTask292
-;FirmV_0_7_0.c,1334 :: 		if(Tasks[i].Expired==1)
+	GOTO        L_AddTask307
+;FirmV_0_7_0.c,1339 :: 		if(Tasks[i].Expired==1)
 	MOVF        AddTask_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7910,8 +7969,8 @@ L_AddTask291:
 	MOVF        POSTINC0+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_AddTask294
-;FirmV_0_7_0.c,1336 :: 		Tasks[i].TaskCode=tcode;
+	GOTO        L_AddTask309
+;FirmV_0_7_0.c,1341 :: 		Tasks[i].TaskCode=tcode;
 	MOVF        AddTask_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7929,7 +7988,7 @@ L_AddTask291:
 	MOVWF       FSR1H 
 	MOVF        FARG_AddTask_tcode+0, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,1337 :: 		Tasks[i].Time=OccTime;
+;FirmV_0_7_0.c,1342 :: 		Tasks[i].Time=OccTime;
 	MOVF        AddTask_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7957,7 +8016,7 @@ L_AddTask291:
 	MOVWF       POSTINC1+0 
 	MOVF        FARG_AddTask_OccTime+3, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,1338 :: 		Tasks[i].Expired=0;
+;FirmV_0_7_0.c,1343 :: 		Tasks[i].Expired=0;
 	MOVF        AddTask_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7978,7 +8037,7 @@ L_AddTask291:
 	ADDWFC      R1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;FirmV_0_7_0.c,1339 :: 		Tasks[i].Fired=0;
+;FirmV_0_7_0.c,1344 :: 		Tasks[i].Fired=0;
 	MOVF        AddTask_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -7999,54 +8058,54 @@ L_AddTask291:
 	ADDWFC      R1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-;FirmV_0_7_0.c,1340 :: 		break;
-	GOTO        L_AddTask292
-;FirmV_0_7_0.c,1341 :: 		}
-L_AddTask294:
-;FirmV_0_7_0.c,1333 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1345 :: 		break;
+	GOTO        L_AddTask307
+;FirmV_0_7_0.c,1346 :: 		}
+L_AddTask309:
+;FirmV_0_7_0.c,1338 :: 		for(i=0;i<20;i++)
 	INCF        AddTask_i_L0+0, 1 
-;FirmV_0_7_0.c,1341 :: 		}
-	GOTO        L_AddTask291
-L_AddTask292:
-;FirmV_0_7_0.c,1342 :: 		}
+;FirmV_0_7_0.c,1346 :: 		}
+	GOTO        L_AddTask306
+L_AddTask307:
+;FirmV_0_7_0.c,1347 :: 		}
 	RETURN      0
 ; end of _AddTask
 
 _EventHandler:
 
-;FirmV_0_7_0.c,1352 :: 		void EventHandler()
-;FirmV_0_7_0.c,1355 :: 		Events.ExternalKeys=GetExternalKeysState();
+;FirmV_0_7_0.c,1357 :: 		void EventHandler()
+;FirmV_0_7_0.c,1360 :: 		Events.ExternalKeys=GetExternalKeysState();
 	CALL        _GetExternalKeysState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+8 
-;FirmV_0_7_0.c,1356 :: 		Events.Limiter=GetLimitSwitchState();
+;FirmV_0_7_0.c,1361 :: 		Events.Limiter=GetLimitSwitchState();
 	CALL        _GetLimitSwitchState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+7 
-;FirmV_0_7_0.c,1357 :: 		Events.Keys=GetKeysState();
+;FirmV_0_7_0.c,1362 :: 		Events.Keys=GetKeysState();
 	CALL        _GetKeysState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+0 
-;FirmV_0_7_0.c,1358 :: 		Events.Remote=GetRemoteState();
+;FirmV_0_7_0.c,1363 :: 		Events.Remote=GetRemoteState();
 	CALL        _GetRemoteState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+4 
-;FirmV_0_7_0.c,1359 :: 		Events.Overload=GetOverloadState();
+;FirmV_0_7_0.c,1364 :: 		Events.Overload=GetOverloadState();
 	CALL        _GetOverloadState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+5 
-;FirmV_0_7_0.c,1360 :: 		Events.Photocell=GetPhotocellState();
+;FirmV_0_7_0.c,1365 :: 		Events.Photocell=GetPhotocellState();
 	CALL        _GetPhotocellState+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Events+6 
-;FirmV_0_7_0.c,1362 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1367 :: 		for(i=0;i<20;i++)
 	CLRF        EventHandler_i_L0+0 
-L_EventHandler295:
+L_EventHandler310:
 	MOVLW       20
 	SUBWF       EventHandler_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_EventHandler296
-;FirmV_0_7_0.c,1363 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].Fired==1))
+	GOTO        L_EventHandler311
+;FirmV_0_7_0.c,1368 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].Fired==1))
 	MOVF        EventHandler_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -8069,7 +8128,7 @@ L_EventHandler295:
 	MOVF        POSTINC0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_EventHandler300
+	GOTO        L_EventHandler315
 	MOVF        EventHandler_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -8092,14 +8151,14 @@ L_EventHandler295:
 	MOVF        POSTINC0+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_EventHandler300
-L__EventHandler709:
-;FirmV_0_7_0.c,1365 :: 		if(Events.Task1==0)
+	GOTO        L_EventHandler315
+L__EventHandler730:
+;FirmV_0_7_0.c,1370 :: 		if(Events.Task1==0)
 	MOVF        _Events+1, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_EventHandler301
-;FirmV_0_7_0.c,1366 :: 		{Events.Task1=Tasks[i].TaskCode; Tasks[i].Expired=1;Tasks[i].Fired=0;}
+	GOTO        L_EventHandler316
+;FirmV_0_7_0.c,1371 :: 		{Events.Task1=Tasks[i].TaskCode; Tasks[i].Expired=1;Tasks[i].Fired=0;}
 	MOVF        EventHandler_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -8149,14 +8208,14 @@ L__EventHandler709:
 	ADDWFC      R1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-	GOTO        L_EventHandler302
-L_EventHandler301:
-;FirmV_0_7_0.c,1367 :: 		else if(Events.Task2==0)
+	GOTO        L_EventHandler317
+L_EventHandler316:
+;FirmV_0_7_0.c,1372 :: 		else if(Events.Task2==0)
 	MOVF        _Events+2, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_EventHandler303
-;FirmV_0_7_0.c,1368 :: 		{Events.Task2=Tasks[i].TaskCode;Tasks[i].Expired=1;Tasks[i].Fired=0;}
+	GOTO        L_EventHandler318
+;FirmV_0_7_0.c,1373 :: 		{Events.Task2=Tasks[i].TaskCode;Tasks[i].Expired=1;Tasks[i].Fired=0;}
 	MOVF        EventHandler_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -8206,14 +8265,14 @@ L_EventHandler301:
 	ADDWFC      R1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-	GOTO        L_EventHandler304
-L_EventHandler303:
-;FirmV_0_7_0.c,1369 :: 		else if(Events.Task3==0)
+	GOTO        L_EventHandler319
+L_EventHandler318:
+;FirmV_0_7_0.c,1374 :: 		else if(Events.Task3==0)
 	MOVF        _Events+3, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_EventHandler305
-;FirmV_0_7_0.c,1370 :: 		{Events.Task3=Tasks[i].TaskCode;Tasks[i].Expired=1;Tasks[i].Fired=0;}
+	GOTO        L_EventHandler320
+;FirmV_0_7_0.c,1375 :: 		{Events.Task3=Tasks[i].TaskCode;Tasks[i].Expired=1;Tasks[i].Fired=0;}
 	MOVF        EventHandler_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -8263,160 +8322,155 @@ L_EventHandler303:
 	ADDWFC      R1, 0 
 	MOVWF       FSR1H 
 	CLRF        POSTINC1+0 
-L_EventHandler305:
-L_EventHandler304:
-L_EventHandler302:
-;FirmV_0_7_0.c,1371 :: 		}
-L_EventHandler300:
-;FirmV_0_7_0.c,1362 :: 		for(i=0;i<20;i++)
+L_EventHandler320:
+L_EventHandler319:
+L_EventHandler317:
+;FirmV_0_7_0.c,1376 :: 		}
+L_EventHandler315:
+;FirmV_0_7_0.c,1367 :: 		for(i=0;i<20;i++)
 	INCF        EventHandler_i_L0+0, 1 
-;FirmV_0_7_0.c,1371 :: 		}
-	GOTO        L_EventHandler295
-L_EventHandler296:
-;FirmV_0_7_0.c,1372 :: 		}
+;FirmV_0_7_0.c,1376 :: 		}
+	GOTO        L_EventHandler310
+L_EventHandler311:
+;FirmV_0_7_0.c,1377 :: 		}
 	RETURN      0
 ; end of _EventHandler
 
 _GetKeysState:
 
-;FirmV_0_7_0.c,1382 :: 		char GetKeysState()
-;FirmV_0_7_0.c,1384 :: 		unsigned res=0;
+;FirmV_0_7_0.c,1387 :: 		char GetKeysState()
+;FirmV_0_7_0.c,1389 :: 		unsigned res=0;
 	CLRF        GetKeysState_res_L0+0 
 	CLRF        GetKeysState_res_L0+1 
-;FirmV_0_7_0.c,1388 :: 		char resch=0,fin;
+;FirmV_0_7_0.c,1393 :: 		char resch=0,fin;
 	CLRF        GetKeysState_resch_L0+0 
-;FirmV_0_7_0.c,1389 :: 		resch.b0=~KeyDown;
+;FirmV_0_7_0.c,1394 :: 		resch.b0=~KeyDown;
 	BTFSC       PORTD+0, 5 
-	GOTO        L__GetKeysState773
+	GOTO        L__GetKeysState794
 	BSF         GetKeysState_resch_L0+0, 0 
-	GOTO        L__GetKeysState774
-L__GetKeysState773:
+	GOTO        L__GetKeysState795
+L__GetKeysState794:
 	BCF         GetKeysState_resch_L0+0, 0 
-L__GetKeysState774:
-;FirmV_0_7_0.c,1390 :: 		resch.b1=~KeyMenu;
+L__GetKeysState795:
+;FirmV_0_7_0.c,1395 :: 		resch.b1=~KeyMenu;
 	BTFSC       PORTE+0, 0 
-	GOTO        L__GetKeysState775
+	GOTO        L__GetKeysState796
 	BSF         GetKeysState_resch_L0+0, 1 
-	GOTO        L__GetKeysState776
-L__GetKeysState775:
+	GOTO        L__GetKeysState797
+L__GetKeysState796:
 	BCF         GetKeysState_resch_L0+0, 1 
-L__GetKeysState776:
-;FirmV_0_7_0.c,1391 :: 		resch.b2=~KeyUp;
+L__GetKeysState797:
+;FirmV_0_7_0.c,1396 :: 		resch.b2=~KeyUp;
 	BTFSC       PORTD+0, 4 
-	GOTO        L__GetKeysState777
+	GOTO        L__GetKeysState798
 	BSF         GetKeysState_resch_L0+0, 2 
-	GOTO        L__GetKeysState778
-L__GetKeysState777:
+	GOTO        L__GetKeysState799
+L__GetKeysState798:
 	BCF         GetKeysState_resch_L0+0, 2 
-L__GetKeysState778:
-;FirmV_0_7_0.c,1393 :: 		if((resch==0))
+L__GetKeysState799:
+;FirmV_0_7_0.c,1398 :: 		if((resch==0))
 	MOVF        GetKeysState_resch_L0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState306
-;FirmV_0_7_0.c,1395 :: 		if(Pressed==0)
+	GOTO        L_GetKeysState321
+;FirmV_0_7_0.c,1400 :: 		if(Pressed==0)
 	MOVF        _Pressed+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState307
-;FirmV_0_7_0.c,1396 :: 		{Repeat=0;RepeatCount=0;Pressed=0;fin=0;RepeatRate=0;}
+	GOTO        L_GetKeysState322
+;FirmV_0_7_0.c,1401 :: 		{Repeat=0;RepeatCount=0;Pressed=0;fin=0;RepeatRate=0;}
 	CLRF        GetKeysState_Repeat_L0+0 
 	CLRF        GetKeysState_RepeatCount_L0+0 
 	CLRF        _Pressed+0 
 	CLRF        GetKeysState_fin_L0+0 
 	CLRF        GetKeysState_RepeatRate_L0+0 
-L_GetKeysState307:
-;FirmV_0_7_0.c,1397 :: 		if(Pressed==1)
+L_GetKeysState322:
+;FirmV_0_7_0.c,1402 :: 		if(Pressed==1)
 	MOVF        _Pressed+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState308
-;FirmV_0_7_0.c,1398 :: 		if(DebouncingDelay>=DebouncingFix)
+	GOTO        L_GetKeysState323
+;FirmV_0_7_0.c,1403 :: 		if(DebouncingDelay>=DebouncingFix)
 	MOVLW       5
 	SUBWF       _DebouncingDelay+0, 0 
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetKeysState309
-;FirmV_0_7_0.c,1399 :: 		{Repeat=0;RepeatCount=0;Pressed=0;fin=0;RepeatRate=0;}
+	GOTO        L_GetKeysState324
+;FirmV_0_7_0.c,1404 :: 		{Repeat=0;RepeatCount=0;Pressed=0;fin=0;RepeatRate=0;}
 	CLRF        GetKeysState_Repeat_L0+0 
 	CLRF        GetKeysState_RepeatCount_L0+0 
 	CLRF        _Pressed+0 
 	CLRF        GetKeysState_fin_L0+0 
 	CLRF        GetKeysState_RepeatRate_L0+0 
-L_GetKeysState309:
-L_GetKeysState308:
-;FirmV_0_7_0.c,1400 :: 		}
-L_GetKeysState306:
-;FirmV_0_7_0.c,1403 :: 		if(RepeatCount<=6)
+L_GetKeysState324:
+L_GetKeysState323:
+;FirmV_0_7_0.c,1405 :: 		}
+L_GetKeysState321:
+;FirmV_0_7_0.c,1408 :: 		if(RepeatCount<=6)
 	MOVF        GetKeysState_RepeatCount_L0+0, 0 
 	SUBLW       6
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetKeysState310
-;FirmV_0_7_0.c,1404 :: 		{RepeatSpeed=20;}
+	GOTO        L_GetKeysState325
+;FirmV_0_7_0.c,1409 :: 		{RepeatSpeed=20;}
 	MOVLW       20
 	MOVWF       GetKeysState_RepeatSpeed_L0+0 
-L_GetKeysState310:
-;FirmV_0_7_0.c,1405 :: 		if((RepeatCount>6)&&(RepeatCount<=20))
+L_GetKeysState325:
+;FirmV_0_7_0.c,1410 :: 		if((RepeatCount>6)&&(RepeatCount<=20))
 	MOVF        GetKeysState_RepeatCount_L0+0, 0 
 	SUBLW       6
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetKeysState313
+	GOTO        L_GetKeysState328
 	MOVF        GetKeysState_RepeatCount_L0+0, 0 
 	SUBLW       20
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetKeysState313
-L__GetKeysState715:
-;FirmV_0_7_0.c,1406 :: 		{RepeatSpeed=10;}
-	MOVLW       10
-	MOVWF       GetKeysState_RepeatSpeed_L0+0 
-L_GetKeysState313:
-;FirmV_0_7_0.c,1407 :: 		if(RepeatCount>20)
-	MOVF        GetKeysState_RepeatCount_L0+0, 0 
-	SUBLW       20
-	BTFSC       STATUS+0, 0 
-	GOTO        L_GetKeysState314
-;FirmV_0_7_0.c,1408 :: 		{RepeatSpeed=5;}
-	MOVLW       5
-	MOVWF       GetKeysState_RepeatSpeed_L0+0 
-	GOTO        L_GetKeysState315
-L_GetKeysState314:
+	GOTO        L_GetKeysState328
+L__GetKeysState736:
 ;FirmV_0_7_0.c,1411 :: 		{RepeatSpeed=10;}
 	MOVLW       10
 	MOVWF       GetKeysState_RepeatSpeed_L0+0 
-L_GetKeysState315:
-;FirmV_0_7_0.c,1414 :: 		if((Repeat==1)&&(KeyFlag>=RepeatSpeed))
+L_GetKeysState328:
+;FirmV_0_7_0.c,1412 :: 		if(RepeatCount>20)
+	MOVF        GetKeysState_RepeatCount_L0+0, 0 
+	SUBLW       20
+	BTFSC       STATUS+0, 0 
+	GOTO        L_GetKeysState329
+;FirmV_0_7_0.c,1413 :: 		{RepeatSpeed=5;}
+	MOVLW       5
+	MOVWF       GetKeysState_RepeatSpeed_L0+0 
+L_GetKeysState329:
+;FirmV_0_7_0.c,1416 :: 		if((Repeat==1)&&(KeyFlag>=RepeatSpeed))
 	MOVF        GetKeysState_Repeat_L0+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState318
+	GOTO        L_GetKeysState332
 	MOVF        GetKeysState_RepeatSpeed_L0+0, 0 
 	SUBWF       _KeyFlag+0, 0 
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetKeysState318
-L__GetKeysState714:
-;FirmV_0_7_0.c,1415 :: 		{RepeatRate=1;KeyFlag=0;if(RepeatCount<25)RepeatCount=RepeatCount+1;}
+	GOTO        L_GetKeysState332
+L__GetKeysState735:
+;FirmV_0_7_0.c,1417 :: 		{RepeatRate=1;KeyFlag=0;if(RepeatCount<25)RepeatCount=RepeatCount+1;}
 	MOVLW       1
 	MOVWF       GetKeysState_RepeatRate_L0+0 
 	CLRF        _KeyFlag+0 
 	MOVLW       25
 	SUBWF       GetKeysState_RepeatCount_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetKeysState319
+	GOTO        L_GetKeysState333
 	INCF        GetKeysState_RepeatCount_L0+0, 1 
-L_GetKeysState319:
-L_GetKeysState318:
-;FirmV_0_7_0.c,1419 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==0)&&(ms500==PressTime+KeyRepeatDelay))
+L_GetKeysState333:
+L_GetKeysState332:
+;FirmV_0_7_0.c,1421 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==0)&&(ms500==PressTime+KeyRepeatDelay))
 	MOVF        GetKeysState_resch_L0+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetKeysState322
+	GOTO        L_GetKeysState336
 	MOVF        _Pressed+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState322
+	GOTO        L_GetKeysState336
 	MOVF        GetKeysState_Repeat_L0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState322
+	GOTO        L_GetKeysState336
 	MOVLW       2
 	ADDWF       GetKeysState_PressTime_L0+0, 0 
 	MOVWF       R1 
@@ -8432,75 +8486,75 @@ L_GetKeysState318:
 	MOVF        _ms500+3, 0 
 	XORWF       R4, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__GetKeysState779
+	GOTO        L__GetKeysState800
 	MOVF        _ms500+2, 0 
 	XORWF       R3, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__GetKeysState779
+	GOTO        L__GetKeysState800
 	MOVF        _ms500+1, 0 
 	XORWF       R2, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__GetKeysState779
+	GOTO        L__GetKeysState800
 	MOVF        _ms500+0, 0 
 	XORWF       R1, 0 
-L__GetKeysState779:
+L__GetKeysState800:
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState322
-L__GetKeysState713:
-;FirmV_0_7_0.c,1420 :: 		{Repeat=1;KeyFlag=0;}
+	GOTO        L_GetKeysState336
+L__GetKeysState734:
+;FirmV_0_7_0.c,1422 :: 		{Repeat=1;KeyFlag=0;}
 	MOVLW       1
 	MOVWF       GetKeysState_Repeat_L0+0 
 	CLRF        _KeyFlag+0 
-L_GetKeysState322:
-;FirmV_0_7_0.c,1422 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==0))
+L_GetKeysState336:
+;FirmV_0_7_0.c,1424 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==0))
 	MOVF        GetKeysState_resch_L0+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetKeysState325
+	GOTO        L_GetKeysState339
 	MOVF        _Pressed+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState325
+	GOTO        L_GetKeysState339
 	MOVF        GetKeysState_Repeat_L0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState325
-L__GetKeysState712:
-;FirmV_0_7_0.c,1423 :: 		fin=0;
+	GOTO        L_GetKeysState339
+L__GetKeysState733:
+;FirmV_0_7_0.c,1425 :: 		fin=0;
 	CLRF        GetKeysState_fin_L0+0 
-L_GetKeysState325:
-;FirmV_0_7_0.c,1425 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==1))
+L_GetKeysState339:
+;FirmV_0_7_0.c,1427 :: 		if((resch!=0)&&(Pressed==1)&&(Repeat==1))
 	MOVF        GetKeysState_resch_L0+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetKeysState328
+	GOTO        L_GetKeysState342
 	MOVF        _Pressed+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState328
+	GOTO        L_GetKeysState342
 	MOVF        GetKeysState_Repeat_L0+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState328
-L__GetKeysState711:
-;FirmV_0_7_0.c,1426 :: 		{fin=resch*RepeatRate;RepeatRate=0;}
+	GOTO        L_GetKeysState342
+L__GetKeysState732:
+;FirmV_0_7_0.c,1428 :: 		{fin=resch*RepeatRate;RepeatRate=0;}
 	MOVF        GetKeysState_resch_L0+0, 0 
 	MULWF       GetKeysState_RepeatRate_L0+0 
 	MOVF        PRODL+0, 0 
 	MOVWF       GetKeysState_fin_L0+0 
 	CLRF        GetKeysState_RepeatRate_L0+0 
-L_GetKeysState328:
-;FirmV_0_7_0.c,1429 :: 		if((resch!=0)&&(Pressed==0))
+L_GetKeysState342:
+;FirmV_0_7_0.c,1431 :: 		if((resch!=0)&&(Pressed==0))
 	MOVF        GetKeysState_resch_L0+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetKeysState331
+	GOTO        L_GetKeysState345
 	MOVF        _Pressed+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetKeysState331
-L__GetKeysState710:
-;FirmV_0_7_0.c,1430 :: 		{fin=resch; Pressed=1;PressTime=ms500;DebouncingDelay=0;}
+	GOTO        L_GetKeysState345
+L__GetKeysState731:
+;FirmV_0_7_0.c,1432 :: 		{fin=resch; Pressed=1;PressTime=ms500;DebouncingDelay=0;}
 	MOVF        GetKeysState_resch_L0+0, 0 
 	MOVWF       GetKeysState_fin_L0+0 
 	MOVLW       1
@@ -8514,106 +8568,142 @@ L__GetKeysState710:
 	MOVF        _ms500+3, 0 
 	MOVWF       GetKeysState_PressTime_L0+3 
 	CLRF        _DebouncingDelay+0 
-L_GetKeysState331:
-;FirmV_0_7_0.c,1434 :: 		return fin;
+L_GetKeysState345:
+;FirmV_0_7_0.c,1436 :: 		if(fin != 0)
+	MOVF        GetKeysState_fin_L0+0, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_GetKeysState346
+;FirmV_0_7_0.c,1437 :: 		BuzzFlag=1;
+	MOVLW       1
+	MOVWF       _BuzzFlag+0 
+L_GetKeysState346:
+;FirmV_0_7_0.c,1439 :: 		return fin;
 	MOVF        GetKeysState_fin_L0+0, 0 
 	MOVWF       R0 
-;FirmV_0_7_0.c,1435 :: 		}
+;FirmV_0_7_0.c,1440 :: 		}
 	RETURN      0
 ; end of _GetKeysState
 
 _GetExternalKeysState:
 
-;FirmV_0_7_0.c,1445 :: 		char GetExternalKeysState()
-;FirmV_0_7_0.c,1447 :: 		char out=0;
+;FirmV_0_7_0.c,1450 :: 		char GetExternalKeysState()
+;FirmV_0_7_0.c,1452 :: 		char out=0;
 	CLRF        GetExternalKeysState_out_L0+0 
-;FirmV_0_7_0.c,1448 :: 		if(KeyUp==0)
+;FirmV_0_7_0.c,1453 :: 		if(KeyUp==0)
 	BTFSC       PORTD+0, 4 
-	GOTO        L_GetExternalKeysState332
-;FirmV_0_7_0.c,1449 :: 		out.b0=1;
+	GOTO        L_GetExternalKeysState347
+;FirmV_0_7_0.c,1454 :: 		out.b0=1;
 	BSF         GetExternalKeysState_out_L0+0, 0 
-L_GetExternalKeysState332:
-;FirmV_0_7_0.c,1450 :: 		if(KeyDown==0)
+L_GetExternalKeysState347:
+;FirmV_0_7_0.c,1455 :: 		if(KeyDown==0)
 	BTFSC       PORTD+0, 5 
-	GOTO        L_GetExternalKeysState333
-;FirmV_0_7_0.c,1451 :: 		out.b1=1;
+	GOTO        L_GetExternalKeysState348
+;FirmV_0_7_0.c,1456 :: 		out.b1=1;
 	BSF         GetExternalKeysState_out_L0+0, 1 
-L_GetExternalKeysState333:
-;FirmV_0_7_0.c,1452 :: 		return out;
+L_GetExternalKeysState348:
+;FirmV_0_7_0.c,1457 :: 		return out;
 	MOVF        GetExternalKeysState_out_L0+0, 0 
 	MOVWF       R0 
-;FirmV_0_7_0.c,1453 :: 		}
+;FirmV_0_7_0.c,1458 :: 		}
 	RETURN      0
 ; end of _GetExternalKeysState
 
 _GetLimitSwitchState:
 
-;FirmV_0_7_0.c,1466 :: 		char GetLimitSwitchState()
-;FirmV_0_7_0.c,1468 :: 		if((Limit1==0)||(Limit2==0))
+;FirmV_0_7_0.c,1471 :: 		char GetLimitSwitchState()
+;FirmV_0_7_0.c,1473 :: 		if((Limit1==0)||(Limit2==0))
 	BTFSS       PORTD+0, 0 
-	GOTO        L__GetLimitSwitchState716
+	GOTO        L__GetLimitSwitchState737
 	BTFSS       PORTD+0, 1 
-	GOTO        L__GetLimitSwitchState716
-	GOTO        L_GetLimitSwitchState336
-L__GetLimitSwitchState716:
-;FirmV_0_7_0.c,1469 :: 		return 1;
+	GOTO        L__GetLimitSwitchState737
+	GOTO        L_GetLimitSwitchState351
+L__GetLimitSwitchState737:
+;FirmV_0_7_0.c,1474 :: 		return 1;
 	MOVLW       1
 	MOVWF       R0 
 	RETURN      0
-L_GetLimitSwitchState336:
-;FirmV_0_7_0.c,1471 :: 		return 0;
+L_GetLimitSwitchState351:
+;FirmV_0_7_0.c,1476 :: 		return 0;
 	CLRF        R0 
-;FirmV_0_7_0.c,1472 :: 		}
+;FirmV_0_7_0.c,1477 :: 		}
 	RETURN      0
 ; end of _GetLimitSwitchState
 
 _GetRemoteState:
 
-;FirmV_0_7_0.c,1481 :: 		char GetRemoteState()
-;FirmV_0_7_0.c,1483 :: 		char res=0;
+;FirmV_0_7_0.c,1486 :: 		char GetRemoteState()
+;FirmV_0_7_0.c,1488 :: 		char res=0;
 	CLRF        GetRemoteState_res_L0+0 
-;FirmV_0_7_0.c,1484 :: 		res.b0=RemoteAFlag.b0;
+;FirmV_0_7_0.c,1489 :: 		res.b0=RemoteAFlag.b0;
 	BTFSC       _RemoteAFlag+0, 0 
-	GOTO        L__GetRemoteState780
+	GOTO        L__GetRemoteState801
 	BCF         GetRemoteState_res_L0+0, 0 
-	GOTO        L__GetRemoteState781
-L__GetRemoteState780:
+	GOTO        L__GetRemoteState802
+L__GetRemoteState801:
 	BSF         GetRemoteState_res_L0+0, 0 
-L__GetRemoteState781:
-;FirmV_0_7_0.c,1485 :: 		res.b1=RemoteBFlag.b0;
+L__GetRemoteState802:
+;FirmV_0_7_0.c,1490 :: 		res.b1=RemoteBFlag.b0;
 	BTFSC       _RemoteBFlag+0, 0 
-	GOTO        L__GetRemoteState782
+	GOTO        L__GetRemoteState803
 	BCF         GetRemoteState_res_L0+0, 1 
-	GOTO        L__GetRemoteState783
-L__GetRemoteState782:
+	GOTO        L__GetRemoteState804
+L__GetRemoteState803:
 	BSF         GetRemoteState_res_L0+0, 1 
-L__GetRemoteState783:
-;FirmV_0_7_0.c,1486 :: 		RemoteAFlag=0;
+L__GetRemoteState804:
+;FirmV_0_7_0.c,1491 :: 		RemoteAFlag=0;
 	CLRF        _RemoteAFlag+0 
-;FirmV_0_7_0.c,1487 :: 		RemoteBFlag=0;
+;FirmV_0_7_0.c,1492 :: 		RemoteBFlag=0;
 	CLRF        _RemoteBFlag+0 
-;FirmV_0_7_0.c,1488 :: 		res.b0=res.b0;//|(~KeyUp);
-;FirmV_0_7_0.c,1489 :: 		res.b1=res.b1;//|(~KeyDown);
-;FirmV_0_7_0.c,1490 :: 		return res;
+;FirmV_0_7_0.c,1493 :: 		res.b0=res.b0;
+;FirmV_0_7_0.c,1494 :: 		res.b1=res.b1;
+;FirmV_0_7_0.c,1495 :: 		if(State<20)
+	MOVLW       20
+	SUBWF       _State+0, 0 
+	BTFSC       STATUS+0, 0 
+	GOTO        L_GetRemoteState353
+;FirmV_0_7_0.c,1497 :: 		res.b0=res.b0|Events.Keys.b2;//up key
+	BTFSC       GetRemoteState_res_L0+0, 0 
+	GOTO        L__GetRemoteState805
+	BTFSC       _Events+0, 2 
+	GOTO        L__GetRemoteState805
+	BCF         GetRemoteState_res_L0+0, 0 
+	GOTO        L__GetRemoteState806
+L__GetRemoteState805:
+	BSF         GetRemoteState_res_L0+0, 0 
+L__GetRemoteState806:
+;FirmV_0_7_0.c,1498 :: 		res.b1=res.b1|Events.Keys.b0;//down key
+	BTFSC       GetRemoteState_res_L0+0, 1 
+	GOTO        L__GetRemoteState807
+	BTFSC       _Events+0, 0 
+	GOTO        L__GetRemoteState807
+	BCF         GetRemoteState_res_L0+0, 1 
+	GOTO        L__GetRemoteState808
+L__GetRemoteState807:
+	BSF         GetRemoteState_res_L0+0, 1 
+L__GetRemoteState808:
+;FirmV_0_7_0.c,1499 :: 		}
+L_GetRemoteState353:
+;FirmV_0_7_0.c,1500 :: 		return res;
 	MOVF        GetRemoteState_res_L0+0, 0 
 	MOVWF       R0 
-;FirmV_0_7_0.c,1491 :: 		}
+;FirmV_0_7_0.c,1501 :: 		}
 	RETURN      0
 ; end of _GetRemoteState
 
 _GetOverloadState:
 
-;FirmV_0_7_0.c,1501 :: 		char GetOverloadState()
-;FirmV_0_7_0.c,1503 :: 		char res=0;
+;FirmV_0_7_0.c,1511 :: 		char GetOverloadState()
+;FirmV_0_7_0.c,1513 :: 		char res=0;
 	CLRF        GetOverloadState_res_L0+0 
-;FirmV_0_7_0.c,1506 :: 		VCapM1=ADC_Read(0);
+;FirmV_0_7_0.c,1516 :: 		VCapM1=ADC_Read(0);
 	CLRF        FARG_ADC_Read_channel+0 
 	CALL        _ADC_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       GetOverloadState_VCapM1_L0+0 
 	MOVF        R1, 0 
 	MOVWF       GetOverloadState_VCapM1_L0+1 
-;FirmV_0_7_0.c,1507 :: 		VCapM2=ADC_Read(1);
+;FirmV_0_7_0.c,1517 :: 		VCapM2=ADC_Read(1);
 	MOVLW       1
 	MOVWF       FARG_ADC_Read_channel+0 
 	CALL        _ADC_Read+0, 0
@@ -8621,376 +8711,376 @@ _GetOverloadState:
 	MOVWF       GetOverloadState_VCapM2_L0+0 
 	MOVF        R1, 0 
 	MOVWF       GetOverloadState_VCapM2_L0+1 
-;FirmV_0_7_0.c,1511 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,1521 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1513 :: 		if(Motor1FullSpeed!=0)
+;FirmV_0_7_0.c,1523 :: 		if(Motor1FullSpeed!=0)
 	MOVF        _Motor1FullSpeed+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetOverloadState338
-;FirmV_0_7_0.c,1515 :: 		if(VCapM1<OverloadTreshold)
+	GOTO        L_GetOverloadState354
+;FirmV_0_7_0.c,1525 :: 		if(VCapM1<OverloadTreshold)
 	MOVF        _OverloadTreshold+1, 0 
 	SUBWF       GetOverloadState_VCapM1_L0+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__GetOverloadState784
+	GOTO        L__GetOverloadState809
 	MOVF        _OverloadTreshold+0, 0 
 	SUBWF       GetOverloadState_VCapM1_L0+0, 0 
-L__GetOverloadState784:
+L__GetOverloadState809:
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState339
-;FirmV_0_7_0.c,1517 :: 		if(OverloadCounter1<255)
+	GOTO        L_GetOverloadState355
+;FirmV_0_7_0.c,1527 :: 		if(OverloadCounter1<255)
 	MOVLW       255
 	SUBWF       _OverloadCounter1+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState340
-;FirmV_0_7_0.c,1518 :: 		OverloadCounter1=OverloadCounter1+1;
+	GOTO        L_GetOverloadState356
+;FirmV_0_7_0.c,1528 :: 		OverloadCounter1=OverloadCounter1+1;
 	INCF        _OverloadCounter1+0, 1 
-L_GetOverloadState340:
-;FirmV_0_7_0.c,1519 :: 		}
-	GOTO        L_GetOverloadState341
-L_GetOverloadState339:
-;FirmV_0_7_0.c,1522 :: 		if(OverloadCounter1>0)
+L_GetOverloadState356:
+;FirmV_0_7_0.c,1529 :: 		}
+	GOTO        L_GetOverloadState357
+L_GetOverloadState355:
+;FirmV_0_7_0.c,1532 :: 		if(OverloadCounter1>0)
 	MOVF        _OverloadCounter1+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState342
-;FirmV_0_7_0.c,1523 :: 		OverloadCounter1=OverloadCounter1-1;
+	GOTO        L_GetOverloadState358
+;FirmV_0_7_0.c,1533 :: 		OverloadCounter1=OverloadCounter1-1;
 	DECF        _OverloadCounter1+0, 1 
-L_GetOverloadState342:
-;FirmV_0_7_0.c,1524 :: 		}
-L_GetOverloadState341:
-;FirmV_0_7_0.c,1525 :: 		}
-	GOTO        L_GetOverloadState343
-L_GetOverloadState338:
-;FirmV_0_7_0.c,1527 :: 		{OverloadCounter1=0;}
+L_GetOverloadState358:
+;FirmV_0_7_0.c,1534 :: 		}
+L_GetOverloadState357:
+;FirmV_0_7_0.c,1535 :: 		}
+	GOTO        L_GetOverloadState359
+L_GetOverloadState354:
+;FirmV_0_7_0.c,1537 :: 		{OverloadCounter1=0;}
 	CLRF        _OverloadCounter1+0 
-L_GetOverloadState343:
-;FirmV_0_7_0.c,1529 :: 		if (OverloadCounter1>OverloadDuration)
+L_GetOverloadState359:
+;FirmV_0_7_0.c,1539 :: 		if (OverloadCounter1>OverloadDuration)
 	MOVF        _OverloadCounter1+0, 0 
 	SUBWF       _OverloadDuration+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState344
-;FirmV_0_7_0.c,1530 :: 		res.b0=1;
+	GOTO        L_GetOverloadState360
+;FirmV_0_7_0.c,1540 :: 		res.b0=1;
 	BSF         GetOverloadState_res_L0+0, 0 
-L_GetOverloadState344:
-;FirmV_0_7_0.c,1535 :: 		if(Motor2FullSpeed!=0)
+L_GetOverloadState360:
+;FirmV_0_7_0.c,1545 :: 		if(Motor2FullSpeed!=0)
 	MOVF        _Motor2FullSpeed+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_GetOverloadState345
-;FirmV_0_7_0.c,1537 :: 		if(VCapM2<OverloadTreshold)
+	GOTO        L_GetOverloadState361
+;FirmV_0_7_0.c,1547 :: 		if(VCapM2<OverloadTreshold)
 	MOVF        _OverloadTreshold+1, 0 
 	SUBWF       GetOverloadState_VCapM2_L0+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__GetOverloadState785
+	GOTO        L__GetOverloadState810
 	MOVF        _OverloadTreshold+0, 0 
 	SUBWF       GetOverloadState_VCapM2_L0+0, 0 
-L__GetOverloadState785:
+L__GetOverloadState810:
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState346
-;FirmV_0_7_0.c,1539 :: 		if(OverloadCounter2<255)
+	GOTO        L_GetOverloadState362
+;FirmV_0_7_0.c,1549 :: 		if(OverloadCounter2<255)
 	MOVLW       255
 	SUBWF       _OverloadCounter2+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState347
-;FirmV_0_7_0.c,1540 :: 		OverloadCounter2=OverloadCounter2+1;
+	GOTO        L_GetOverloadState363
+;FirmV_0_7_0.c,1550 :: 		OverloadCounter2=OverloadCounter2+1;
 	INCF        _OverloadCounter2+0, 1 
-L_GetOverloadState347:
-;FirmV_0_7_0.c,1541 :: 		}
-	GOTO        L_GetOverloadState348
-L_GetOverloadState346:
-;FirmV_0_7_0.c,1544 :: 		if(OverloadCounter2>0)
+L_GetOverloadState363:
+;FirmV_0_7_0.c,1551 :: 		}
+	GOTO        L_GetOverloadState364
+L_GetOverloadState362:
+;FirmV_0_7_0.c,1554 :: 		if(OverloadCounter2>0)
 	MOVF        _OverloadCounter2+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState349
-;FirmV_0_7_0.c,1545 :: 		OverloadCounter2=OverloadCounter2-1;
+	GOTO        L_GetOverloadState365
+;FirmV_0_7_0.c,1555 :: 		OverloadCounter2=OverloadCounter2-1;
 	DECF        _OverloadCounter2+0, 1 
-L_GetOverloadState349:
-;FirmV_0_7_0.c,1546 :: 		}
-L_GetOverloadState348:
-;FirmV_0_7_0.c,1547 :: 		}
-	GOTO        L_GetOverloadState350
-L_GetOverloadState345:
-;FirmV_0_7_0.c,1549 :: 		{OverloadCounter2=0;}
+L_GetOverloadState365:
+;FirmV_0_7_0.c,1556 :: 		}
+L_GetOverloadState364:
+;FirmV_0_7_0.c,1557 :: 		}
+	GOTO        L_GetOverloadState366
+L_GetOverloadState361:
+;FirmV_0_7_0.c,1559 :: 		{OverloadCounter2=0;}
 	CLRF        _OverloadCounter2+0 
-L_GetOverloadState350:
-;FirmV_0_7_0.c,1552 :: 		if (OverloadCounter2>OverloadDuration)
+L_GetOverloadState366:
+;FirmV_0_7_0.c,1562 :: 		if (OverloadCounter2>OverloadDuration)
 	MOVF        _OverloadCounter2+0, 0 
 	SUBWF       _OverloadDuration+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetOverloadState351
-;FirmV_0_7_0.c,1553 :: 		res.b1=1;
+	GOTO        L_GetOverloadState367
+;FirmV_0_7_0.c,1563 :: 		res.b1=1;
 	BSF         GetOverloadState_res_L0+0, 1 
-L_GetOverloadState351:
-;FirmV_0_7_0.c,1555 :: 		return res;
+L_GetOverloadState367:
+;FirmV_0_7_0.c,1565 :: 		return res;
 	MOVF        GetOverloadState_res_L0+0, 0 
 	MOVWF       R0 
-;FirmV_0_7_0.c,1556 :: 		}
+;FirmV_0_7_0.c,1566 :: 		}
 	RETURN      0
 ; end of _GetOverloadState
 
 _GetPhotocellState:
 
-;FirmV_0_7_0.c,1569 :: 		char GetPhotocellState()
-;FirmV_0_7_0.c,1571 :: 		if(Phcell1==0)
+;FirmV_0_7_0.c,1579 :: 		char GetPhotocellState()
+;FirmV_0_7_0.c,1581 :: 		if(Phcell1==0)
 	BTFSC       PORTD+0, 3 
-	GOTO        L_GetPhotocellState352
-;FirmV_0_7_0.c,1572 :: 		{if(PhotocellCount<=20)PhotocellCount=PhotocellCount+1;}
+	GOTO        L_GetPhotocellState368
+;FirmV_0_7_0.c,1582 :: 		{if(PhotocellCount<=20)PhotocellCount=PhotocellCount+1;}
 	MOVF        _PhotocellCount+0, 0 
 	SUBLW       20
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetPhotocellState353
+	GOTO        L_GetPhotocellState369
 	INCF        _PhotocellCount+0, 1 
-L_GetPhotocellState353:
-	GOTO        L_GetPhotocellState354
-L_GetPhotocellState352:
-;FirmV_0_7_0.c,1574 :: 		{PhotocellCount=0;}
+L_GetPhotocellState369:
+	GOTO        L_GetPhotocellState370
+L_GetPhotocellState368:
+;FirmV_0_7_0.c,1584 :: 		{PhotocellCount=0;}
 	CLRF        _PhotocellCount+0 
-L_GetPhotocellState354:
-;FirmV_0_7_0.c,1575 :: 		if(PhotocellCount>=20)
+L_GetPhotocellState370:
+;FirmV_0_7_0.c,1585 :: 		if(PhotocellCount>=20)
 	MOVLW       20
 	SUBWF       _PhotocellCount+0, 0 
 	BTFSS       STATUS+0, 0 
-	GOTO        L_GetPhotocellState355
-;FirmV_0_7_0.c,1576 :: 		return 1;
+	GOTO        L_GetPhotocellState371
+;FirmV_0_7_0.c,1586 :: 		return 1;
 	MOVLW       1
 	MOVWF       R0 
 	RETURN      0
-L_GetPhotocellState355:
-;FirmV_0_7_0.c,1578 :: 		return 0;
+L_GetPhotocellState371:
+;FirmV_0_7_0.c,1588 :: 		return 0;
 	CLRF        R0 
-;FirmV_0_7_0.c,1579 :: 		}
+;FirmV_0_7_0.c,1589 :: 		}
 	RETURN      0
 ; end of _GetPhotocellState
 
 _SetMotorSpeed:
 
-;FirmV_0_7_0.c,1591 :: 		void SetMotorSpeed(char M1FullSpeed,char M2FullSpeed)
-;FirmV_0_7_0.c,1593 :: 		if((M1FullSpeed==0)||(M2FullSpeed==0))
+;FirmV_0_7_0.c,1601 :: 		void SetMotorSpeed(char M1FullSpeed,char M2FullSpeed)
+;FirmV_0_7_0.c,1603 :: 		if((M1FullSpeed==0)||(M2FullSpeed==0))
 	MOVF        FARG_SetMotorSpeed_M1FullSpeed+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__SetMotorSpeed717
+	GOTO        L__SetMotorSpeed738
 	MOVF        FARG_SetMotorSpeed_M2FullSpeed+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L__SetMotorSpeed717
-	GOTO        L_SetMotorSpeed359
-L__SetMotorSpeed717:
-;FirmV_0_7_0.c,1594 :: 		INT0E_bit=1;
+	GOTO        L__SetMotorSpeed738
+	GOTO        L_SetMotorSpeed375
+L__SetMotorSpeed738:
+;FirmV_0_7_0.c,1604 :: 		INT0E_bit=1;
 	BSF         INT0E_bit+0, 4 
-	GOTO        L_SetMotorSpeed360
-L_SetMotorSpeed359:
-;FirmV_0_7_0.c,1596 :: 		INT0E_bit=0;
+	GOTO        L_SetMotorSpeed376
+L_SetMotorSpeed375:
+;FirmV_0_7_0.c,1606 :: 		INT0E_bit=0;
 	BCF         INT0E_bit+0, 4 
-L_SetMotorSpeed360:
-;FirmV_0_7_0.c,1598 :: 		Motor1FullSpeed=M1FullSpeed;
+L_SetMotorSpeed376:
+;FirmV_0_7_0.c,1608 :: 		Motor1FullSpeed=M1FullSpeed;
 	MOVF        FARG_SetMotorSpeed_M1FullSpeed+0, 0 
 	MOVWF       _Motor1FullSpeed+0 
-;FirmV_0_7_0.c,1599 :: 		Motor2FullSpeed=M2FullSpeed;
+;FirmV_0_7_0.c,1609 :: 		Motor2FullSpeed=M2FullSpeed;
 	MOVF        FARG_SetMotorSpeed_M2FullSpeed+0, 0 
 	MOVWF       _Motor2FullSpeed+0 
-;FirmV_0_7_0.c,1600 :: 		}
+;FirmV_0_7_0.c,1610 :: 		}
 	RETURN      0
 ; end of _SetMotorSpeed
 
 _OverloadInit:
 
-;FirmV_0_7_0.c,1611 :: 		void OverloadInit(char ch)
-;FirmV_0_7_0.c,1613 :: 		if(ch==1)
+;FirmV_0_7_0.c,1621 :: 		void OverloadInit(char ch)
+;FirmV_0_7_0.c,1623 :: 		if(ch==1)
 	MOVF        FARG_OverloadInit_ch+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_OverloadInit361
-;FirmV_0_7_0.c,1615 :: 		OverloadCounter1=0;
+	GOTO        L_OverloadInit377
+;FirmV_0_7_0.c,1625 :: 		OverloadCounter1=0;
 	CLRF        _OverloadCounter1+0 
-;FirmV_0_7_0.c,1616 :: 		Events.Overload.b0=0;
+;FirmV_0_7_0.c,1626 :: 		Events.Overload.b0=0;
 	BCF         _Events+5, 0 
-;FirmV_0_7_0.c,1617 :: 		}
-L_OverloadInit361:
-;FirmV_0_7_0.c,1619 :: 		if(ch==2)
+;FirmV_0_7_0.c,1627 :: 		}
+L_OverloadInit377:
+;FirmV_0_7_0.c,1629 :: 		if(ch==2)
 	MOVF        FARG_OverloadInit_ch+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_OverloadInit362
-;FirmV_0_7_0.c,1621 :: 		OverloadCounter2=0;
+	GOTO        L_OverloadInit378
+;FirmV_0_7_0.c,1631 :: 		OverloadCounter2=0;
 	CLRF        _OverloadCounter2+0 
-;FirmV_0_7_0.c,1622 :: 		Events.Overload.b1=0;
+;FirmV_0_7_0.c,1632 :: 		Events.Overload.b1=0;
 	BCF         _Events+5, 1 
-;FirmV_0_7_0.c,1623 :: 		}
-L_OverloadInit362:
-;FirmV_0_7_0.c,1624 :: 		}
+;FirmV_0_7_0.c,1633 :: 		}
+L_OverloadInit378:
+;FirmV_0_7_0.c,1634 :: 		}
 	RETURN      0
 ; end of _OverloadInit
 
 _SaveConfigs:
 
-;FirmV_0_7_0.c,1635 :: 		void SaveConfigs()
-;FirmV_0_7_0.c,1638 :: 		EEPROM_Write(1,Door1OpenTime);
+;FirmV_0_7_0.c,1645 :: 		void SaveConfigs()
+;FirmV_0_7_0.c,1648 :: 		EEPROM_Write(1,Door1OpenTime);
 	MOVLW       1
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _Door1OpenTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1639 :: 		EEPROM_Write(2,Door2OpenTime);
+;FirmV_0_7_0.c,1649 :: 		EEPROM_Write(2,Door2OpenTime);
 	MOVLW       2
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _Door2OpenTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1640 :: 		EEPROM_Write(3,Door1CloseTime);
+;FirmV_0_7_0.c,1650 :: 		EEPROM_Write(3,Door1CloseTime);
 	MOVLW       3
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _Door1CloseTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1641 :: 		EEPROM_Write(4,Door2CloseTime);
+;FirmV_0_7_0.c,1651 :: 		EEPROM_Write(4,Door2CloseTime);
 	MOVLW       4
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _Door2CloseTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1642 :: 		EEPROM_Write(5,ActionTimeDiff);
+;FirmV_0_7_0.c,1652 :: 		EEPROM_Write(5,ActionTimeDiff);
 	MOVLW       5
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _ActionTimeDiff+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1643 :: 		EEPROM_Write(6,OpenSoftStartTime);
+;FirmV_0_7_0.c,1653 :: 		EEPROM_Write(6,OpenSoftStartTime);
 	MOVLW       6
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _OpenSoftStartTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1644 :: 		EEPROM_Write(7,OpenSoftStopTime);
+;FirmV_0_7_0.c,1654 :: 		EEPROM_Write(7,OpenSoftStopTime);
 	MOVLW       7
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _OpenSoftStopTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1645 :: 		EEPROM_Write(8,CloseSoftStartTime);
+;FirmV_0_7_0.c,1655 :: 		EEPROM_Write(8,CloseSoftStartTime);
 	MOVLW       8
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _CloseSoftStartTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1646 :: 		EEPROM_Write(9,CloseSoftStopTime);
+;FirmV_0_7_0.c,1656 :: 		EEPROM_Write(9,CloseSoftStopTime);
 	MOVLW       9
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _CloseSoftStopTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1647 :: 		EEPROM_Write(10,Hi(AutoCloseTime));
+;FirmV_0_7_0.c,1657 :: 		EEPROM_Write(10,Hi(AutoCloseTime));
 	MOVLW       10
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _AutoCloseTime+1, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1648 :: 		EEPROM_Write(11,Lo(AutoCloseTime));
+;FirmV_0_7_0.c,1658 :: 		EEPROM_Write(11,Lo(AutoCloseTime));
 	MOVLW       11
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _AutoCloseTime+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1649 :: 		EEPROM_Write(12,OverloadSens);
+;FirmV_0_7_0.c,1659 :: 		EEPROM_Write(12,OverloadSens);
 	MOVLW       12
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _OverloadSens+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1650 :: 		SetOverloadParams(9-OverloadSens);
+;FirmV_0_7_0.c,1660 :: 		SetOverloadParams(9-OverloadSens);
 	MOVF        _OverloadSens+0, 0 
 	SUBLW       9
 	MOVWF       FARG_SetOverloadParams+0 
 	CALL        _SetOverloadParams+0, 0
-;FirmV_0_7_0.c,1651 :: 		EEPROM_Write(13,CloseAfterPass);
+;FirmV_0_7_0.c,1661 :: 		EEPROM_Write(13,CloseAfterPass);
 	MOVLW       13
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _CloseAfterPass+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1652 :: 		EEPROM_Write(14,LockForce);
+;FirmV_0_7_0.c,1662 :: 		EEPROM_Write(14,LockForce);
 	MOVLW       14
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _LockForce+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1653 :: 		EEPROM_Write(15,OpenPhEnable);
+;FirmV_0_7_0.c,1663 :: 		EEPROM_Write(15,OpenPhEnable);
 	MOVLW       15
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _OpenPhEnable+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1654 :: 		EEPROM_Write(16,LimiterEnable);
+;FirmV_0_7_0.c,1664 :: 		EEPROM_Write(16,LimiterEnable);
 	MOVLW       16
 	MOVWF       FARG_EEPROM_Write_address+0 
 	MOVF        _LimiterEnable+0, 0 
 	MOVWF       FARG_EEPROM_Write_data_+0 
 	CALL        _EEPROM_Write+0, 0
-;FirmV_0_7_0.c,1656 :: 		}
+;FirmV_0_7_0.c,1666 :: 		}
 	RETURN      0
 ; end of _SaveConfigs
 
 _LoadConfigs:
 
-;FirmV_0_7_0.c,1669 :: 		void LoadConfigs()
-;FirmV_0_7_0.c,1671 :: 		Door1OpenTime=EEPROM_Read(1);
+;FirmV_0_7_0.c,1679 :: 		void LoadConfigs()
+;FirmV_0_7_0.c,1681 :: 		Door1OpenTime=EEPROM_Read(1);
 	MOVLW       1
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Door1OpenTime+0 
-;FirmV_0_7_0.c,1672 :: 		Door2OpenTime=EEPROM_Read(2);
+;FirmV_0_7_0.c,1682 :: 		Door2OpenTime=EEPROM_Read(2);
 	MOVLW       2
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Door2OpenTime+0 
-;FirmV_0_7_0.c,1673 :: 		Door1CloseTime=EEPROM_Read(3);
+;FirmV_0_7_0.c,1683 :: 		Door1CloseTime=EEPROM_Read(3);
 	MOVLW       3
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Door1CloseTime+0 
-;FirmV_0_7_0.c,1674 :: 		Door2CloseTime=EEPROM_Read(4);
+;FirmV_0_7_0.c,1684 :: 		Door2CloseTime=EEPROM_Read(4);
 	MOVLW       4
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _Door2CloseTime+0 
-;FirmV_0_7_0.c,1675 :: 		ActionTimeDiff=EEPROM_Read(5);
+;FirmV_0_7_0.c,1685 :: 		ActionTimeDiff=EEPROM_Read(5);
 	MOVLW       5
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _ActionTimeDiff+0 
-;FirmV_0_7_0.c,1676 :: 		OpenSoftStartTime=EEPROM_Read(6);
+;FirmV_0_7_0.c,1686 :: 		OpenSoftStartTime=EEPROM_Read(6);
 	MOVLW       6
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _OpenSoftStartTime+0 
-;FirmV_0_7_0.c,1677 :: 		OpenSoftStopTime=EEPROM_Read(7);
+;FirmV_0_7_0.c,1687 :: 		OpenSoftStopTime=EEPROM_Read(7);
 	MOVLW       7
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _OpenSoftStopTime+0 
-;FirmV_0_7_0.c,1678 :: 		CloseSoftStartTime=EEPROM_Read(8);
+;FirmV_0_7_0.c,1688 :: 		CloseSoftStartTime=EEPROM_Read(8);
 	MOVLW       8
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _CloseSoftStartTime+0 
-;FirmV_0_7_0.c,1679 :: 		CloseSoftStopTime=EEPROM_Read(9);
+;FirmV_0_7_0.c,1689 :: 		CloseSoftStopTime=EEPROM_Read(9);
 	MOVLW       9
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _CloseSoftStopTime+0 
-;FirmV_0_7_0.c,1680 :: 		AutoCloseTime=EEPROM_Read(10);
+;FirmV_0_7_0.c,1690 :: 		AutoCloseTime=EEPROM_Read(10);
 	MOVLW       10
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
@@ -8998,11 +9088,11 @@ _LoadConfigs:
 	MOVWF       _AutoCloseTime+0 
 	MOVLW       0
 	MOVWF       _AutoCloseTime+1 
-;FirmV_0_7_0.c,1681 :: 		AutoCloseTime=AutoCloseTime<<8;
+;FirmV_0_7_0.c,1691 :: 		AutoCloseTime=AutoCloseTime<<8;
 	MOVF        _AutoCloseTime+0, 0 
 	MOVWF       _AutoCloseTime+1 
 	CLRF        _AutoCloseTime+0 
-;FirmV_0_7_0.c,1682 :: 		AutoCloseTime=AutocloseTime|EEPROM_Read(11);
+;FirmV_0_7_0.c,1692 :: 		AutoCloseTime=AutocloseTime|EEPROM_Read(11);
 	MOVLW       11
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
@@ -9010,260 +9100,260 @@ _LoadConfigs:
 	IORWF       _AutoCloseTime+0, 1 
 	MOVLW       0
 	IORWF       _AutoCloseTime+1, 1 
-;FirmV_0_7_0.c,1683 :: 		OverloadSens=EEPROM_Read(12);
+;FirmV_0_7_0.c,1693 :: 		OverloadSens=EEPROM_Read(12);
 	MOVLW       12
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _OverloadSens+0 
-;FirmV_0_7_0.c,1684 :: 		SetOverloadParams(9-OverloadSens);
+;FirmV_0_7_0.c,1694 :: 		SetOverloadParams(9-OverloadSens);
 	MOVF        R0, 0 
 	SUBLW       9
 	MOVWF       FARG_SetOverloadParams+0 
 	CALL        _SetOverloadParams+0, 0
-;FirmV_0_7_0.c,1685 :: 		CloseAfterPass=EEPROM_Read(13);
+;FirmV_0_7_0.c,1695 :: 		CloseAfterPass=EEPROM_Read(13);
 	MOVLW       13
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _CloseAfterPass+0 
-;FirmV_0_7_0.c,1686 :: 		LockForce=EEPROM_Read(14);
+;FirmV_0_7_0.c,1696 :: 		LockForce=EEPROM_Read(14);
 	MOVLW       14
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _LockForce+0 
-;FirmV_0_7_0.c,1687 :: 		OpenPhEnable=EEPROM_Read(15);
+;FirmV_0_7_0.c,1697 :: 		OpenPhEnable=EEPROM_Read(15);
 	MOVLW       15
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _OpenPhEnable+0 
-;FirmV_0_7_0.c,1688 :: 		LimiterEnable=EEPROM_Read(16);
+;FirmV_0_7_0.c,1698 :: 		LimiterEnable=EEPROM_Read(16);
 	MOVLW       16
 	MOVWF       FARG_EEPROM_Read_address+0 
 	CALL        _EEPROM_Read+0, 0
 	MOVF        R0, 0 
 	MOVWF       _LimiterEnable+0 
-;FirmV_0_7_0.c,1690 :: 		}
+;FirmV_0_7_0.c,1700 :: 		}
 	RETURN      0
 ; end of _LoadConfigs
 
 _FactorySettings:
 
-;FirmV_0_7_0.c,1703 :: 		void FactorySettings()
-;FirmV_0_7_0.c,1705 :: 		Door1OpenTime=20;
+;FirmV_0_7_0.c,1713 :: 		void FactorySettings()
+;FirmV_0_7_0.c,1715 :: 		Door1OpenTime=20;
 	MOVLW       20
 	MOVWF       _Door1OpenTime+0 
-;FirmV_0_7_0.c,1706 :: 		Door1CloseTime=20;
+;FirmV_0_7_0.c,1716 :: 		Door1CloseTime=20;
 	MOVLW       20
 	MOVWF       _Door1CloseTime+0 
-;FirmV_0_7_0.c,1707 :: 		Door2OpenTime=20;
+;FirmV_0_7_0.c,1717 :: 		Door2OpenTime=20;
 	MOVLW       20
 	MOVWF       _Door2OpenTime+0 
-;FirmV_0_7_0.c,1708 :: 		Door2CloseTime=20;
+;FirmV_0_7_0.c,1718 :: 		Door2CloseTime=20;
 	MOVLW       20
 	MOVWF       _Door2CloseTime+0 
-;FirmV_0_7_0.c,1709 :: 		OverloadSens=5;
+;FirmV_0_7_0.c,1719 :: 		OverloadSens=5;
 	MOVLW       5
 	MOVWF       _OverloadSens+0 
-;FirmV_0_7_0.c,1710 :: 		SetOverloadParams(4);  //9-5
+;FirmV_0_7_0.c,1720 :: 		SetOverloadParams(4);  //9-5
 	MOVLW       4
 	MOVWF       FARG_SetOverloadParams+0 
 	CALL        _SetOverloadParams+0, 0
-;FirmV_0_7_0.c,1711 :: 		OpenSoftStopTime=10;
+;FirmV_0_7_0.c,1721 :: 		OpenSoftStopTime=10;
 	MOVLW       10
 	MOVWF       _OpenSoftStopTime+0 
-;FirmV_0_7_0.c,1712 :: 		OpenSoftStartTime=4;
+;FirmV_0_7_0.c,1722 :: 		OpenSoftStartTime=4;
 	MOVLW       4
 	MOVWF       _OpenSoftStartTime+0 
-;FirmV_0_7_0.c,1713 :: 		CloseSoftStopTime=10;
+;FirmV_0_7_0.c,1723 :: 		CloseSoftStopTime=10;
 	MOVLW       10
 	MOVWF       _CloseSoftStopTime+0 
-;FirmV_0_7_0.c,1714 :: 		CloseSoftStartTime=4;
+;FirmV_0_7_0.c,1724 :: 		CloseSoftStartTime=4;
 	MOVLW       4
 	MOVWF       _CloseSoftStartTime+0 
-;FirmV_0_7_0.c,1715 :: 		ActionTimeDiff=12;
+;FirmV_0_7_0.c,1725 :: 		ActionTimeDiff=12;
 	MOVLW       12
 	MOVWF       _ActionTimeDiff+0 
-;FirmV_0_7_0.c,1716 :: 		AutoCloseTime=0;
+;FirmV_0_7_0.c,1726 :: 		AutoCloseTime=0;
 	CLRF        _AutoCloseTime+0 
 	CLRF        _AutoCloseTime+1 
-;FirmV_0_7_0.c,1717 :: 		LockForce=0;
+;FirmV_0_7_0.c,1727 :: 		LockForce=0;
 	CLRF        _LockForce+0 
-;FirmV_0_7_0.c,1718 :: 		OpenPhEnable=0;
+;FirmV_0_7_0.c,1728 :: 		OpenPhEnable=0;
 	CLRF        _OpenPhEnable+0 
-;FirmV_0_7_0.c,1719 :: 		LimiterEnable=0;
+;FirmV_0_7_0.c,1729 :: 		LimiterEnable=0;
 	CLRF        _LimiterEnable+0 
-;FirmV_0_7_0.c,1720 :: 		CloseAfterPass=0;
+;FirmV_0_7_0.c,1730 :: 		CloseAfterPass=0;
 	CLRF        _CloseAfterPass+0 
-;FirmV_0_7_0.c,1722 :: 		SaveConfigs();
+;FirmV_0_7_0.c,1732 :: 		SaveConfigs();
 	CALL        _SaveConfigs+0, 0
-;FirmV_0_7_0.c,1723 :: 		}
+;FirmV_0_7_0.c,1733 :: 		}
 	RETURN      0
 ; end of _FactorySettings
 
 _StartMotor:
 
-;FirmV_0_7_0.c,1729 :: 		void StartMotor(char Mx,char Dir)
-;FirmV_0_7_0.c,1731 :: 		if(Mx==1)
+;FirmV_0_7_0.c,1739 :: 		void StartMotor(char Mx,char Dir)
+;FirmV_0_7_0.c,1741 :: 		if(Mx==1)
 	MOVF        FARG_StartMotor_Mx+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_StartMotor363
-;FirmV_0_7_0.c,1733 :: 		Motor1Dir=Dir;
+	GOTO        L_StartMotor379
+;FirmV_0_7_0.c,1743 :: 		Motor1Dir=Dir;
 	BTFSC       FARG_StartMotor_Dir+0, 0 
-	GOTO        L__StartMotor786
+	GOTO        L__StartMotor811
 	BCF         PORTC+0, 1 
-	GOTO        L__StartMotor787
-L__StartMotor786:
+	GOTO        L__StartMotor812
+L__StartMotor811:
 	BSF         PORTC+0, 1 
-L__StartMotor787:
-;FirmV_0_7_0.c,1734 :: 		delay_ms(100);
+L__StartMotor812:
+;FirmV_0_7_0.c,1744 :: 		delay_ms(100);
 	MOVLW       6
 	MOVWF       R11, 0
 	MOVLW       19
 	MOVWF       R12, 0
 	MOVLW       173
 	MOVWF       R13, 0
-L_StartMotor364:
+L_StartMotor380:
 	DECFSZ      R13, 1, 0
-	BRA         L_StartMotor364
+	BRA         L_StartMotor380
 	DECFSZ      R12, 1, 0
-	BRA         L_StartMotor364
+	BRA         L_StartMotor380
 	DECFSZ      R11, 1, 0
-	BRA         L_StartMotor364
+	BRA         L_StartMotor380
 	NOP
 	NOP
-;FirmV_0_7_0.c,1735 :: 		Motor1Start=1;
+;FirmV_0_7_0.c,1745 :: 		Motor1Start=1;
 	MOVLW       1
 	MOVWF       _Motor1Start+0 
-;FirmV_0_7_0.c,1736 :: 		Motor1=1;
+;FirmV_0_7_0.c,1746 :: 		Motor1=1;
 	BSF         PORTB+0, 3 
-;FirmV_0_7_0.c,1737 :: 		}
-L_StartMotor363:
-;FirmV_0_7_0.c,1739 :: 		if(Mx==2)
+;FirmV_0_7_0.c,1747 :: 		}
+L_StartMotor379:
+;FirmV_0_7_0.c,1749 :: 		if(Mx==2)
 	MOVF        FARG_StartMotor_Mx+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_StartMotor365
-;FirmV_0_7_0.c,1741 :: 		Motor2Dir=Dir;
+	GOTO        L_StartMotor381
+;FirmV_0_7_0.c,1751 :: 		Motor2Dir=Dir;
 	BTFSC       FARG_StartMotor_Dir+0, 0 
-	GOTO        L__StartMotor788
+	GOTO        L__StartMotor813
 	BCF         PORTC+0, 0 
-	GOTO        L__StartMotor789
-L__StartMotor788:
+	GOTO        L__StartMotor814
+L__StartMotor813:
 	BSF         PORTC+0, 0 
-L__StartMotor789:
-;FirmV_0_7_0.c,1742 :: 		delay_ms(100);
+L__StartMotor814:
+;FirmV_0_7_0.c,1752 :: 		delay_ms(100);
 	MOVLW       6
 	MOVWF       R11, 0
 	MOVLW       19
 	MOVWF       R12, 0
 	MOVLW       173
 	MOVWF       R13, 0
-L_StartMotor366:
+L_StartMotor382:
 	DECFSZ      R13, 1, 0
-	BRA         L_StartMotor366
+	BRA         L_StartMotor382
 	DECFSZ      R12, 1, 0
-	BRA         L_StartMotor366
+	BRA         L_StartMotor382
 	DECFSZ      R11, 1, 0
-	BRA         L_StartMotor366
+	BRA         L_StartMotor382
 	NOP
 	NOP
-;FirmV_0_7_0.c,1743 :: 		Motor2Start=1;
+;FirmV_0_7_0.c,1753 :: 		Motor2Start=1;
 	MOVLW       1
 	MOVWF       _Motor2Start+0 
-;FirmV_0_7_0.c,1744 :: 		Motor2=1;
+;FirmV_0_7_0.c,1754 :: 		Motor2=1;
 	BSF         PORTB+0, 4 
-;FirmV_0_7_0.c,1745 :: 		}
-L_StartMotor365:
-;FirmV_0_7_0.c,1746 :: 		}
+;FirmV_0_7_0.c,1755 :: 		}
+L_StartMotor381:
+;FirmV_0_7_0.c,1756 :: 		}
 	RETURN      0
 ; end of _StartMotor
 
 _StopMotor:
 
-;FirmV_0_7_0.c,1749 :: 		void StopMotor(char Mx)
-;FirmV_0_7_0.c,1751 :: 		if(Mx==1)
+;FirmV_0_7_0.c,1759 :: 		void StopMotor(char Mx)
+;FirmV_0_7_0.c,1761 :: 		if(Mx==1)
 	MOVF        FARG_StopMotor_Mx+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_StopMotor367
-;FirmV_0_7_0.c,1753 :: 		Motor1Start=0;
+	GOTO        L_StopMotor383
+;FirmV_0_7_0.c,1763 :: 		Motor1Start=0;
 	CLRF        _Motor1Start+0 
-;FirmV_0_7_0.c,1754 :: 		Motor1=0;
+;FirmV_0_7_0.c,1764 :: 		Motor1=0;
 	BCF         PORTB+0, 3 
-;FirmV_0_7_0.c,1755 :: 		}
-L_StopMotor367:
-;FirmV_0_7_0.c,1757 :: 		if(Mx==2)
+;FirmV_0_7_0.c,1765 :: 		}
+L_StopMotor383:
+;FirmV_0_7_0.c,1767 :: 		if(Mx==2)
 	MOVF        FARG_StopMotor_Mx+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_StopMotor368
-;FirmV_0_7_0.c,1759 :: 		Motor2Start=0;
+	GOTO        L_StopMotor384
+;FirmV_0_7_0.c,1769 :: 		Motor2Start=0;
 	CLRF        _Motor2Start+0 
-;FirmV_0_7_0.c,1760 :: 		Motor2=0;
+;FirmV_0_7_0.c,1770 :: 		Motor2=0;
 	BCF         PORTB+0, 4 
-;FirmV_0_7_0.c,1761 :: 		}
-L_StopMotor368:
-;FirmV_0_7_0.c,1762 :: 		}
+;FirmV_0_7_0.c,1771 :: 		}
+L_StopMotor384:
+;FirmV_0_7_0.c,1772 :: 		}
 	RETURN      0
 ; end of _StopMotor
 
 _CheckTask:
 
-;FirmV_0_7_0.c,1774 :: 		char CheckTask(char TaskCode)
-;FirmV_0_7_0.c,1776 :: 		if(Events.Task1==TaskCode)
+;FirmV_0_7_0.c,1784 :: 		char CheckTask(char TaskCode)
+;FirmV_0_7_0.c,1786 :: 		if(Events.Task1==TaskCode)
 	MOVF        _Events+1, 0 
 	XORWF       FARG_CheckTask_TaskCode+0, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L_CheckTask369
-;FirmV_0_7_0.c,1777 :: 		{Events.Task1=0; return 1;}
+	GOTO        L_CheckTask385
+;FirmV_0_7_0.c,1787 :: 		{Events.Task1=0; return 1;}
 	CLRF        _Events+1 
 	MOVLW       1
 	MOVWF       R0 
 	RETURN      0
-L_CheckTask369:
-;FirmV_0_7_0.c,1779 :: 		if(Events.Task2==TaskCode)
+L_CheckTask385:
+;FirmV_0_7_0.c,1789 :: 		if(Events.Task2==TaskCode)
 	MOVF        _Events+2, 0 
 	XORWF       FARG_CheckTask_TaskCode+0, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L_CheckTask370
-;FirmV_0_7_0.c,1780 :: 		{Events.Task2=0; return 1;}
+	GOTO        L_CheckTask386
+;FirmV_0_7_0.c,1790 :: 		{Events.Task2=0; return 1;}
 	CLRF        _Events+2 
 	MOVLW       1
 	MOVWF       R0 
 	RETURN      0
-L_CheckTask370:
-;FirmV_0_7_0.c,1782 :: 		if(Events.Task3==TaskCode)
+L_CheckTask386:
+;FirmV_0_7_0.c,1792 :: 		if(Events.Task3==TaskCode)
 	MOVF        _Events+3, 0 
 	XORWF       FARG_CheckTask_TaskCode+0, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L_CheckTask371
-;FirmV_0_7_0.c,1783 :: 		{Events.Task3=0; return 1;}
+	GOTO        L_CheckTask387
+;FirmV_0_7_0.c,1793 :: 		{Events.Task3=0; return 1;}
 	CLRF        _Events+3 
 	MOVLW       1
 	MOVWF       R0 
 	RETURN      0
-L_CheckTask371:
-;FirmV_0_7_0.c,1785 :: 		return 0;
+L_CheckTask387:
+;FirmV_0_7_0.c,1795 :: 		return 0;
 	CLRF        R0 
-;FirmV_0_7_0.c,1787 :: 		}
+;FirmV_0_7_0.c,1797 :: 		}
 	RETURN      0
 ; end of _CheckTask
 
 _GetAutocloseTime:
 
-;FirmV_0_7_0.c,1795 :: 		char GetAutocloseTime()
-;FirmV_0_7_0.c,1799 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1805 :: 		char GetAutocloseTime()
+;FirmV_0_7_0.c,1809 :: 		for(i=0;i<20;i++)
 	CLRF        GetAutocloseTime_i_L0+0 
-L_GetAutocloseTime372:
+L_GetAutocloseTime388:
 	MOVLW       20
 	SUBWF       GetAutocloseTime_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_GetAutocloseTime373
-;FirmV_0_7_0.c,1801 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
+	GOTO        L_GetAutocloseTime389
+;FirmV_0_7_0.c,1811 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
 	MOVF        GetAutocloseTime_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9286,7 +9376,7 @@ L_GetAutocloseTime372:
 	MOVF        POSTINC0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetAutocloseTime377
+	GOTO        L_GetAutocloseTime393
 	MOVF        GetAutocloseTime_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9307,9 +9397,9 @@ L_GetAutocloseTime372:
 	MOVF        R1, 0 
 	XORLW       9
 	BTFSS       STATUS+0, 2 
-	GOTO        L_GetAutocloseTime377
-L__GetAutocloseTime718:
-;FirmV_0_7_0.c,1802 :: 		t=Tasks[i].Time;
+	GOTO        L_GetAutocloseTime393
+L__GetAutocloseTime739:
+;FirmV_0_7_0.c,1812 :: 		t=Tasks[i].Time;
 	MOVF        GetAutocloseTime_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9337,8 +9427,8 @@ L__GetAutocloseTime718:
 	MOVWF       GetAutocloseTime_t_L0+2 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       GetAutocloseTime_t_L0+3 
-L_GetAutocloseTime377:
-;FirmV_0_7_0.c,1803 :: 		Tasks[i].Expired=1;
+L_GetAutocloseTime393:
+;FirmV_0_7_0.c,1813 :: 		Tasks[i].Expired=1;
 	MOVF        GetAutocloseTime_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9360,33 +9450,33 @@ L_GetAutocloseTime377:
 	MOVWF       FSR1H 
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,1799 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1809 :: 		for(i=0;i<20;i++)
 	INCF        GetAutocloseTime_i_L0+0, 1 
-;FirmV_0_7_0.c,1804 :: 		}
-	GOTO        L_GetAutocloseTime372
-L_GetAutocloseTime373:
-;FirmV_0_7_0.c,1805 :: 		i=t-ms500;
+;FirmV_0_7_0.c,1814 :: 		}
+	GOTO        L_GetAutocloseTime388
+L_GetAutocloseTime389:
+;FirmV_0_7_0.c,1815 :: 		i=t-ms500;
 	MOVF        _ms500+0, 0 
 	SUBWF       GetAutocloseTime_t_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       GetAutocloseTime_i_L0+0 
-;FirmV_0_7_0.c,1806 :: 		return i;
-;FirmV_0_7_0.c,1807 :: 		}
+;FirmV_0_7_0.c,1816 :: 		return i;
+;FirmV_0_7_0.c,1817 :: 		}
 	RETURN      0
 ; end of _GetAutocloseTime
 
 _ClearTasks:
 
-;FirmV_0_7_0.c,1824 :: 		void ClearTasks(char except)
-;FirmV_0_7_0.c,1827 :: 		for(i=0;i<20;i++)
+;FirmV_0_7_0.c,1834 :: 		void ClearTasks(char except)
+;FirmV_0_7_0.c,1837 :: 		for(i=0;i<20;i++)
 	CLRF        ClearTasks_i_L0+0 
-L_ClearTasks378:
+L_ClearTasks394:
 	MOVLW       20
 	SUBWF       ClearTasks_i_L0+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_ClearTasks379
-;FirmV_0_7_0.c,1828 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode!=except))
+	GOTO        L_ClearTasks395
+;FirmV_0_7_0.c,1838 :: 		if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode!=except))
 	MOVF        ClearTasks_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9409,7 +9499,7 @@ L_ClearTasks378:
 	MOVF        POSTINC0+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_ClearTasks383
+	GOTO        L_ClearTasks399
 	MOVF        ClearTasks_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9430,9 +9520,9 @@ L_ClearTasks378:
 	MOVF        R1, 0 
 	XORWF       FARG_ClearTasks_except+0, 0 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_ClearTasks383
-L__ClearTasks719:
-;FirmV_0_7_0.c,1829 :: 		Tasks[i].Expired=1;
+	GOTO        L_ClearTasks399
+L__ClearTasks740:
+;FirmV_0_7_0.c,1839 :: 		Tasks[i].Expired=1;
 	MOVF        ClearTasks_i_L0+0, 0 
 	MOVWF       R0 
 	MOVLW       0
@@ -9454,23 +9544,23 @@ L__ClearTasks719:
 	MOVWF       FSR1H 
 	MOVLW       1
 	MOVWF       POSTINC1+0 
-L_ClearTasks383:
-;FirmV_0_7_0.c,1827 :: 		for(i=0;i<20;i++)
+L_ClearTasks399:
+;FirmV_0_7_0.c,1837 :: 		for(i=0;i<20;i++)
 	INCF        ClearTasks_i_L0+0, 1 
-;FirmV_0_7_0.c,1829 :: 		Tasks[i].Expired=1;
-	GOTO        L_ClearTasks378
-L_ClearTasks379:
-;FirmV_0_7_0.c,1830 :: 		}
+;FirmV_0_7_0.c,1839 :: 		Tasks[i].Expired=1;
+	GOTO        L_ClearTasks394
+L_ClearTasks395:
+;FirmV_0_7_0.c,1840 :: 		}
 	RETURN      0
 ; end of _ClearTasks
 
 _Menu0:
 
-;FirmV_0_7_0.c,1845 :: 		void Menu0()
-;FirmV_0_7_0.c,1847 :: 		LCDLines=2;
+;FirmV_0_7_0.c,1855 :: 		void Menu0()
+;FirmV_0_7_0.c,1857 :: 		LCDLines=2;
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,1848 :: 		memcpy(LCDLine2,"                ",16);
+;FirmV_0_7_0.c,1858 :: 		memcpy(LCDLine2,"                ",16);
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -9499,12 +9589,12 @@ _Menu0:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,1850 :: 		if(MenuPointer==0)
+;FirmV_0_7_0.c,1860 :: 		if(MenuPointer==0)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0384
-;FirmV_0_7_0.c,1851 :: 		{memcpy(LCDLine1,"00 Learning Mode",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0400
+;FirmV_0_7_0.c,1861 :: 		{memcpy(LCDLine1,"00 Learning Mode",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9535,11 +9625,11 @@ _Menu0:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1852 :: 		if(LearningMode==0)memcpy(LCDLine2,"      Auto      ",16);
+;FirmV_0_7_0.c,1862 :: 		if(LearningMode==0)memcpy(LCDLine2,"      Auto      ",16);
 	MOVF        _LearningMode+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0385
+	GOTO        L_Menu0401
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -9568,12 +9658,12 @@ _Menu0:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_Menu0385:
-;FirmV_0_7_0.c,1853 :: 		if(LearningMode==1)memcpy(LCDLine2,"     Manual     ",16);}
+L_Menu0401:
+;FirmV_0_7_0.c,1863 :: 		if(LearningMode==1)memcpy(LCDLine2,"     Manual     ",16);}
 	MOVF        _LearningMode+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0386
+	GOTO        L_Menu0402
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -9602,14 +9692,14 @@ L_Menu0385:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_Menu0386:
-L_Menu0384:
-;FirmV_0_7_0.c,1855 :: 		if(MenuPointer==1)
+L_Menu0402:
+L_Menu0400:
+;FirmV_0_7_0.c,1865 :: 		if(MenuPointer==1)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0387
-;FirmV_0_7_0.c,1856 :: 		{memcpy(LCDLine1,"01 D1 Open Time ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0403
+;FirmV_0_7_0.c,1866 :: 		{memcpy(LCDLine1,"01 D1 Open Time ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9640,7 +9730,7 @@ L_Menu0384:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1857 :: 		charValueToStr(Door1OpenTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1867 :: 		charValueToStr(Door1OpenTime,LCDLine2+6);}
 	MOVF        _Door1OpenTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9648,13 +9738,13 @@ L_Menu0384:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0387:
-;FirmV_0_7_0.c,1859 :: 		if(MenuPointer==2)
+L_Menu0403:
+;FirmV_0_7_0.c,1869 :: 		if(MenuPointer==2)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0388
-;FirmV_0_7_0.c,1860 :: 		{memcpy(LCDLine1,"02 D2 Open Time ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0404
+;FirmV_0_7_0.c,1870 :: 		{memcpy(LCDLine1,"02 D2 Open Time ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9685,7 +9775,7 @@ L_Menu0387:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1861 :: 		charValueToStr(Door2OpenTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1871 :: 		charValueToStr(Door2OpenTime,LCDLine2+6);}
 	MOVF        _Door2OpenTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9693,13 +9783,13 @@ L_Menu0387:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0388:
-;FirmV_0_7_0.c,1863 :: 		if(MenuPointer==3)
+L_Menu0404:
+;FirmV_0_7_0.c,1873 :: 		if(MenuPointer==3)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       3
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0389
-;FirmV_0_7_0.c,1864 :: 		{memcpy(LCDLine1,"03 D1 Close Time",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0405
+;FirmV_0_7_0.c,1874 :: 		{memcpy(LCDLine1,"03 D1 Close Time",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9730,7 +9820,7 @@ L_Menu0388:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1865 :: 		charValueToStr(Door1CloseTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1875 :: 		charValueToStr(Door1CloseTime,LCDLine2+6);}
 	MOVF        _Door1CloseTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9738,13 +9828,13 @@ L_Menu0388:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0389:
-;FirmV_0_7_0.c,1867 :: 		if(MenuPointer==4)
+L_Menu0405:
+;FirmV_0_7_0.c,1877 :: 		if(MenuPointer==4)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       4
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0390
-;FirmV_0_7_0.c,1868 :: 		{memcpy(LCDLine1,"04 D2 Close Time",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0406
+;FirmV_0_7_0.c,1878 :: 		{memcpy(LCDLine1,"04 D2 Close Time",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9775,7 +9865,7 @@ L_Menu0389:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1869 :: 		charValueToStr(Door2CloseTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1879 :: 		charValueToStr(Door2CloseTime,LCDLine2+6);}
 	MOVF        _Door2CloseTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9783,13 +9873,13 @@ L_Menu0389:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0390:
-;FirmV_0_7_0.c,1871 :: 		if(MenuPointer==5)
+L_Menu0406:
+;FirmV_0_7_0.c,1881 :: 		if(MenuPointer==5)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       5
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0391
-;FirmV_0_7_0.c,1872 :: 		{memcpy(LCDLine1,"05 Op Soft Start",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0407
+;FirmV_0_7_0.c,1882 :: 		{memcpy(LCDLine1,"05 Op Soft Start",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9820,7 +9910,7 @@ L_Menu0390:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1873 :: 		charValueToStr(OpenSoftStartTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1883 :: 		charValueToStr(OpenSoftStartTime,LCDLine2+6);}
 	MOVF        _OpenSoftStartTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9828,13 +9918,13 @@ L_Menu0390:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0391:
-;FirmV_0_7_0.c,1875 :: 		if(MenuPointer==6)
+L_Menu0407:
+;FirmV_0_7_0.c,1885 :: 		if(MenuPointer==6)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       6
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0392
-;FirmV_0_7_0.c,1876 :: 		{memcpy(LCDLine1,"06 Op Soft Stop ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0408
+;FirmV_0_7_0.c,1886 :: 		{memcpy(LCDLine1,"06 Op Soft Stop ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9865,7 +9955,7 @@ L_Menu0391:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1877 :: 		charValueToStr(OpenSoftStopTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1887 :: 		charValueToStr(OpenSoftStopTime,LCDLine2+6);}
 	MOVF        _OpenSoftStopTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9873,13 +9963,13 @@ L_Menu0391:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0392:
-;FirmV_0_7_0.c,1879 :: 		if(MenuPointer==7)
+L_Menu0408:
+;FirmV_0_7_0.c,1889 :: 		if(MenuPointer==7)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       7
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0393
-;FirmV_0_7_0.c,1880 :: 		{memcpy(LCDLine1,"07 Cl Soft Start",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0409
+;FirmV_0_7_0.c,1890 :: 		{memcpy(LCDLine1,"07 Cl Soft Start",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9910,7 +10000,7 @@ L_Menu0392:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1881 :: 		charValueToStr(CloseSoftStartTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1891 :: 		charValueToStr(CloseSoftStartTime,LCDLine2+6);}
 	MOVF        _CloseSoftStartTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9918,13 +10008,13 @@ L_Menu0392:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0393:
-;FirmV_0_7_0.c,1883 :: 		if(MenuPointer==8)
+L_Menu0409:
+;FirmV_0_7_0.c,1893 :: 		if(MenuPointer==8)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       8
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0394
-;FirmV_0_7_0.c,1884 :: 		{memcpy(LCDLine1,"08 Cl Soft Stop ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0410
+;FirmV_0_7_0.c,1894 :: 		{memcpy(LCDLine1,"08 Cl Soft Stop ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -9955,7 +10045,7 @@ L_Menu0393:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1885 :: 		charValueToStr(CloseSoftStopTime,LCDLine2+6);}
+;FirmV_0_7_0.c,1895 :: 		charValueToStr(CloseSoftStopTime,LCDLine2+6);}
 	MOVF        _CloseSoftStopTime+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -9963,13 +10053,13 @@ L_Menu0393:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0394:
-;FirmV_0_7_0.c,1887 :: 		if(MenuPointer==9)
+L_Menu0410:
+;FirmV_0_7_0.c,1897 :: 		if(MenuPointer==9)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       9
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0395
-;FirmV_0_7_0.c,1888 :: 		{memcpy(LCDLine1,"09 Power        ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0411
+;FirmV_0_7_0.c,1898 :: 		{memcpy(LCDLine1,"09 Power        ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10000,7 +10090,7 @@ L_Menu0394:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1889 :: 		bytetostr(OverloadSens,LCDLine2+6);LCDLine2[9]=' ';}
+;FirmV_0_7_0.c,1899 :: 		bytetostr(OverloadSens,LCDLine2+6);LCDLine2[9]=' ';}
 	MOVF        _OverloadSens+0, 0 
 	MOVWF       FARG_ByteToStr_input+0 
 	MOVLW       _LCDLine2+6
@@ -10010,13 +10100,13 @@ L_Menu0394:
 	CALL        _ByteToStr+0, 0
 	MOVLW       32
 	MOVWF       _LCDLine2+9 
-L_Menu0395:
-;FirmV_0_7_0.c,1891 :: 		if(MenuPointer==10)
+L_Menu0411:
+;FirmV_0_7_0.c,1901 :: 		if(MenuPointer==10)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       10
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0396
-;FirmV_0_7_0.c,1892 :: 		{memcpy(LCDLine1,"10 Interval Time",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0412
+;FirmV_0_7_0.c,1902 :: 		{memcpy(LCDLine1,"10 Interval Time",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10047,7 +10137,7 @@ L_Menu0395:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1893 :: 		charValueToStr(ActionTimeDiff,LCDLine2+6);}
+;FirmV_0_7_0.c,1903 :: 		charValueToStr(ActionTimeDiff,LCDLine2+6);}
 	MOVF        _ActionTimeDiff+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -10055,13 +10145,13 @@ L_Menu0395:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0396:
-;FirmV_0_7_0.c,1895 :: 		if(MenuPointer==11)
+L_Menu0412:
+;FirmV_0_7_0.c,1905 :: 		if(MenuPointer==11)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       11
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0397
-;FirmV_0_7_0.c,1896 :: 		{memcpy(LCDLine1,"11 Auto-close T ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0413
+;FirmV_0_7_0.c,1906 :: 		{memcpy(LCDLine1,"11 Auto-close T ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10092,7 +10182,7 @@ L_Menu0396:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1897 :: 		intValueToStr(AutoCloseTime,LCDLine2+4);}
+;FirmV_0_7_0.c,1907 :: 		intValueToStr(AutoCloseTime,LCDLine2+4);}
 	MOVF        _AutoCloseTime+0, 0 
 	MOVWF       FARG_intValueToStr+0 
 	MOVF        _AutoCloseTime+1, 0 
@@ -10102,13 +10192,13 @@ L_Menu0396:
 	MOVLW       hi_addr(_LCDLine2+4)
 	MOVWF       FARG_intValueToStr+1 
 	CALL        _intValueToStr+0, 0
-L_Menu0397:
-;FirmV_0_7_0.c,1899 :: 		if(MenuPointer==12)
+L_Menu0413:
+;FirmV_0_7_0.c,1909 :: 		if(MenuPointer==12)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       12
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0398
-;FirmV_0_7_0.c,1900 :: 		{memcpy(LCDLine1,"12 Factory Reset",16);LCDUpdateFlag=1;}
+	GOTO        L_Menu0414
+;FirmV_0_7_0.c,1910 :: 		{memcpy(LCDLine1,"12 Factory Reset",16);LCDUpdateFlag=1;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10139,13 +10229,13 @@ L_Menu0397:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-L_Menu0398:
-;FirmV_0_7_0.c,1902 :: 		if(MenuPointer==13)
+L_Menu0414:
+;FirmV_0_7_0.c,1912 :: 		if(MenuPointer==13)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       13
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0399
-;FirmV_0_7_0.c,1903 :: 		{memcpy(LCDLine1,"13 Open Photo En",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0415
+;FirmV_0_7_0.c,1913 :: 		{memcpy(LCDLine1,"13 Open Photo En",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10176,11 +10266,11 @@ L_Menu0398:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1904 :: 		if(OpenPhEnable==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
+;FirmV_0_7_0.c,1914 :: 		if(OpenPhEnable==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
 	MOVF        _OpenPhEnable+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0400
+	GOTO        L_Menu0416
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10209,8 +10299,8 @@ L_Menu0398:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-	GOTO        L_Menu0401
-L_Menu0400:
+	GOTO        L_Menu0417
+L_Menu0416:
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10241,14 +10331,14 @@ L_Menu0400:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_Menu0401:
-L_Menu0399:
-;FirmV_0_7_0.c,1906 :: 		if(MenuPointer==14)
+L_Menu0417:
+L_Menu0415:
+;FirmV_0_7_0.c,1916 :: 		if(MenuPointer==14)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       14
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0402
-;FirmV_0_7_0.c,1907 :: 		{memcpy(LCDLine1,"14 Limit Enable ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0418
+;FirmV_0_7_0.c,1917 :: 		{memcpy(LCDLine1,"14 Limit Enable ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10279,11 +10369,11 @@ L_Menu0399:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1908 :: 		if(LimiterEnable==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
+;FirmV_0_7_0.c,1918 :: 		if(LimiterEnable==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
 	MOVF        _LimiterEnable+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0403
+	GOTO        L_Menu0419
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10312,8 +10402,8 @@ L_Menu0399:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-	GOTO        L_Menu0404
-L_Menu0403:
+	GOTO        L_Menu0420
+L_Menu0419:
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10344,14 +10434,14 @@ L_Menu0403:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_Menu0404:
-L_Menu0402:
-;FirmV_0_7_0.c,1910 :: 		if(MenuPointer==15)
+L_Menu0420:
+L_Menu0418:
+;FirmV_0_7_0.c,1920 :: 		if(MenuPointer==15)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       15
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0405
-;FirmV_0_7_0.c,1911 :: 		{memcpy(LCDLine1,"15 Lock Force   ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0421
+;FirmV_0_7_0.c,1921 :: 		{memcpy(LCDLine1,"15 Lock Force   ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10382,11 +10472,11 @@ L_Menu0402:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1912 :: 		if(LockForce==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
+;FirmV_0_7_0.c,1922 :: 		if(LockForce==0) memcpy(LCDLine2+6,"No     ",7);else memcpy(LCDLine2+6,"Yes     ",8);}
 	MOVF        _LockForce+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0406
+	GOTO        L_Menu0422
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10415,8 +10505,8 @@ L_Menu0402:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-	GOTO        L_Menu0407
-L_Menu0406:
+	GOTO        L_Menu0423
+L_Menu0422:
 	MOVLW       _LCDLine2+6
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+6)
@@ -10447,14 +10537,14 @@ L_Menu0406:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_Menu0407:
-L_Menu0405:
-;FirmV_0_7_0.c,1914 :: 		if(MenuPointer==16)
+L_Menu0423:
+L_Menu0421:
+;FirmV_0_7_0.c,1924 :: 		if(MenuPointer==16)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       16
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0408
-;FirmV_0_7_0.c,1915 :: 		{memcpy(LCDLine1,"16 Au-Cl Pass   ",16);LCDUpdateFlag=1;
+	GOTO        L_Menu0424
+;FirmV_0_7_0.c,1925 :: 		{memcpy(LCDLine1,"16 Au-Cl Pass   ",16);LCDUpdateFlag=1;
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10485,7 +10575,7 @@ L_Menu0405:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1916 :: 		charValueToStr(CloseAfterPass,LCDLine2+6);}
+;FirmV_0_7_0.c,1926 :: 		charValueToStr(CloseAfterPass,LCDLine2+6);}
 	MOVF        _CloseAfterPass+0, 0 
 	MOVWF       FARG_charValueToStr+0 
 	MOVLW       _LCDLine2+6
@@ -10493,13 +10583,13 @@ L_Menu0405:
 	MOVLW       hi_addr(_LCDLine2+6)
 	MOVWF       FARG_charValueToStr+1 
 	CALL        _charValueToStr+0, 0
-L_Menu0408:
-;FirmV_0_7_0.c,1918 :: 		if(MenuPointer==17)
+L_Menu0424:
+;FirmV_0_7_0.c,1928 :: 		if(MenuPointer==17)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       17
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0409
-;FirmV_0_7_0.c,1919 :: 		{memcpy(LCDLine1,"17 Save Changes ",16);LCDUpdateFlag=1;}
+	GOTO        L_Menu0425
+;FirmV_0_7_0.c,1929 :: 		{memcpy(LCDLine1,"17 Save Changes ",16);LCDUpdateFlag=1;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10530,13 +10620,13 @@ L_Menu0408:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-L_Menu0409:
-;FirmV_0_7_0.c,1921 :: 		if(MenuPointer==18)
+L_Menu0425:
+;FirmV_0_7_0.c,1931 :: 		if(MenuPointer==18)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       18
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu0410
-;FirmV_0_7_0.c,1922 :: 		{memcpy(LCDLine1,"18 Discard Exit ",16);LCDUpdateFlag=1;}
+	GOTO        L_Menu0426
+;FirmV_0_7_0.c,1932 :: 		{memcpy(LCDLine1,"18 Discard Exit ",16);LCDUpdateFlag=1;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10567,29 +10657,29 @@ L_Menu0409:
 	CALL        _memcpy+0, 0
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-L_Menu0410:
-;FirmV_0_7_0.c,1925 :: 		State=101;
+L_Menu0426:
+;FirmV_0_7_0.c,1935 :: 		State=101;
 	MOVLW       101
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,1926 :: 		}
+;FirmV_0_7_0.c,1936 :: 		}
 	RETURN      0
 ; end of _Menu0
 
 _About:
 
-;FirmV_0_7_0.c,1934 :: 		void About()
-;FirmV_0_7_0.c,1936 :: 		if((Events.Keys.b1==1))
+;FirmV_0_7_0.c,1944 :: 		void About()
+;FirmV_0_7_0.c,1946 :: 		if((Events.Keys.b1==1))
 	BTFSS       _Events+0, 1 
-	GOTO        L_About411
-;FirmV_0_7_0.c,1937 :: 		AboutCounter=AboutCounter+1;
+	GOTO        L_About427
+;FirmV_0_7_0.c,1947 :: 		AboutCounter=AboutCounter+1;
 	INCF        _AboutCounter+0, 1 
-L_About411:
-;FirmV_0_7_0.c,1939 :: 		if(AboutCounter==1)
+L_About427:
+;FirmV_0_7_0.c,1949 :: 		if(AboutCounter==1)
 	MOVF        _AboutCounter+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_About412
-;FirmV_0_7_0.c,1940 :: 		{memcpy(LCDLine1,Crypto[2],16);
+	GOTO        L_About428
+;FirmV_0_7_0.c,1950 :: 		{memcpy(LCDLine1,Crypto[2],16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10603,7 +10693,7 @@ L_About411:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,1941 :: 		memcpy(LCDLine2,Crypto[3],16);
+;FirmV_0_7_0.c,1951 :: 		memcpy(LCDLine2,Crypto[3],16);
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -10617,17 +10707,17 @@ L_About411:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,1942 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,1952 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1943 :: 		}
-L_About412:
-;FirmV_0_7_0.c,1945 :: 		if(AboutCounter==2)
+;FirmV_0_7_0.c,1953 :: 		}
+L_About428:
+;FirmV_0_7_0.c,1955 :: 		if(AboutCounter==2)
 	MOVF        _AboutCounter+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_About413
-;FirmV_0_7_0.c,1946 :: 		{memcpy(LCDLine1,Crypto[4],16);
+	GOTO        L_About429
+;FirmV_0_7_0.c,1956 :: 		{memcpy(LCDLine1,Crypto[4],16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10641,7 +10731,7 @@ L_About412:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,1947 :: 		memcpy(LCDLine2,Crypto[5],16);
+;FirmV_0_7_0.c,1957 :: 		memcpy(LCDLine2,Crypto[5],16);
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -10655,73 +10745,73 @@ L_About412:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,1948 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,1958 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,1949 :: 		}
-L_About413:
-;FirmV_0_7_0.c,1951 :: 		if(AboutCounter==3)
+;FirmV_0_7_0.c,1959 :: 		}
+L_About429:
+;FirmV_0_7_0.c,1961 :: 		if(AboutCounter==3)
 	MOVF        _AboutCounter+0, 0 
 	XORLW       3
 	BTFSS       STATUS+0, 2 
-	GOTO        L_About414
-;FirmV_0_7_0.c,1952 :: 		{State=100;}
+	GOTO        L_About430
+;FirmV_0_7_0.c,1962 :: 		{State=100;}
 	MOVLW       100
 	MOVWF       _State+0 
-L_About414:
-;FirmV_0_7_0.c,1953 :: 		}
+L_About430:
+;FirmV_0_7_0.c,1963 :: 		}
 	RETURN      0
 ; end of _About
 
 _Menu1:
 
-;FirmV_0_7_0.c,1962 :: 		void Menu1()
-;FirmV_0_7_0.c,1965 :: 		if((Events.Keys.b0==1))
+;FirmV_0_7_0.c,1972 :: 		void Menu1()
+;FirmV_0_7_0.c,1975 :: 		if((Events.Keys.b0==1))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu1415
-;FirmV_0_7_0.c,1966 :: 		{if(MenuPointer==0){MenuPointer=18;}else{MenuPointer=MenuPointer-1;}State=100;}
+	GOTO        L_Menu1431
+;FirmV_0_7_0.c,1976 :: 		{if(MenuPointer==0){MenuPointer=18;}else{MenuPointer=MenuPointer-1;}State=100;}
 	MOVF        _MenuPointer+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu1416
+	GOTO        L_Menu1432
 	MOVLW       18
 	MOVWF       _MenuPointer+0 
-	GOTO        L_Menu1417
-L_Menu1416:
+	GOTO        L_Menu1433
+L_Menu1432:
 	DECF        _MenuPointer+0, 1 
-L_Menu1417:
+L_Menu1433:
 	MOVLW       100
 	MOVWF       _State+0 
-L_Menu1415:
-;FirmV_0_7_0.c,1968 :: 		if((Events.Keys.b2==1))
+L_Menu1431:
+;FirmV_0_7_0.c,1978 :: 		if((Events.Keys.b2==1))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu1418
-;FirmV_0_7_0.c,1969 :: 		{if(MenuPointer==18){MenuPointer=0;}else{MenuPointer=MenuPointer+1;}State=100;}
+	GOTO        L_Menu1434
+;FirmV_0_7_0.c,1979 :: 		{if(MenuPointer==18){MenuPointer=0;}else{MenuPointer=MenuPointer+1;}State=100;}
 	MOVF        _MenuPointer+0, 0 
 	XORLW       18
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu1419
+	GOTO        L_Menu1435
 	CLRF        _MenuPointer+0 
-	GOTO        L_Menu1420
-L_Menu1419:
+	GOTO        L_Menu1436
+L_Menu1435:
 	INCF        _MenuPointer+0, 1 
-L_Menu1420:
+L_Menu1436:
 	MOVLW       100
 	MOVWF       _State+0 
-L_Menu1418:
-;FirmV_0_7_0.c,1971 :: 		if((Events.Keys.b1==1))
+L_Menu1434:
+;FirmV_0_7_0.c,1981 :: 		if((Events.Keys.b1==1))
 	BTFSS       _Events+0, 1 
-	GOTO        L_Menu1421
-;FirmV_0_7_0.c,1972 :: 		{State=102;}
+	GOTO        L_Menu1437
+;FirmV_0_7_0.c,1982 :: 		{State=102;}
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu1421:
-;FirmV_0_7_0.c,1974 :: 		if(Events.Keys==0b101)
+L_Menu1437:
+;FirmV_0_7_0.c,1984 :: 		if(Events.Keys==0b101)
 	MOVF        _Events+0, 0 
 	XORLW       5
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu1422
-;FirmV_0_7_0.c,1975 :: 		{memcpy(LCDLine1,Crypto[0],16);AboutCounter=0;memcpy(LCDLine2,Crypto[1],16);LCDLines=2;LCDUpdateFlag=1;State=250;}
+	GOTO        L_Menu1438
+;FirmV_0_7_0.c,1985 :: 		{memcpy(LCDLine1,Crypto[0],16);AboutCounter=0;memcpy(LCDLine2,Crypto[1],16);LCDLines=2;LCDUpdateFlag=1;State=250;}
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -10755,460 +10845,464 @@ L_Menu1421:
 	MOVWF       _LCDUpdateFlag+0 
 	MOVLW       250
 	MOVWF       _State+0 
-L_Menu1422:
-;FirmV_0_7_0.c,1978 :: 		}
+L_Menu1438:
+;FirmV_0_7_0.c,1988 :: 		}
 	RETURN      0
 ; end of _Menu1
 
 _Menu2:
 
-;FirmV_0_7_0.c,1986 :: 		void Menu2()
-;FirmV_0_7_0.c,1989 :: 		LCDFlash=1;
+;FirmV_0_7_0.c,1996 :: 		void Menu2()
+;FirmV_0_7_0.c,1999 :: 		LCDFlash=1;
 	MOVLW       1
 	MOVWF       _LCDFlash+0 
-;FirmV_0_7_0.c,1991 :: 		if(Events.Keys.b1==1)
+;FirmV_0_7_0.c,2001 :: 		if(Events.Keys.b1==1)
 	BTFSS       _Events+0, 1 
-	GOTO        L_Menu2423
-;FirmV_0_7_0.c,1993 :: 		LCDFlash=0;LCDFlashFlag=0;State=101;
+	GOTO        L_Menu2439
+;FirmV_0_7_0.c,2003 :: 		LCDFlash=0;LCDFlashFlag=0;State=101;
 	CLRF        _LCDFlash+0 
 	CLRF        _LCDFlashFlag+0 
 	MOVLW       101
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,1994 :: 		if(MenuPointer==0)
+;FirmV_0_7_0.c,2004 :: 		if(MenuPointer==0)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2424
-;FirmV_0_7_0.c,1996 :: 		LearnPhase=0;
+	GOTO        L_Menu2440
+;FirmV_0_7_0.c,2006 :: 		LearnPhase=0;
 	CLRF        _LearnPhase+0 
-;FirmV_0_7_0.c,1997 :: 		if(LearningMode==0)
+;FirmV_0_7_0.c,2007 :: 		if(LearningMode==0)
 	MOVF        _LearningMode+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2425
-;FirmV_0_7_0.c,1998 :: 		State=200;
+	GOTO        L_Menu2441
+;FirmV_0_7_0.c,2008 :: 		{State=200;LongBuzzFlag=1;}
 	MOVLW       200
 	MOVWF       _State+0 
-L_Menu2425:
-;FirmV_0_7_0.c,1999 :: 		if(LearningMode==1)
+	MOVLW       1
+	MOVWF       _LongBuzzFlag+0 
+L_Menu2441:
+;FirmV_0_7_0.c,2009 :: 		if(LearningMode==1)
 	MOVF        _LearningMode+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2426
-;FirmV_0_7_0.c,2000 :: 		State=201;
+	GOTO        L_Menu2442
+;FirmV_0_7_0.c,2010 :: 		{State=201;LongBuzzFlag=1;}
 	MOVLW       201
 	MOVWF       _State+0 
-L_Menu2426:
-;FirmV_0_7_0.c,2001 :: 		}
-L_Menu2424:
-;FirmV_0_7_0.c,2002 :: 		}
-L_Menu2423:
-;FirmV_0_7_0.c,2005 :: 		if(MenuPointer==0)
+	MOVLW       1
+	MOVWF       _LongBuzzFlag+0 
+L_Menu2442:
+;FirmV_0_7_0.c,2011 :: 		}
+L_Menu2440:
+;FirmV_0_7_0.c,2012 :: 		}
+L_Menu2439:
+;FirmV_0_7_0.c,2015 :: 		if(MenuPointer==0)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       0
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2427
-;FirmV_0_7_0.c,2006 :: 		{ if((Events.Keys.b0==1)&&(LearningMode>0))
+	GOTO        L_Menu2443
+;FirmV_0_7_0.c,2016 :: 		{ if((Events.Keys.b0==1)&&(LearningMode>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2430
+	GOTO        L_Menu2446
 	MOVF        _LearningMode+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2430
-L__Menu2751:
-;FirmV_0_7_0.c,2007 :: 		{LearningMode=LearningMode-1;Menu0();State=102;}
+	GOTO        L_Menu2446
+L__Menu2772:
+;FirmV_0_7_0.c,2017 :: 		{LearningMode=LearningMode-1;Menu0();State=102;}
 	DECF        _LearningMode+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2430:
-;FirmV_0_7_0.c,2008 :: 		if((Events.Keys.b2==1)&&(LearningMode<1))
+L_Menu2446:
+;FirmV_0_7_0.c,2018 :: 		if((Events.Keys.b2==1)&&(LearningMode<1))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2433
+	GOTO        L_Menu2449
 	MOVLW       1
 	SUBWF       _LearningMode+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2433
-L__Menu2750:
-;FirmV_0_7_0.c,2009 :: 		{LearningMode=LearningMode+1;Menu0();State=102;}
+	GOTO        L_Menu2449
+L__Menu2771:
+;FirmV_0_7_0.c,2019 :: 		{LearningMode=LearningMode+1;Menu0();State=102;}
 	INCF        _LearningMode+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2433:
-;FirmV_0_7_0.c,2010 :: 		}
-L_Menu2427:
-;FirmV_0_7_0.c,2014 :: 		if(MenuPointer==1)
+L_Menu2449:
+;FirmV_0_7_0.c,2020 :: 		}
+L_Menu2443:
+;FirmV_0_7_0.c,2024 :: 		if(MenuPointer==1)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2434
-;FirmV_0_7_0.c,2015 :: 		{ if((Events.Keys.b0==1)&&(Door1OpenTime>0))
+	GOTO        L_Menu2450
+;FirmV_0_7_0.c,2025 :: 		{ if((Events.Keys.b0==1)&&(Door1OpenTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2437
+	GOTO        L_Menu2453
 	MOVF        _Door1OpenTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2437
-L__Menu2749:
-;FirmV_0_7_0.c,2016 :: 		{Door1OpenTime=Door1OpenTime-1;Menu0();State=102;}
+	GOTO        L_Menu2453
+L__Menu2770:
+;FirmV_0_7_0.c,2026 :: 		{Door1OpenTime=Door1OpenTime-1;Menu0();State=102;}
 	DECF        _Door1OpenTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2437:
-;FirmV_0_7_0.c,2017 :: 		if((Events.Keys.b2==1)&&(Door1OpenTime<255))
+L_Menu2453:
+;FirmV_0_7_0.c,2027 :: 		if((Events.Keys.b2==1)&&(Door1OpenTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2440
+	GOTO        L_Menu2456
 	MOVLW       255
 	SUBWF       _Door1OpenTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2440
-L__Menu2748:
-;FirmV_0_7_0.c,2018 :: 		{Door1OpenTime=Door1OpenTime+1;Menu0();State=102;}
+	GOTO        L_Menu2456
+L__Menu2769:
+;FirmV_0_7_0.c,2028 :: 		{Door1OpenTime=Door1OpenTime+1;Menu0();State=102;}
 	INCF        _Door1OpenTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2440:
-;FirmV_0_7_0.c,2019 :: 		}
-L_Menu2434:
-;FirmV_0_7_0.c,2023 :: 		if(MenuPointer==2)
+L_Menu2456:
+;FirmV_0_7_0.c,2029 :: 		}
+L_Menu2450:
+;FirmV_0_7_0.c,2033 :: 		if(MenuPointer==2)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2441
-;FirmV_0_7_0.c,2024 :: 		{ if((Events.Keys.b0==1)&&(Door2OpenTime>0))
+	GOTO        L_Menu2457
+;FirmV_0_7_0.c,2034 :: 		{ if((Events.Keys.b0==1)&&(Door2OpenTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2444
+	GOTO        L_Menu2460
 	MOVF        _Door2OpenTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2444
-L__Menu2747:
-;FirmV_0_7_0.c,2025 :: 		{Door2OpenTime=Door2OpenTime-1;Menu0();State=102;}
+	GOTO        L_Menu2460
+L__Menu2768:
+;FirmV_0_7_0.c,2035 :: 		{Door2OpenTime=Door2OpenTime-1;Menu0();State=102;}
 	DECF        _Door2OpenTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2444:
-;FirmV_0_7_0.c,2026 :: 		if((Events.Keys.b2==1)&&(Door2OpenTime<255))
+L_Menu2460:
+;FirmV_0_7_0.c,2036 :: 		if((Events.Keys.b2==1)&&(Door2OpenTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2447
+	GOTO        L_Menu2463
 	MOVLW       255
 	SUBWF       _Door2OpenTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2447
-L__Menu2746:
-;FirmV_0_7_0.c,2027 :: 		{Door2OpenTime=Door2OpenTime+1;Menu0();State=102;}
+	GOTO        L_Menu2463
+L__Menu2767:
+;FirmV_0_7_0.c,2037 :: 		{Door2OpenTime=Door2OpenTime+1;Menu0();State=102;}
 	INCF        _Door2OpenTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2447:
-;FirmV_0_7_0.c,2028 :: 		}
-L_Menu2441:
-;FirmV_0_7_0.c,2031 :: 		if(MenuPointer==3)
+L_Menu2463:
+;FirmV_0_7_0.c,2038 :: 		}
+L_Menu2457:
+;FirmV_0_7_0.c,2041 :: 		if(MenuPointer==3)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       3
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2448
-;FirmV_0_7_0.c,2032 :: 		{ if((Events.Keys.b0==1)&&(Door1CloseTime>0))
+	GOTO        L_Menu2464
+;FirmV_0_7_0.c,2042 :: 		{ if((Events.Keys.b0==1)&&(Door1CloseTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2451
+	GOTO        L_Menu2467
 	MOVF        _Door1CloseTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2451
-L__Menu2745:
-;FirmV_0_7_0.c,2033 :: 		{Door1CloseTime=Door1CloseTime-1;Menu0();State=102;}
+	GOTO        L_Menu2467
+L__Menu2766:
+;FirmV_0_7_0.c,2043 :: 		{Door1CloseTime=Door1CloseTime-1;Menu0();State=102;}
 	DECF        _Door1CloseTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2451:
-;FirmV_0_7_0.c,2034 :: 		if((Events.Keys.b2==1)&&(Door1CloseTime<255))
+L_Menu2467:
+;FirmV_0_7_0.c,2044 :: 		if((Events.Keys.b2==1)&&(Door1CloseTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2454
+	GOTO        L_Menu2470
 	MOVLW       255
 	SUBWF       _Door1CloseTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2454
-L__Menu2744:
-;FirmV_0_7_0.c,2035 :: 		{Door1CloseTime=Door1CloseTime+1;Menu0();State=102;}
+	GOTO        L_Menu2470
+L__Menu2765:
+;FirmV_0_7_0.c,2045 :: 		{Door1CloseTime=Door1CloseTime+1;Menu0();State=102;}
 	INCF        _Door1CloseTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2454:
-;FirmV_0_7_0.c,2036 :: 		}
-L_Menu2448:
-;FirmV_0_7_0.c,2039 :: 		if(MenuPointer==4)
+L_Menu2470:
+;FirmV_0_7_0.c,2046 :: 		}
+L_Menu2464:
+;FirmV_0_7_0.c,2049 :: 		if(MenuPointer==4)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       4
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2455
-;FirmV_0_7_0.c,2040 :: 		{ if((Events.Keys.b0==1)&&(Door2CloseTime>0))
+	GOTO        L_Menu2471
+;FirmV_0_7_0.c,2050 :: 		{ if((Events.Keys.b0==1)&&(Door2CloseTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2458
+	GOTO        L_Menu2474
 	MOVF        _Door2CloseTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2458
-L__Menu2743:
-;FirmV_0_7_0.c,2041 :: 		{Door2CloseTime=Door2CloseTime-1;Menu0();State=102;}
+	GOTO        L_Menu2474
+L__Menu2764:
+;FirmV_0_7_0.c,2051 :: 		{Door2CloseTime=Door2CloseTime-1;Menu0();State=102;}
 	DECF        _Door2CloseTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2458:
-;FirmV_0_7_0.c,2042 :: 		if((Events.Keys.b2==1)&&(Door2CloseTime<255))
+L_Menu2474:
+;FirmV_0_7_0.c,2052 :: 		if((Events.Keys.b2==1)&&(Door2CloseTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2461
+	GOTO        L_Menu2477
 	MOVLW       255
 	SUBWF       _Door2CloseTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2461
-L__Menu2742:
-;FirmV_0_7_0.c,2043 :: 		{Door2CloseTime=Door2CloseTime+1;Menu0();State=102;}
+	GOTO        L_Menu2477
+L__Menu2763:
+;FirmV_0_7_0.c,2053 :: 		{Door2CloseTime=Door2CloseTime+1;Menu0();State=102;}
 	INCF        _Door2CloseTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2461:
-;FirmV_0_7_0.c,2044 :: 		}
-L_Menu2455:
-;FirmV_0_7_0.c,2048 :: 		if(MenuPointer==5)
+L_Menu2477:
+;FirmV_0_7_0.c,2054 :: 		}
+L_Menu2471:
+;FirmV_0_7_0.c,2058 :: 		if(MenuPointer==5)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       5
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2462
-;FirmV_0_7_0.c,2049 :: 		{ if((Events.Keys.b0==1)&&(OpenSoftStartTime>0))
+	GOTO        L_Menu2478
+;FirmV_0_7_0.c,2059 :: 		{ if((Events.Keys.b0==1)&&(OpenSoftStartTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2465
+	GOTO        L_Menu2481
 	MOVF        _OpenSoftStartTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2465
-L__Menu2741:
-;FirmV_0_7_0.c,2050 :: 		{OpenSoftStartTime=OpenSoftStartTime-1;Menu0();State=102;}
+	GOTO        L_Menu2481
+L__Menu2762:
+;FirmV_0_7_0.c,2060 :: 		{OpenSoftStartTime=OpenSoftStartTime-1;Menu0();State=102;}
 	DECF        _OpenSoftStartTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2465:
-;FirmV_0_7_0.c,2051 :: 		if((Events.Keys.b2==1)&&(OpenSoftStartTime<255))
+L_Menu2481:
+;FirmV_0_7_0.c,2061 :: 		if((Events.Keys.b2==1)&&(OpenSoftStartTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2468
+	GOTO        L_Menu2484
 	MOVLW       255
 	SUBWF       _OpenSoftStartTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2468
-L__Menu2740:
-;FirmV_0_7_0.c,2052 :: 		{OpenSoftStartTime=OpenSoftStartTime+1;Menu0();State=102;}
+	GOTO        L_Menu2484
+L__Menu2761:
+;FirmV_0_7_0.c,2062 :: 		{OpenSoftStartTime=OpenSoftStartTime+1;Menu0();State=102;}
 	INCF        _OpenSoftStartTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2468:
-;FirmV_0_7_0.c,2053 :: 		}
-L_Menu2462:
-;FirmV_0_7_0.c,2056 :: 		if(MenuPointer==6)
+L_Menu2484:
+;FirmV_0_7_0.c,2063 :: 		}
+L_Menu2478:
+;FirmV_0_7_0.c,2066 :: 		if(MenuPointer==6)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       6
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2469
-;FirmV_0_7_0.c,2057 :: 		{ if((Events.Keys.b0==1)&&(OpenSoftStopTime>0))
+	GOTO        L_Menu2485
+;FirmV_0_7_0.c,2067 :: 		{ if((Events.Keys.b0==1)&&(OpenSoftStopTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2472
+	GOTO        L_Menu2488
 	MOVF        _OpenSoftStopTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2472
-L__Menu2739:
-;FirmV_0_7_0.c,2058 :: 		{OpenSoftStopTime=OpenSoftStopTime-1;Menu0();State=102;}
+	GOTO        L_Menu2488
+L__Menu2760:
+;FirmV_0_7_0.c,2068 :: 		{OpenSoftStopTime=OpenSoftStopTime-1;Menu0();State=102;}
 	DECF        _OpenSoftStopTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2472:
-;FirmV_0_7_0.c,2059 :: 		if((Events.Keys.b2==1)&&(OpenSoftStopTime<255))
+L_Menu2488:
+;FirmV_0_7_0.c,2069 :: 		if((Events.Keys.b2==1)&&(OpenSoftStopTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2475
+	GOTO        L_Menu2491
 	MOVLW       255
 	SUBWF       _OpenSoftStopTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2475
-L__Menu2738:
-;FirmV_0_7_0.c,2060 :: 		{OpenSoftStopTime=OpenSoftStopTime+1;Menu0();State=102;}
+	GOTO        L_Menu2491
+L__Menu2759:
+;FirmV_0_7_0.c,2070 :: 		{OpenSoftStopTime=OpenSoftStopTime+1;Menu0();State=102;}
 	INCF        _OpenSoftStopTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2475:
-;FirmV_0_7_0.c,2061 :: 		}
-L_Menu2469:
-;FirmV_0_7_0.c,2064 :: 		if(MenuPointer==7)
+L_Menu2491:
+;FirmV_0_7_0.c,2071 :: 		}
+L_Menu2485:
+;FirmV_0_7_0.c,2074 :: 		if(MenuPointer==7)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       7
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2476
-;FirmV_0_7_0.c,2065 :: 		{ if((Events.Keys.b0==1)&&(CloseSoftStartTime>0))
+	GOTO        L_Menu2492
+;FirmV_0_7_0.c,2075 :: 		{ if((Events.Keys.b0==1)&&(CloseSoftStartTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2479
+	GOTO        L_Menu2495
 	MOVF        _CloseSoftStartTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2479
-L__Menu2737:
-;FirmV_0_7_0.c,2066 :: 		{CloseSoftStartTime=CloseSoftStartTime-1;Menu0();State=102;}
+	GOTO        L_Menu2495
+L__Menu2758:
+;FirmV_0_7_0.c,2076 :: 		{CloseSoftStartTime=CloseSoftStartTime-1;Menu0();State=102;}
 	DECF        _CloseSoftStartTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2479:
-;FirmV_0_7_0.c,2067 :: 		if((Events.Keys.b2==1)&&(CloseSoftStartTime<255))
+L_Menu2495:
+;FirmV_0_7_0.c,2077 :: 		if((Events.Keys.b2==1)&&(CloseSoftStartTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2482
+	GOTO        L_Menu2498
 	MOVLW       255
 	SUBWF       _CloseSoftStartTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2482
-L__Menu2736:
-;FirmV_0_7_0.c,2068 :: 		{CloseSoftStartTime=CloseSoftStartTime+1;Menu0();State=102;}
+	GOTO        L_Menu2498
+L__Menu2757:
+;FirmV_0_7_0.c,2078 :: 		{CloseSoftStartTime=CloseSoftStartTime+1;Menu0();State=102;}
 	INCF        _CloseSoftStartTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2482:
-;FirmV_0_7_0.c,2069 :: 		}
-L_Menu2476:
-;FirmV_0_7_0.c,2072 :: 		if(MenuPointer==8)
+L_Menu2498:
+;FirmV_0_7_0.c,2079 :: 		}
+L_Menu2492:
+;FirmV_0_7_0.c,2082 :: 		if(MenuPointer==8)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       8
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2483
-;FirmV_0_7_0.c,2073 :: 		{ if((Events.Keys.b0==1)&&(CloseSoftStopTime>0))
+	GOTO        L_Menu2499
+;FirmV_0_7_0.c,2083 :: 		{ if((Events.Keys.b0==1)&&(CloseSoftStopTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2486
+	GOTO        L_Menu2502
 	MOVF        _CloseSoftStopTime+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2486
-L__Menu2735:
-;FirmV_0_7_0.c,2074 :: 		{CloseSoftStopTime=CloseSoftStopTime-1;Menu0();State=102;}
+	GOTO        L_Menu2502
+L__Menu2756:
+;FirmV_0_7_0.c,2084 :: 		{CloseSoftStopTime=CloseSoftStopTime-1;Menu0();State=102;}
 	DECF        _CloseSoftStopTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2486:
-;FirmV_0_7_0.c,2075 :: 		if((Events.Keys.b2==1)&&(CloseSoftStopTime<255))
+L_Menu2502:
+;FirmV_0_7_0.c,2085 :: 		if((Events.Keys.b2==1)&&(CloseSoftStopTime<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2489
+	GOTO        L_Menu2505
 	MOVLW       255
 	SUBWF       _CloseSoftStopTime+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2489
-L__Menu2734:
-;FirmV_0_7_0.c,2076 :: 		{CloseSoftStopTime=CloseSoftStopTime+1;Menu0();State=102;}
+	GOTO        L_Menu2505
+L__Menu2755:
+;FirmV_0_7_0.c,2086 :: 		{CloseSoftStopTime=CloseSoftStopTime+1;Menu0();State=102;}
 	INCF        _CloseSoftStopTime+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2489:
-;FirmV_0_7_0.c,2077 :: 		}
-L_Menu2483:
-;FirmV_0_7_0.c,2081 :: 		if(MenuPointer==9)
+L_Menu2505:
+;FirmV_0_7_0.c,2087 :: 		}
+L_Menu2499:
+;FirmV_0_7_0.c,2091 :: 		if(MenuPointer==9)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       9
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2490
-;FirmV_0_7_0.c,2082 :: 		{ if((Events.Keys.b0==1)&&(OverloadSens>0))
+	GOTO        L_Menu2506
+;FirmV_0_7_0.c,2092 :: 		{ if((Events.Keys.b0==1)&&(OverloadSens>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2493
+	GOTO        L_Menu2509
 	MOVF        _OverloadSens+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2493
-L__Menu2733:
-;FirmV_0_7_0.c,2083 :: 		{OverloadSens=OverloadSens-1;Menu0();State=102;}
+	GOTO        L_Menu2509
+L__Menu2754:
+;FirmV_0_7_0.c,2093 :: 		{OverloadSens=OverloadSens-1;Menu0();State=102;}
 	DECF        _OverloadSens+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2493:
-;FirmV_0_7_0.c,2084 :: 		if((Events.Keys.b2==1)&&(OverloadSens<9))
+L_Menu2509:
+;FirmV_0_7_0.c,2094 :: 		if((Events.Keys.b2==1)&&(OverloadSens<9))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2496
+	GOTO        L_Menu2512
 	MOVLW       9
 	SUBWF       _OverloadSens+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2496
-L__Menu2732:
-;FirmV_0_7_0.c,2085 :: 		{OverloadSens=OverloadSens+1;Menu0();State=102;}
+	GOTO        L_Menu2512
+L__Menu2753:
+;FirmV_0_7_0.c,2095 :: 		{OverloadSens=OverloadSens+1;Menu0();State=102;}
 	INCF        _OverloadSens+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2496:
-;FirmV_0_7_0.c,2086 :: 		}
-L_Menu2490:
-;FirmV_0_7_0.c,2089 :: 		if(MenuPointer==10)
+L_Menu2512:
+;FirmV_0_7_0.c,2096 :: 		}
+L_Menu2506:
+;FirmV_0_7_0.c,2099 :: 		if(MenuPointer==10)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       10
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2497
-;FirmV_0_7_0.c,2090 :: 		{ if((Events.Keys.b0==1)&&(ActionTimeDiff>0))
+	GOTO        L_Menu2513
+;FirmV_0_7_0.c,2100 :: 		{ if((Events.Keys.b0==1)&&(ActionTimeDiff>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2500
+	GOTO        L_Menu2516
 	MOVF        _ActionTimeDiff+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2500
-L__Menu2731:
-;FirmV_0_7_0.c,2091 :: 		{ActionTimeDiff=ActionTimeDiff-1;Menu0();State=102;}
+	GOTO        L_Menu2516
+L__Menu2752:
+;FirmV_0_7_0.c,2101 :: 		{ActionTimeDiff=ActionTimeDiff-1;Menu0();State=102;}
 	DECF        _ActionTimeDiff+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2500:
-;FirmV_0_7_0.c,2092 :: 		if((Events.Keys.b2==1)&&(ActionTimeDiff<255))
+L_Menu2516:
+;FirmV_0_7_0.c,2102 :: 		if((Events.Keys.b2==1)&&(ActionTimeDiff<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2503
+	GOTO        L_Menu2519
 	MOVLW       255
 	SUBWF       _ActionTimeDiff+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2503
-L__Menu2730:
-;FirmV_0_7_0.c,2093 :: 		{ActionTimeDiff=ActionTimeDiff+1;Menu0();State=102;}
+	GOTO        L_Menu2519
+L__Menu2751:
+;FirmV_0_7_0.c,2103 :: 		{ActionTimeDiff=ActionTimeDiff+1;Menu0();State=102;}
 	INCF        _ActionTimeDiff+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2503:
-;FirmV_0_7_0.c,2094 :: 		}
-L_Menu2497:
-;FirmV_0_7_0.c,2097 :: 		if(MenuPointer==11)
+L_Menu2519:
+;FirmV_0_7_0.c,2104 :: 		}
+L_Menu2513:
+;FirmV_0_7_0.c,2107 :: 		if(MenuPointer==11)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       11
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2504
-;FirmV_0_7_0.c,2098 :: 		{ if((Events.Keys.b0==1)&&(AutoCloseTime>0))
+	GOTO        L_Menu2520
+;FirmV_0_7_0.c,2108 :: 		{ if((Events.Keys.b0==1)&&(AutoCloseTime>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2507
+	GOTO        L_Menu2523
 	MOVLW       0
 	MOVWF       R0 
 	MOVF        _AutoCloseTime+1, 0 
 	SUBWF       R0, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__Menu2790
+	GOTO        L__Menu2815
 	MOVF        _AutoCloseTime+0, 0 
 	SUBLW       0
-L__Menu2790:
+L__Menu2815:
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2507
-L__Menu2729:
-;FirmV_0_7_0.c,2099 :: 		{AutoCloseTime=AutoCloseTime-1;Menu0();State=102;}
+	GOTO        L_Menu2523
+L__Menu2750:
+;FirmV_0_7_0.c,2109 :: 		{AutoCloseTime=AutoCloseTime-1;Menu0();State=102;}
 	MOVLW       1
 	SUBWF       _AutoCloseTime+0, 1 
 	MOVLW       0
@@ -11216,37 +11310,37 @@ L__Menu2729:
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2507:
-;FirmV_0_7_0.c,2100 :: 		if((Events.Keys.b2==1)&&(AutoCloseTime<65000))
+L_Menu2523:
+;FirmV_0_7_0.c,2110 :: 		if((Events.Keys.b2==1)&&(AutoCloseTime<65000))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2510
+	GOTO        L_Menu2526
 	MOVLW       253
 	SUBWF       _AutoCloseTime+1, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__Menu2791
+	GOTO        L__Menu2816
 	MOVLW       232
 	SUBWF       _AutoCloseTime+0, 0 
-L__Menu2791:
+L__Menu2816:
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2510
-L__Menu2728:
-;FirmV_0_7_0.c,2101 :: 		{AutoCloseTime=AutoCloseTime+1;Menu0();State=102;}
+	GOTO        L_Menu2526
+L__Menu2749:
+;FirmV_0_7_0.c,2111 :: 		{AutoCloseTime=AutoCloseTime+1;Menu0();State=102;}
 	INFSNZ      _AutoCloseTime+0, 1 
 	INCF        _AutoCloseTime+1, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2510:
-;FirmV_0_7_0.c,2102 :: 		}
-L_Menu2504:
-;FirmV_0_7_0.c,2105 :: 		if(MenuPointer==12)
+L_Menu2526:
+;FirmV_0_7_0.c,2112 :: 		}
+L_Menu2520:
+;FirmV_0_7_0.c,2115 :: 		if(MenuPointer==12)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       12
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2511
-;FirmV_0_7_0.c,2107 :: 		State=0;
+	GOTO        L_Menu2527
+;FirmV_0_7_0.c,2117 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,2108 :: 		memcpy(LCDLine1,Sipher,16);
+;FirmV_0_7_0.c,2118 :: 		memcpy(LCDLine1,Sipher,16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -11260,183 +11354,186 @@ L_Menu2504:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2109 :: 		LCDLines=1;
+;FirmV_0_7_0.c,2119 :: 		LCDLines=1;
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,2110 :: 		LCDFlash=0; LCDFlashFlag=0;
+;FirmV_0_7_0.c,2120 :: 		LCDFlash=0; LCDFlashFlag=0;
 	CLRF        _LCDFlash+0 
 	CLRF        _LCDFlashFlag+0 
-;FirmV_0_7_0.c,2111 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,2121 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,2112 :: 		FactorySettings();
+;FirmV_0_7_0.c,2122 :: 		LongBuzzFlag=1;
+	MOVLW       1
+	MOVWF       _LongBuzzFlag+0 
+;FirmV_0_7_0.c,2123 :: 		FactorySettings();
 	CALL        _FactorySettings+0, 0
-;FirmV_0_7_0.c,2113 :: 		SaveConfigs();
+;FirmV_0_7_0.c,2124 :: 		SaveConfigs();
 	CALL        _SaveConfigs+0, 0
-;FirmV_0_7_0.c,2114 :: 		}
-L_Menu2511:
-;FirmV_0_7_0.c,2117 :: 		if(MenuPointer==13)
+;FirmV_0_7_0.c,2125 :: 		}
+L_Menu2527:
+;FirmV_0_7_0.c,2128 :: 		if(MenuPointer==13)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       13
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2512
-;FirmV_0_7_0.c,2118 :: 		{ if((Events.Keys.b0==1)&&(OpenPhEnable>0))
+	GOTO        L_Menu2528
+;FirmV_0_7_0.c,2129 :: 		{ if((Events.Keys.b0==1)&&(OpenPhEnable>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2515
+	GOTO        L_Menu2531
 	MOVF        _OpenPhEnable+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2515
-L__Menu2727:
-;FirmV_0_7_0.c,2119 :: 		{OpenPhEnable=OpenPhEnable-1;Menu0();State=102;}
+	GOTO        L_Menu2531
+L__Menu2748:
+;FirmV_0_7_0.c,2130 :: 		{OpenPhEnable=OpenPhEnable-1;Menu0();State=102;}
 	DECF        _OpenPhEnable+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2515:
-;FirmV_0_7_0.c,2120 :: 		if((Events.Keys.b2==1)&&(OpenPhEnable<1))
+L_Menu2531:
+;FirmV_0_7_0.c,2131 :: 		if((Events.Keys.b2==1)&&(OpenPhEnable<1))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2518
+	GOTO        L_Menu2534
 	MOVLW       1
 	SUBWF       _OpenPhEnable+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2518
-L__Menu2726:
-;FirmV_0_7_0.c,2121 :: 		{OpenPhEnable=OpenPhEnable+1;Menu0();State=102;}
+	GOTO        L_Menu2534
+L__Menu2747:
+;FirmV_0_7_0.c,2132 :: 		{OpenPhEnable=OpenPhEnable+1;Menu0();State=102;}
 	INCF        _OpenPhEnable+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2518:
-;FirmV_0_7_0.c,2122 :: 		}
-L_Menu2512:
-;FirmV_0_7_0.c,2126 :: 		if(MenuPointer==14)
+L_Menu2534:
+;FirmV_0_7_0.c,2133 :: 		}
+L_Menu2528:
+;FirmV_0_7_0.c,2137 :: 		if(MenuPointer==14)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       14
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2519
-;FirmV_0_7_0.c,2127 :: 		{ if((Events.Keys.b0==1)&&(LimiterEnable>0))
+	GOTO        L_Menu2535
+;FirmV_0_7_0.c,2138 :: 		{ if((Events.Keys.b0==1)&&(LimiterEnable>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2522
+	GOTO        L_Menu2538
 	MOVF        _LimiterEnable+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2522
-L__Menu2725:
-;FirmV_0_7_0.c,2128 :: 		{LimiterEnable=LimiterEnable-1;Menu0();State=102;}
+	GOTO        L_Menu2538
+L__Menu2746:
+;FirmV_0_7_0.c,2139 :: 		{LimiterEnable=LimiterEnable-1;Menu0();State=102;}
 	DECF        _LimiterEnable+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2522:
-;FirmV_0_7_0.c,2129 :: 		if((Events.Keys.b2==1)&&(LimiterEnable<1))
+L_Menu2538:
+;FirmV_0_7_0.c,2140 :: 		if((Events.Keys.b2==1)&&(LimiterEnable<1))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2525
+	GOTO        L_Menu2541
 	MOVLW       1
 	SUBWF       _LimiterEnable+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2525
-L__Menu2724:
-;FirmV_0_7_0.c,2130 :: 		{LimiterEnable=LimiterEnable+1;Menu0();State=102;}
+	GOTO        L_Menu2541
+L__Menu2745:
+;FirmV_0_7_0.c,2141 :: 		{LimiterEnable=LimiterEnable+1;Menu0();State=102;}
 	INCF        _LimiterEnable+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2525:
-;FirmV_0_7_0.c,2131 :: 		}
-L_Menu2519:
-;FirmV_0_7_0.c,2134 :: 		if(MenuPointer==15)
+L_Menu2541:
+;FirmV_0_7_0.c,2142 :: 		}
+L_Menu2535:
+;FirmV_0_7_0.c,2145 :: 		if(MenuPointer==15)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       15
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2526
-;FirmV_0_7_0.c,2135 :: 		{ if((Events.Keys.b0==1)&&(LockForce>0))
+	GOTO        L_Menu2542
+;FirmV_0_7_0.c,2146 :: 		{ if((Events.Keys.b0==1)&&(LockForce>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2529
+	GOTO        L_Menu2545
 	MOVF        _LockForce+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2529
-L__Menu2723:
-;FirmV_0_7_0.c,2136 :: 		{LockForce=LockForce-1;Menu0();State=102;}
+	GOTO        L_Menu2545
+L__Menu2744:
+;FirmV_0_7_0.c,2147 :: 		{LockForce=LockForce-1;Menu0();State=102;}
 	DECF        _LockForce+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2529:
-;FirmV_0_7_0.c,2137 :: 		if((Events.Keys.b2==1)&&(LockForce<1))
+L_Menu2545:
+;FirmV_0_7_0.c,2148 :: 		if((Events.Keys.b2==1)&&(LockForce<1))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2532
+	GOTO        L_Menu2548
 	MOVLW       1
 	SUBWF       _LockForce+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2532
-L__Menu2722:
-;FirmV_0_7_0.c,2138 :: 		{LockForce=LockForce+1;Menu0();State=102;}
+	GOTO        L_Menu2548
+L__Menu2743:
+;FirmV_0_7_0.c,2149 :: 		{LockForce=LockForce+1;Menu0();State=102;}
 	INCF        _LockForce+0, 1 
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2532:
-;FirmV_0_7_0.c,2139 :: 		}
-L_Menu2526:
-;FirmV_0_7_0.c,2142 :: 		if(MenuPointer==16)
+L_Menu2548:
+;FirmV_0_7_0.c,2150 :: 		}
+L_Menu2542:
+;FirmV_0_7_0.c,2153 :: 		if(MenuPointer==16)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       16
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2533
-;FirmV_0_7_0.c,2143 :: 		{ if((Events.Keys.b0==1)&&(CloseAfterPass>0))
+	GOTO        L_Menu2549
+;FirmV_0_7_0.c,2154 :: 		{ if((Events.Keys.b0==1)&&(CloseAfterPass>0))
 	BTFSS       _Events+0, 0 
-	GOTO        L_Menu2536
+	GOTO        L_Menu2552
 	MOVF        _CloseAfterPass+0, 0 
 	SUBLW       0
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2536
-L__Menu2721:
-;FirmV_0_7_0.c,2144 :: 		{CloseAfterPass=CloseAfterPass-1;if(CloseAfterPass==9) CloseAfterPass=0;Menu0();State=102;}
+	GOTO        L_Menu2552
+L__Menu2742:
+;FirmV_0_7_0.c,2155 :: 		{CloseAfterPass=CloseAfterPass-1;if(CloseAfterPass==9) CloseAfterPass=0;Menu0();State=102;}
 	DECF        _CloseAfterPass+0, 1 
 	MOVF        _CloseAfterPass+0, 0 
 	XORLW       9
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2537
+	GOTO        L_Menu2553
 	CLRF        _CloseAfterPass+0 
-L_Menu2537:
+L_Menu2553:
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2536:
-;FirmV_0_7_0.c,2145 :: 		if((Events.Keys.b2==1)&&(CloseAfterPass<255))
+L_Menu2552:
+;FirmV_0_7_0.c,2156 :: 		if((Events.Keys.b2==1)&&(CloseAfterPass<255))
 	BTFSS       _Events+0, 2 
-	GOTO        L_Menu2540
+	GOTO        L_Menu2556
 	MOVLW       255
 	SUBWF       _CloseAfterPass+0, 0 
 	BTFSC       STATUS+0, 0 
-	GOTO        L_Menu2540
-L__Menu2720:
-;FirmV_0_7_0.c,2146 :: 		{CloseAfterPass=CloseAfterPass+1;if(CloseAfterPass==1) CloseAfterPass=10;Menu0();State=102;}
+	GOTO        L_Menu2556
+L__Menu2741:
+;FirmV_0_7_0.c,2157 :: 		{CloseAfterPass=CloseAfterPass+1;if(CloseAfterPass==1) CloseAfterPass=10;Menu0();State=102;}
 	INCF        _CloseAfterPass+0, 1 
 	MOVF        _CloseAfterPass+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2541
+	GOTO        L_Menu2557
 	MOVLW       10
 	MOVWF       _CloseAfterPass+0 
-L_Menu2541:
+L_Menu2557:
 	CALL        _Menu0+0, 0
 	MOVLW       102
 	MOVWF       _State+0 
-L_Menu2540:
-;FirmV_0_7_0.c,2147 :: 		}
-L_Menu2533:
-;FirmV_0_7_0.c,2150 :: 		if(MenuPointer==17)
+L_Menu2556:
+;FirmV_0_7_0.c,2158 :: 		}
+L_Menu2549:
+;FirmV_0_7_0.c,2161 :: 		if(MenuPointer==17)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       17
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2542
-;FirmV_0_7_0.c,2152 :: 		State=103;
+	GOTO        L_Menu2558
+;FirmV_0_7_0.c,2163 :: 		State=103;
 	MOVLW       103
 	MOVWF       _State+0 
-;FirmV_0_7_0.c,2153 :: 		memcpy(LCDLine1,Sipher,16);
+;FirmV_0_7_0.c,2164 :: 		memcpy(LCDLine1,Sipher,16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -11450,24 +11547,27 @@ L_Menu2533:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2154 :: 		LCDFlash=0;
+;FirmV_0_7_0.c,2165 :: 		LCDFlash=0;
 	CLRF        _LCDFlash+0 
-;FirmV_0_7_0.c,2155 :: 		LCDLines=1;
+;FirmV_0_7_0.c,2166 :: 		LCDLines=1;
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,2156 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,2167 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,2157 :: 		}
-L_Menu2542:
-;FirmV_0_7_0.c,2160 :: 		if(MenuPointer==18)
+;FirmV_0_7_0.c,2168 :: 		LongBuzzFlag=1;
+	MOVLW       1
+	MOVWF       _LongBuzzFlag+0 
+;FirmV_0_7_0.c,2169 :: 		}
+L_Menu2558:
+;FirmV_0_7_0.c,2172 :: 		if(MenuPointer==18)
 	MOVF        _MenuPointer+0, 0 
 	XORLW       18
 	BTFSS       STATUS+0, 2 
-	GOTO        L_Menu2543
-;FirmV_0_7_0.c,2162 :: 		State=0;
+	GOTO        L_Menu2559
+;FirmV_0_7_0.c,2174 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,2163 :: 		memcpy(LCDLine1,Sipher,16);
+;FirmV_0_7_0.c,2175 :: 		memcpy(LCDLine1,Sipher,16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -11481,64 +11581,67 @@ L_Menu2542:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2164 :: 		LCDFlash=0;
+;FirmV_0_7_0.c,2176 :: 		LCDFlash=0;
 	CLRF        _LCDFlash+0 
-;FirmV_0_7_0.c,2165 :: 		LCDLines=1;
+;FirmV_0_7_0.c,2177 :: 		LCDLines=1;
 	MOVLW       1
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,2166 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,2178 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,2167 :: 		LoadConfigs();
+;FirmV_0_7_0.c,2179 :: 		LoadConfigs();
 	CALL        _LoadConfigs+0, 0
-;FirmV_0_7_0.c,2168 :: 		}
-L_Menu2543:
-;FirmV_0_7_0.c,2169 :: 		}
+;FirmV_0_7_0.c,2180 :: 		LongBuzzFlag=1;
+	MOVLW       1
+	MOVWF       _LongBuzzFlag+0 
+;FirmV_0_7_0.c,2181 :: 		}
+L_Menu2559:
+;FirmV_0_7_0.c,2182 :: 		}
 	RETURN      0
 ; end of _Menu2
 
 _Menu3:
 
-;FirmV_0_7_0.c,2181 :: 		void Menu3()
-;FirmV_0_7_0.c,2183 :: 		SaveConfigs();
+;FirmV_0_7_0.c,2194 :: 		void Menu3()
+;FirmV_0_7_0.c,2196 :: 		SaveConfigs();
 	CALL        _SaveConfigs+0, 0
-;FirmV_0_7_0.c,2184 :: 		State=0;
+;FirmV_0_7_0.c,2197 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,2185 :: 		}
+;FirmV_0_7_0.c,2198 :: 		}
 	RETURN      0
 ; end of _Menu3
 
 _LearnAuto:
 
-;FirmV_0_7_0.c,2199 :: 		void LearnAuto()
-;FirmV_0_7_0.c,2205 :: 		switch(LearnPhase)
-	GOTO        L_LearnAuto544
-;FirmV_0_7_0.c,2207 :: 		case 0:
-L_LearnAuto546:
-;FirmV_0_7_0.c,2208 :: 		Flasher=1;
+;FirmV_0_7_0.c,2212 :: 		void LearnAuto()
+;FirmV_0_7_0.c,2218 :: 		switch(LearnPhase)
+	GOTO        L_LearnAuto560
+;FirmV_0_7_0.c,2220 :: 		case 0:
+L_LearnAuto562:
+;FirmV_0_7_0.c,2221 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,2209 :: 		if(Events.Remote.b0==1) {DoorNo=2; LearnPhase=LearnPhase+1;} if(Events.Remote.b1==1) {DoorNo=1;LearnPhase=3;}
+;FirmV_0_7_0.c,2222 :: 		if(Events.Remote.b0==1) {DoorNo=2; LearnPhase=LearnPhase+1;} if(Events.Remote.b1==1) {DoorNo=1;LearnPhase=3;}
 	BTFSS       _Events+4, 0 
-	GOTO        L_LearnAuto547
+	GOTO        L_LearnAuto563
 	MOVLW       2
 	MOVWF       LearnAuto_DoorNo_L0+0 
 	INCF        _LearnPhase+0, 1 
-L_LearnAuto547:
+L_LearnAuto563:
 	BTFSS       _Events+4, 1 
-	GOTO        L_LearnAuto548
+	GOTO        L_LearnAuto564
 	MOVLW       1
 	MOVWF       LearnAuto_DoorNo_L0+0 
 	MOVLW       3
 	MOVWF       _LearnPhase+0 
-L_LearnAuto548:
-;FirmV_0_7_0.c,2210 :: 		OverloadCheckFlag1=0;OverloadCheckFlag2=0;
+L_LearnAuto564:
+;FirmV_0_7_0.c,2223 :: 		OverloadCheckFlag1=0;OverloadCheckFlag2=0;
 	CLRF        _OverloadCheckFlag1+0 
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,2211 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2213 :: 		case 1: //Start D2 and enable overload sensing after 1s
-L_LearnAuto549:
-;FirmV_0_7_0.c,2214 :: 		StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
+;FirmV_0_7_0.c,2224 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2226 :: 		case 1: //Start D2 and enable overload sensing after 1s
+L_LearnAuto565:
+;FirmV_0_7_0.c,2227 :: 		StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
 	MOVLW       2
 	MOVWF       FARG_StartMotor_Mx+0 
 	CLRF        FARG_StartMotor_Dir+0 
@@ -11559,39 +11662,39 @@ L_LearnAuto549:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2215 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2217 :: 		case 2: //Check if D2 reaches end of its course
-L_LearnAuto550:
-;FirmV_0_7_0.c,2218 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
+;FirmV_0_7_0.c,2228 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2230 :: 		case 2: //Check if D2 reaches end of its course
+L_LearnAuto566:
+;FirmV_0_7_0.c,2231 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
 	BTFSS       _Events+5, 1 
-	GOTO        L_LearnAuto553
+	GOTO        L_LearnAuto569
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto553
-L__LearnAuto757:
+	GOTO        L_LearnAuto569
+L__LearnAuto778:
 	CLRF        _OverloadCheckFlag2+0 
 	MOVLW       2
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
 	INCF        _LearnPhase+0, 1 
-L_LearnAuto553:
-;FirmV_0_7_0.c,2219 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
+L_LearnAuto569:
+;FirmV_0_7_0.c,2232 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
 	MOVLW       21
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto554
+	GOTO        L_LearnAuto570
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
-L_LearnAuto554:
-;FirmV_0_7_0.c,2220 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2222 :: 		case 3: //Start D1 and enable overload sensin after 1 s
-L_LearnAuto555:
-;FirmV_0_7_0.c,2223 :: 		StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;;
+L_LearnAuto570:
+;FirmV_0_7_0.c,2233 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2235 :: 		case 3: //Start D1 and enable overload sensin after 1 s
+L_LearnAuto571:
+;FirmV_0_7_0.c,2236 :: 		StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;;
 	MOVLW       1
 	MOVWF       FARG_StartMotor_Mx+0 
 	CLRF        FARG_StartMotor_Dir+0 
@@ -11612,37 +11715,37 @@ L_LearnAuto555:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2225 :: 		case 4: //Check if D1 reaches end of its course
-L_LearnAuto556:
-;FirmV_0_7_0.c,2226 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
+;FirmV_0_7_0.c,2238 :: 		case 4: //Check if D1 reaches end of its course
+L_LearnAuto572:
+;FirmV_0_7_0.c,2239 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
 	BTFSS       _Events+5, 0 
-	GOTO        L_LearnAuto559
+	GOTO        L_LearnAuto575
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto559
-L__LearnAuto756:
+	GOTO        L_LearnAuto575
+L__LearnAuto777:
 	CLRF        _OverloadCheckFlag1+0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
 	INCF        _LearnPhase+0, 1 
-L_LearnAuto559:
-;FirmV_0_7_0.c,2227 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
+L_LearnAuto575:
+;FirmV_0_7_0.c,2240 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
 	MOVLW       20
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto560
+	GOTO        L_LearnAuto576
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
-L_LearnAuto560:
-;FirmV_0_7_0.c,2228 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2230 :: 		case 5: //Start D1 for opening and save start time and enable overload sensing after 1s
-L_LearnAuto561:
-;FirmV_0_7_0.c,2231 :: 		startT=ms500;StartMotor(1,_Open);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;
+L_LearnAuto576:
+;FirmV_0_7_0.c,2241 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2243 :: 		case 5: //Start D1 for opening and save start time and enable overload sensing after 1s
+L_LearnAuto577:
+;FirmV_0_7_0.c,2244 :: 		startT=ms500;StartMotor(1,_Open);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnAuto_startT_L0+0 
 	MOVF        _ms500+1, 0 
@@ -11672,18 +11775,18 @@ L_LearnAuto561:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2232 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2234 :: 		case 6: //Check if D1 reaches end of its course and save the stop time
-L_LearnAuto562:
-;FirmV_0_7_0.c,2235 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);if(DoorNo==1)LearnPhase=11;else LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1OpenTime=(char)(stopT-startT);}
+;FirmV_0_7_0.c,2245 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2247 :: 		case 6: //Check if D1 reaches end of its course and save the stop time
+L_LearnAuto578:
+;FirmV_0_7_0.c,2248 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);if(DoorNo==1)LearnPhase=11;else LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1OpenTime=(char)(stopT-startT);}
 	BTFSS       _Events+5, 0 
-	GOTO        L_LearnAuto565
+	GOTO        L_LearnAuto581
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto565
-L__LearnAuto755:
+	GOTO        L_LearnAuto581
+L__LearnAuto776:
 	CLRF        _OverloadCheckFlag1+0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
@@ -11691,34 +11794,34 @@ L__LearnAuto755:
 	MOVF        LearnAuto_DoorNo_L0+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto566
+	GOTO        L_LearnAuto582
 	MOVLW       11
 	MOVWF       _LearnPhase+0 
-	GOTO        L_LearnAuto567
-L_LearnAuto566:
+	GOTO        L_LearnAuto583
+L_LearnAuto582:
 	INCF        _LearnPhase+0, 1 
-L_LearnAuto567:
+L_LearnAuto583:
 	MOVF        LearnAuto_startT_L0+0, 0 
 	SUBWF       _ms500+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnAuto_RawData_L0+1 
-L_LearnAuto565:
-;FirmV_0_7_0.c,2236 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
+L_LearnAuto581:
+;FirmV_0_7_0.c,2249 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
 	MOVLW       20
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto568
+	GOTO        L_LearnAuto584
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
-L_LearnAuto568:
-;FirmV_0_7_0.c,2237 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2239 :: 		case 7: //Start D2 for opening and save start time and enable overload sensing after 1s
-L_LearnAuto569:
-;FirmV_0_7_0.c,2240 :: 		startT=ms500;StartMotor(2,_Open);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
+L_LearnAuto584:
+;FirmV_0_7_0.c,2250 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2252 :: 		case 7: //Start D2 for opening and save start time and enable overload sensing after 1s
+L_LearnAuto585:
+;FirmV_0_7_0.c,2253 :: 		startT=ms500;StartMotor(2,_Open);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnAuto_startT_L0+0 
 	MOVF        _ms500+1, 0 
@@ -11748,18 +11851,18 @@ L_LearnAuto569:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2241 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2243 :: 		case 8: //Check if D2 reaches end of its course and save the stop time
-L_LearnAuto570:
-;FirmV_0_7_0.c,2244 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2OpenTime=(char)(stopT-startT);}
+;FirmV_0_7_0.c,2254 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2256 :: 		case 8: //Check if D2 reaches end of its course and save the stop time
+L_LearnAuto586:
+;FirmV_0_7_0.c,2257 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2OpenTime=(char)(stopT-startT);}
 	BTFSS       _Events+5, 1 
-	GOTO        L_LearnAuto573
+	GOTO        L_LearnAuto589
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto573
-L__LearnAuto754:
+	GOTO        L_LearnAuto589
+L__LearnAuto775:
 	CLRF        _OverloadCheckFlag2+0 
 	MOVLW       2
 	MOVWF       FARG_StopMotor_Mx+0 
@@ -11770,22 +11873,22 @@ L__LearnAuto754:
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnAuto_RawData_L0+3 
-L_LearnAuto573:
-;FirmV_0_7_0.c,2245 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
+L_LearnAuto589:
+;FirmV_0_7_0.c,2258 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
 	MOVLW       21
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto574
+	GOTO        L_LearnAuto590
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
-L_LearnAuto574:
-;FirmV_0_7_0.c,2246 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2248 :: 		case 9: //Start D2 for closing and save start time and enable overload sensing after 1s
-L_LearnAuto575:
-;FirmV_0_7_0.c,2249 :: 		startT=ms500;StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
+L_LearnAuto590:
+;FirmV_0_7_0.c,2259 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2261 :: 		case 9: //Start D2 for closing and save start time and enable overload sensing after 1s
+L_LearnAuto591:
+;FirmV_0_7_0.c,2262 :: 		startT=ms500;StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnAuto_startT_L0+0 
 	MOVF        _ms500+1, 0 
@@ -11814,18 +11917,18 @@ L_LearnAuto575:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2250 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2252 :: 		case 10: //Check if D2 reaches end of its course and save the stop time
-L_LearnAuto576:
-;FirmV_0_7_0.c,2253 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2CloseTime=(char)(stopT-startT);}
+;FirmV_0_7_0.c,2263 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2265 :: 		case 10: //Check if D2 reaches end of its course and save the stop time
+L_LearnAuto592:
+;FirmV_0_7_0.c,2266 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D2CloseTime=(char)(stopT-startT);}
 	BTFSS       _Events+5, 1 
-	GOTO        L_LearnAuto579
+	GOTO        L_LearnAuto595
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto579
-L__LearnAuto753:
+	GOTO        L_LearnAuto595
+L__LearnAuto774:
 	CLRF        _OverloadCheckFlag2+0 
 	MOVLW       2
 	MOVWF       FARG_StopMotor_Mx+0 
@@ -11836,22 +11939,22 @@ L__LearnAuto753:
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnAuto_RawData_L0+2 
-L_LearnAuto579:
-;FirmV_0_7_0.c,2254 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
+L_LearnAuto595:
+;FirmV_0_7_0.c,2267 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
 	MOVLW       21
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto580
+	GOTO        L_LearnAuto596
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
-L_LearnAuto580:
-;FirmV_0_7_0.c,2255 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2257 :: 		case 11: //Start D1 for closing and save start time and enable overload sensing after 1s
-L_LearnAuto581:
-;FirmV_0_7_0.c,2258 :: 		startT=ms500;StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;
+L_LearnAuto596:
+;FirmV_0_7_0.c,2268 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2270 :: 		case 11: //Start D1 for closing and save start time and enable overload sensing after 1s
+L_LearnAuto597:
+;FirmV_0_7_0.c,2271 :: 		startT=ms500;StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnAuto_startT_L0+0 
 	MOVF        _ms500+1, 0 
@@ -11880,18 +11983,18 @@ L_LearnAuto581:
 	MOVWF       FARG_AddTask_tcode+0 
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
-;FirmV_0_7_0.c,2259 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2261 :: 		case 12: //Check if D1 reaches end of its course and save the stop time
-L_LearnAuto582:
-;FirmV_0_7_0.c,2262 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1CloseTime=(char)(stopT-startT);}
+;FirmV_0_7_0.c,2272 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2274 :: 		case 12: //Check if D1 reaches end of its course and save the stop time
+L_LearnAuto598:
+;FirmV_0_7_0.c,2275 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;stopT=ms500;RawData.D1CloseTime=(char)(stopT-startT);}
 	BTFSS       _Events+5, 0 
-	GOTO        L_LearnAuto585
+	GOTO        L_LearnAuto601
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnAuto585
-L__LearnAuto752:
+	GOTO        L_LearnAuto601
+L__LearnAuto773:
 	CLRF        _OverloadCheckFlag1+0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
@@ -11902,28 +12005,28 @@ L__LearnAuto752:
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnAuto_RawData_L0+0 
-L_LearnAuto585:
-;FirmV_0_7_0.c,2263 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
+L_LearnAuto601:
+;FirmV_0_7_0.c,2276 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
 	MOVLW       20
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto586
+	GOTO        L_LearnAuto602
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
-L_LearnAuto586:
-;FirmV_0_7_0.c,2264 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2266 :: 		case 13:
-L_LearnAuto587:
-;FirmV_0_7_0.c,2267 :: 		AutoLearnCalculator(&RawData);
+L_LearnAuto602:
+;FirmV_0_7_0.c,2277 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2279 :: 		case 13:
+L_LearnAuto603:
+;FirmV_0_7_0.c,2280 :: 		AutoLearnCalculator(&RawData);
 	MOVLW       LearnAuto_RawData_L0+0
 	MOVWF       FARG_AutoLearnCalculator+0 
 	MOVLW       hi_addr(LearnAuto_RawData_L0+0)
 	MOVWF       FARG_AutoLearnCalculator+1 
 	CALL        _AutoLearnCalculator+0, 0
-;FirmV_0_7_0.c,2268 :: 		SaveLearnData(&RawData,DoorNo);
+;FirmV_0_7_0.c,2281 :: 		SaveLearnData(&RawData,DoorNo);
 	MOVLW       LearnAuto_RawData_L0+0
 	MOVWF       FARG_SaveLearnData+0 
 	MOVLW       hi_addr(LearnAuto_RawData_L0+0)
@@ -11931,7 +12034,7 @@ L_LearnAuto587:
 	MOVF        LearnAuto_DoorNo_L0+0, 0 
 	MOVWF       FARG_SaveLearnData+0 
 	CALL        _SaveLearnData+0, 0
-;FirmV_0_7_0.c,2269 :: 		memcpy(LCDLine1," Learn Complete ",16);
+;FirmV_0_7_0.c,2282 :: 		memcpy(LCDLine1," Learn Complete ",16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -11960,7 +12063,7 @@ L_LearnAuto587:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2270 :: 		memcpy(LCDLine2,"     Ready      ",16);
+;FirmV_0_7_0.c,2283 :: 		memcpy(LCDLine2,"     Ready      ",16);
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -11989,85 +12092,85 @@ L_LearnAuto587:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2271 :: 		LCDLines=2;
+;FirmV_0_7_0.c,2284 :: 		LCDLines=2;
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,2272 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,2285 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,2273 :: 		Flasher=0;
+;FirmV_0_7_0.c,2286 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,2274 :: 		State=0;
+;FirmV_0_7_0.c,2287 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,2275 :: 		break;
-	GOTO        L_LearnAuto545
-;FirmV_0_7_0.c,2278 :: 		}
-L_LearnAuto544:
+;FirmV_0_7_0.c,2288 :: 		break;
+	GOTO        L_LearnAuto561
+;FirmV_0_7_0.c,2291 :: 		}
+L_LearnAuto560:
 	MOVF        _LearnPhase+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto546
+	GOTO        L_LearnAuto562
 	MOVF        _LearnPhase+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto549
+	GOTO        L_LearnAuto565
 	MOVF        _LearnPhase+0, 0 
 	XORLW       2
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto550
+	GOTO        L_LearnAuto566
 	MOVF        _LearnPhase+0, 0 
 	XORLW       3
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto555
+	GOTO        L_LearnAuto571
 	MOVF        _LearnPhase+0, 0 
 	XORLW       4
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto556
+	GOTO        L_LearnAuto572
 	MOVF        _LearnPhase+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto561
+	GOTO        L_LearnAuto577
 	MOVF        _LearnPhase+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto562
+	GOTO        L_LearnAuto578
 	MOVF        _LearnPhase+0, 0 
 	XORLW       7
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto569
+	GOTO        L_LearnAuto585
 	MOVF        _LearnPhase+0, 0 
 	XORLW       8
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto570
+	GOTO        L_LearnAuto586
 	MOVF        _LearnPhase+0, 0 
 	XORLW       9
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto575
+	GOTO        L_LearnAuto591
 	MOVF        _LearnPhase+0, 0 
 	XORLW       10
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto576
+	GOTO        L_LearnAuto592
 	MOVF        _LearnPhase+0, 0 
 	XORLW       11
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto581
+	GOTO        L_LearnAuto597
 	MOVF        _LearnPhase+0, 0 
 	XORLW       12
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto582
+	GOTO        L_LearnAuto598
 	MOVF        _LearnPhase+0, 0 
 	XORLW       13
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnAuto587
-L_LearnAuto545:
-;FirmV_0_7_0.c,2282 :: 		}
+	GOTO        L_LearnAuto603
+L_LearnAuto561:
+;FirmV_0_7_0.c,2295 :: 		}
 	RETURN      0
 ; end of _LearnAuto
 
 _AutoLearnCalculator:
 
-;FirmV_0_7_0.c,2302 :: 		void AutoLearnCalculator(Learn *raw)
-;FirmV_0_7_0.c,2305 :: 		(*raw).D1OpenTime=(*raw).D1OpenTime+10;
+;FirmV_0_7_0.c,2315 :: 		void AutoLearnCalculator(Learn *raw)
+;FirmV_0_7_0.c,2318 :: 		(*raw).D1OpenTime=(*raw).D1OpenTime+10;
 	MOVLW       1
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       R1 
@@ -12083,7 +12186,7 @@ _AutoLearnCalculator:
 	MOVFF       R2, FSR1H
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2306 :: 		(*raw).D2OpenTime=(*raw).D2OpenTime+10;
+;FirmV_0_7_0.c,2319 :: 		(*raw).D2OpenTime=(*raw).D2OpenTime+10;
 	MOVLW       3
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       R1 
@@ -12099,7 +12202,7 @@ _AutoLearnCalculator:
 	MOVFF       R2, FSR1H
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2307 :: 		(*raw).D1CloseTime=(*raw).D1CloseTime+10;
+;FirmV_0_7_0.c,2320 :: 		(*raw).D1CloseTime=(*raw).D1CloseTime+10;
 	MOVFF       FARG_AutoLearnCalculator_raw+0, FSR0L
 	MOVFF       FARG_AutoLearnCalculator_raw+1, FSR0H
 	MOVF        POSTINC0+0, 0 
@@ -12109,7 +12212,7 @@ _AutoLearnCalculator:
 	MOVLW       10
 	ADDWF       R0, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2308 :: 		(*raw).D2CloseTime=(*raw).D2CloseTime+10;
+;FirmV_0_7_0.c,2321 :: 		(*raw).D2CloseTime=(*raw).D2CloseTime+10;
 	MOVLW       2
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       R1 
@@ -12125,7 +12228,7 @@ _AutoLearnCalculator:
 	MOVFF       R2, FSR1H
 	MOVF        R0, 0 
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2310 :: 		(*raw).D1OpenSoftStart=4;
+;FirmV_0_7_0.c,2323 :: 		(*raw).D1OpenSoftStart=4;
 	MOVLW       4
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12134,7 +12237,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2311 :: 		(*raw).D1CloseSoftStart=4;
+;FirmV_0_7_0.c,2324 :: 		(*raw).D1CloseSoftStart=4;
 	MOVLW       6
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12143,7 +12246,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2312 :: 		(*raw).D2OpenSoftStart=4;
+;FirmV_0_7_0.c,2325 :: 		(*raw).D2OpenSoftStart=4;
 	MOVLW       8
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12152,7 +12255,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2313 :: 		(*raw).D2CloseSoftStart=4;
+;FirmV_0_7_0.c,2326 :: 		(*raw).D2CloseSoftStart=4;
 	MOVLW       10
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12161,7 +12264,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       4
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2315 :: 		(*raw).D1OpenSoftStop=10;
+;FirmV_0_7_0.c,2328 :: 		(*raw).D1OpenSoftStop=10;
 	MOVLW       5
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12170,7 +12273,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       10
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2316 :: 		(*raw).D2OpenSoftStop=10;
+;FirmV_0_7_0.c,2329 :: 		(*raw).D2OpenSoftStop=10;
 	MOVLW       9
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12179,7 +12282,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       10
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2317 :: 		(*raw).D1CloseSoftStop=10;
+;FirmV_0_7_0.c,2330 :: 		(*raw).D1CloseSoftStop=10;
 	MOVLW       7
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12188,7 +12291,7 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       10
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2318 :: 		(*raw).D2CloseSoftStop=10;
+;FirmV_0_7_0.c,2331 :: 		(*raw).D2CloseSoftStop=10;
 	MOVLW       11
 	ADDWF       FARG_AutoLearnCalculator_raw+0, 0 
 	MOVWF       FSR1L 
@@ -12197,14 +12300,14 @@ _AutoLearnCalculator:
 	MOVWF       FSR1H 
 	MOVLW       10
 	MOVWF       POSTINC1+0 
-;FirmV_0_7_0.c,2320 :: 		}
+;FirmV_0_7_0.c,2333 :: 		}
 	RETURN      0
 ; end of _AutoLearnCalculator
 
 _SaveLearnData:
 
-;FirmV_0_7_0.c,2332 :: 		void SaveLearnData(Learn *d,char DCount)
-;FirmV_0_7_0.c,2334 :: 		Door1OpenTime=(*d).D1OpenTime;
+;FirmV_0_7_0.c,2345 :: 		void SaveLearnData(Learn *d,char DCount)
+;FirmV_0_7_0.c,2347 :: 		Door1OpenTime=(*d).D1OpenTime;
 	MOVLW       1
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12213,17 +12316,17 @@ _SaveLearnData:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _Door1OpenTime+0 
-;FirmV_0_7_0.c,2335 :: 		Door1CloseTime=(*d).D1CloseTime;
+;FirmV_0_7_0.c,2348 :: 		Door1CloseTime=(*d).D1CloseTime;
 	MOVFF       FARG_SaveLearnData_d+0, FSR0L
 	MOVFF       FARG_SaveLearnData_d+1, FSR0H
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _Door1CloseTime+0 
-;FirmV_0_7_0.c,2336 :: 		if(DCount==2)
+;FirmV_0_7_0.c,2349 :: 		if(DCount==2)
 	MOVF        FARG_SaveLearnData_DCount+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_SaveLearnData588
-;FirmV_0_7_0.c,2338 :: 		Door2OpenTime=(*d).D2OpenTime;
+	GOTO        L_SaveLearnData604
+;FirmV_0_7_0.c,2351 :: 		Door2OpenTime=(*d).D2OpenTime;
 	MOVLW       3
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12232,7 +12335,7 @@ _SaveLearnData:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _Door2OpenTime+0 
-;FirmV_0_7_0.c,2339 :: 		Door2CloseTime=(*d).D2CloseTime;
+;FirmV_0_7_0.c,2352 :: 		Door2CloseTime=(*d).D2CloseTime;
 	MOVLW       2
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12241,7 +12344,7 @@ _SaveLearnData:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _Door2CloseTime+0 
-;FirmV_0_7_0.c,2340 :: 		OpenSoftStartTime=((*d).D1OpenSoftStart+(*d).D2OpenSoftStart)/2;
+;FirmV_0_7_0.c,2353 :: 		OpenSoftStartTime=((*d).D1OpenSoftStart+(*d).D2OpenSoftStart)/2;
 	MOVLW       4
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12271,7 +12374,7 @@ _SaveLearnData:
 	BSF         R1, 7 
 	MOVF        R0, 0 
 	MOVWF       _OpenSoftStartTime+0 
-;FirmV_0_7_0.c,2341 :: 		OpenSoftStopTime=((*d).D1OpenSoftStop+(*d).D2OpenSoftStop)/2;
+;FirmV_0_7_0.c,2354 :: 		OpenSoftStopTime=((*d).D1OpenSoftStop+(*d).D2OpenSoftStop)/2;
 	MOVLW       5
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12301,7 +12404,7 @@ _SaveLearnData:
 	BSF         R1, 7 
 	MOVF        R0, 0 
 	MOVWF       _OpenSoftStopTime+0 
-;FirmV_0_7_0.c,2342 :: 		CloseSoftStartTime=((*d).D1CloseSoftStart+(*d).D2CloseSoftStart)/2;
+;FirmV_0_7_0.c,2355 :: 		CloseSoftStartTime=((*d).D1CloseSoftStart+(*d).D2CloseSoftStart)/2;
 	MOVLW       6
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12331,7 +12434,7 @@ _SaveLearnData:
 	BSF         R1, 7 
 	MOVF        R0, 0 
 	MOVWF       _CloseSoftStartTime+0 
-;FirmV_0_7_0.c,2343 :: 		CloseSoftStopTime=((*d).D1CloseSoftStop+(*d).D2CloseSoftStop)/2;
+;FirmV_0_7_0.c,2356 :: 		CloseSoftStopTime=((*d).D1CloseSoftStop+(*d).D2CloseSoftStop)/2;
 	MOVLW       7
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12361,14 +12464,14 @@ _SaveLearnData:
 	BSF         R1, 7 
 	MOVF        R0, 0 
 	MOVWF       _CloseSoftStopTime+0 
-;FirmV_0_7_0.c,2344 :: 		}
-	GOTO        L_SaveLearnData589
-L_SaveLearnData588:
-;FirmV_0_7_0.c,2347 :: 		Door2OpenTime=0;
+;FirmV_0_7_0.c,2357 :: 		}
+	GOTO        L_SaveLearnData605
+L_SaveLearnData604:
+;FirmV_0_7_0.c,2360 :: 		Door2OpenTime=0;
 	CLRF        _Door2OpenTime+0 
-;FirmV_0_7_0.c,2348 :: 		Door2CloseTime=0;
+;FirmV_0_7_0.c,2361 :: 		Door2CloseTime=0;
 	CLRF        _Door2CloseTime+0 
-;FirmV_0_7_0.c,2349 :: 		OpenSoftStartTime=(*d).D1OpenSoftStart;
+;FirmV_0_7_0.c,2362 :: 		OpenSoftStartTime=(*d).D1OpenSoftStart;
 	MOVLW       4
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12377,7 +12480,7 @@ L_SaveLearnData588:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _OpenSoftStartTime+0 
-;FirmV_0_7_0.c,2350 :: 		OpenSoftStopTime=(*d).D1OpenSoftStop;
+;FirmV_0_7_0.c,2363 :: 		OpenSoftStopTime=(*d).D1OpenSoftStop;
 	MOVLW       5
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12386,7 +12489,7 @@ L_SaveLearnData588:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _OpenSoftStopTime+0 
-;FirmV_0_7_0.c,2351 :: 		CloseSoftStartTime=(*d).D1CloseSoftStart;
+;FirmV_0_7_0.c,2364 :: 		CloseSoftStartTime=(*d).D1CloseSoftStart;
 	MOVLW       6
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12395,7 +12498,7 @@ L_SaveLearnData588:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _CloseSoftStartTime+0 
-;FirmV_0_7_0.c,2352 :: 		CloseSoftStopTime=(*d).D1CloseSoftStop;
+;FirmV_0_7_0.c,2365 :: 		CloseSoftStopTime=(*d).D1CloseSoftStop;
 	MOVLW       7
 	ADDWF       FARG_SaveLearnData_d+0, 0 
 	MOVWF       FSR0L 
@@ -12404,42 +12507,42 @@ L_SaveLearnData588:
 	MOVWF       FSR0H 
 	MOVF        POSTINC0+0, 0 
 	MOVWF       _CloseSoftStopTime+0 
-;FirmV_0_7_0.c,2353 :: 		}
-L_SaveLearnData589:
-;FirmV_0_7_0.c,2355 :: 		SaveConfigs();
+;FirmV_0_7_0.c,2366 :: 		}
+L_SaveLearnData605:
+;FirmV_0_7_0.c,2368 :: 		SaveConfigs();
 	CALL        _SaveConfigs+0, 0
-;FirmV_0_7_0.c,2356 :: 		}
+;FirmV_0_7_0.c,2369 :: 		}
 	RETURN      0
 ; end of _SaveLearnData
 
 _LearnManual:
 
-;FirmV_0_7_0.c,2371 :: 		void LearnManual()
-;FirmV_0_7_0.c,2379 :: 		switch(LearnPhase)
-	GOTO        L_LearnManual590
-;FirmV_0_7_0.c,2381 :: 		case 0:
-L_LearnManual592:
-;FirmV_0_7_0.c,2382 :: 		Flasher=1;
+;FirmV_0_7_0.c,2384 :: 		void LearnManual()
+;FirmV_0_7_0.c,2392 :: 		switch(LearnPhase)
+	GOTO        L_LearnManual606
+;FirmV_0_7_0.c,2394 :: 		case 0:
+L_LearnManual608:
+;FirmV_0_7_0.c,2395 :: 		Flasher=1;
 	BSF         PORTD+0, 7 
-;FirmV_0_7_0.c,2383 :: 		if(Events.Remote.b0==1){LearnPhase=LearnPhase+1; DoorNo=2;}if(Events.Remote.b1==1){LearnPhase=3; DoorNo=1;}
+;FirmV_0_7_0.c,2396 :: 		if(Events.Remote.b0==1){LearnPhase=LearnPhase+1; DoorNo=2;}if(Events.Remote.b1==1){LearnPhase=3; DoorNo=1;}
 	BTFSS       _Events+4, 0 
-	GOTO        L_LearnManual593
+	GOTO        L_LearnManual609
 	INCF        _LearnPhase+0, 1 
 	MOVLW       2
 	MOVWF       LearnManual_DoorNo_L0+0 
-L_LearnManual593:
+L_LearnManual609:
 	BTFSS       _Events+4, 1 
-	GOTO        L_LearnManual594
+	GOTO        L_LearnManual610
 	MOVLW       3
 	MOVWF       _LearnPhase+0 
 	MOVLW       1
 	MOVWF       LearnManual_DoorNo_L0+0 
-L_LearnManual594:
-;FirmV_0_7_0.c,2384 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2386 :: 		case 1: //Start D2 and enable overload sensing after 1s
-L_LearnManual595:
-;FirmV_0_7_0.c,2387 :: 		StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;OverloadCheckFlag2=0;
+L_LearnManual610:
+;FirmV_0_7_0.c,2397 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2399 :: 		case 1: //Start D2 and enable overload sensing after 1s
+L_LearnManual611:
+;FirmV_0_7_0.c,2400 :: 		StartMotor(2,_Close);AddTask(ms500+4,21);LearnPhase=LearnPhase+1;OverloadCheckFlag2=0;
 	MOVLW       2
 	MOVWF       FARG_StartMotor_Mx+0 
 	CLRF        FARG_StartMotor_Dir+0 
@@ -12461,39 +12564,39 @@ L_LearnManual595:
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
 	CLRF        _OverloadCheckFlag2+0 
-;FirmV_0_7_0.c,2388 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2390 :: 		case 2: //Check if D2 reaches end of its course
-L_LearnManual596:
-;FirmV_0_7_0.c,2391 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
+;FirmV_0_7_0.c,2401 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2403 :: 		case 2: //Check if D2 reaches end of its course
+L_LearnManual612:
+;FirmV_0_7_0.c,2404 :: 		if((Events.Overload.b1==1)&&(OverloadCheckFlag2==1)){OverloadCheckFlag2=0;StopMotor(2);LearnPhase=LearnPhase+1;}
 	BTFSS       _Events+5, 1 
-	GOTO        L_LearnManual599
+	GOTO        L_LearnManual615
 	MOVF        _OverloadCheckFlag2+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnManual599
-L__LearnManual759:
+	GOTO        L_LearnManual615
+L__LearnManual780:
 	CLRF        _OverloadCheckFlag2+0 
 	MOVLW       2
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
 	INCF        _LearnPhase+0, 1 
-L_LearnManual599:
-;FirmV_0_7_0.c,2392 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
+L_LearnManual615:
+;FirmV_0_7_0.c,2405 :: 		if(CheckTask(21))OverloadCheckFlag2=1;
 	MOVLW       21
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual600
+	GOTO        L_LearnManual616
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag2+0 
-L_LearnManual600:
-;FirmV_0_7_0.c,2393 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2395 :: 		case 3: //Start D1 and enable overload sensin after 1 s
-L_LearnManual601:
-;FirmV_0_7_0.c,2396 :: 		StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;;OverloadCheckFlag1=0;
+L_LearnManual616:
+;FirmV_0_7_0.c,2406 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2408 :: 		case 3: //Start D1 and enable overload sensin after 1 s
+L_LearnManual617:
+;FirmV_0_7_0.c,2409 :: 		StartMotor(1,_Close);AddTask(ms500+4,20);LearnPhase=LearnPhase+1;;OverloadCheckFlag1=0;
 	MOVLW       1
 	MOVWF       FARG_StartMotor_Mx+0 
 	CLRF        FARG_StartMotor_Dir+0 
@@ -12515,41 +12618,41 @@ L_LearnManual601:
 	CALL        _AddTask+0, 0
 	INCF        _LearnPhase+0, 1 
 	CLRF        _OverloadCheckFlag1+0 
-;FirmV_0_7_0.c,2398 :: 		case 4: //Check if D1 reaches end of its course
-L_LearnManual602:
-;FirmV_0_7_0.c,2399 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
+;FirmV_0_7_0.c,2411 :: 		case 4: //Check if D1 reaches end of its course
+L_LearnManual618:
+;FirmV_0_7_0.c,2412 :: 		if((Events.Overload.b0==1)&&(OverloadCheckFlag1==1)){OverloadCheckFlag1=0;StopMotor(1);LearnPhase=LearnPhase+1;}
 	BTFSS       _Events+5, 0 
-	GOTO        L_LearnManual605
+	GOTO        L_LearnManual621
 	MOVF        _OverloadCheckFlag1+0, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnManual605
-L__LearnManual758:
+	GOTO        L_LearnManual621
+L__LearnManual779:
 	CLRF        _OverloadCheckFlag1+0 
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
 	INCF        _LearnPhase+0, 1 
-L_LearnManual605:
-;FirmV_0_7_0.c,2400 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
+L_LearnManual621:
+;FirmV_0_7_0.c,2413 :: 		if(CheckTask(20))OverloadCheckFlag1=1;
 	MOVLW       20
 	MOVWF       FARG_CheckTask_TaskCode+0 
 	CALL        _CheckTask+0, 0
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual606
+	GOTO        L_LearnManual622
 	MOVLW       1
 	MOVWF       _OverloadCheckFlag1+0 
-L_LearnManual606:
-;FirmV_0_7_0.c,2401 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2403 :: 		case 5: //Wait for remote to start D1 and slow down
-L_LearnManual607:
-;FirmV_0_7_0.c,2404 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(1,_Open);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
+L_LearnManual622:
+;FirmV_0_7_0.c,2414 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2416 :: 		case 5: //Wait for remote to start D1 and slow down
+L_LearnManual623:
+;FirmV_0_7_0.c,2417 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(1,_Open);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual608
+	GOTO        L_LearnManual624
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t1_L0+0 
 	MOVF        _ms500+1, 0 
@@ -12570,16 +12673,16 @@ L_LearnManual607:
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
 	INCF        _LearnPhase+0, 1 
-L_LearnManual608:
-;FirmV_0_7_0.c,2405 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2407 :: 		case 6: //check for Remote press and fast up
-L_LearnManual609:
-;FirmV_0_7_0.c,2408 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
+L_LearnManual624:
+;FirmV_0_7_0.c,2418 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2420 :: 		case 6: //check for Remote press and fast up
+L_LearnManual625:
+;FirmV_0_7_0.c,2421 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual610
+	GOTO        L_LearnManual626
 	INCF        _LearnPhase+0, 1 
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t2_L0+0 
@@ -12595,16 +12698,16 @@ L_LearnManual609:
 	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
 	CALL        _SetMotorSpeed+0, 0
 	CLRF        _M1isSlow+0 
-L_LearnManual610:
-;FirmV_0_7_0.c,2409 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2411 :: 		case 7: //check for Remote press and slow down
-L_LearnManual611:
-;FirmV_0_7_0.c,2412 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
+L_LearnManual626:
+;FirmV_0_7_0.c,2422 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2424 :: 		case 7: //check for Remote press and slow down
+L_LearnManual627:
+;FirmV_0_7_0.c,2425 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual612
+	GOTO        L_LearnManual628
 	INCF        _LearnPhase+0, 1 
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t3_L0+0 
@@ -12620,26 +12723,26 @@ L_LearnManual611:
 	CALL        _SetMotorSpeed+0, 0
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
-L_LearnManual612:
-;FirmV_0_7_0.c,2413 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2415 :: 		case 8: //check for Remote press and stop
-L_LearnManual613:
-;FirmV_0_7_0.c,2416 :: 		if(Events.Remote!=0){if(DoorNo==2)LearnPhase=LearnPhase+1;else LearnPhase=17;t4=ms500;StopMotor(1);
+L_LearnManual628:
+;FirmV_0_7_0.c,2426 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2428 :: 		case 8: //check for Remote press and stop
+L_LearnManual629:
+;FirmV_0_7_0.c,2429 :: 		if(Events.Remote!=0){if(DoorNo==2)LearnPhase=LearnPhase+1;else LearnPhase=17;t4=ms500;StopMotor(1);
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual614
+	GOTO        L_LearnManual630
 	MOVF        LearnManual_DoorNo_L0+0, 0 
 	XORLW       2
 	BTFSS       STATUS+0, 2 
-	GOTO        L_LearnManual615
+	GOTO        L_LearnManual631
 	INCF        _LearnPhase+0, 1 
-	GOTO        L_LearnManual616
-L_LearnManual615:
+	GOTO        L_LearnManual632
+L_LearnManual631:
 	MOVLW       17
 	MOVWF       _LearnPhase+0 
-L_LearnManual616:
+L_LearnManual632:
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t4_L0+0 
 	MOVF        _ms500+1, 0 
@@ -12651,35 +12754,35 @@ L_LearnManual616:
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
-;FirmV_0_7_0.c,2417 :: 		RawData.D1OpenTime=(char)(t4-t1);
+;FirmV_0_7_0.c,2430 :: 		RawData.D1OpenTime=(char)(t4-t1);
 	MOVF        LearnManual_t1_L0+0, 0 
 	SUBWF       LearnManual_t4_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+1 
-;FirmV_0_7_0.c,2418 :: 		RawData.D1OpenSoftStart=(char)(t2-t1);
+;FirmV_0_7_0.c,2431 :: 		RawData.D1OpenSoftStart=(char)(t2-t1);
 	MOVF        LearnManual_t1_L0+0, 0 
 	SUBWF       LearnManual_t2_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+4 
-;FirmV_0_7_0.c,2419 :: 		RawData.D1OpenSoftStop=(char)(t4-t3);
+;FirmV_0_7_0.c,2432 :: 		RawData.D1OpenSoftStop=(char)(t4-t3);
 	MOVF        LearnManual_t3_L0+0, 0 
 	SUBWF       LearnManual_t4_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+5 
-;FirmV_0_7_0.c,2420 :: 		}
-L_LearnManual614:
-;FirmV_0_7_0.c,2421 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2423 :: 		case 9: //Wait for remote to start D2 and slow down
-L_LearnManual617:
-;FirmV_0_7_0.c,2424 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(2,_Open);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
+;FirmV_0_7_0.c,2433 :: 		}
+L_LearnManual630:
+;FirmV_0_7_0.c,2434 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2436 :: 		case 9: //Wait for remote to start D2 and slow down
+L_LearnManual633:
+;FirmV_0_7_0.c,2437 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(2,_Open);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual618
+	GOTO        L_LearnManual634
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t1_L0+0 
 	MOVF        _ms500+1, 0 
@@ -12700,252 +12803,12 @@ L_LearnManual617:
 	MOVLW       1
 	MOVWF       _M2isSlow+0 
 	INCF        _LearnPhase+0, 1 
-L_LearnManual618:
-;FirmV_0_7_0.c,2425 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2427 :: 		case 10: //check for Remote press and fast up
-L_LearnManual619:
-;FirmV_0_7_0.c,2428 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual620
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t2_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t2_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t2_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t2_L0+3 
-	MOVF        _Motor1FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
-	MOVLW       1
-	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	CLRF        _M2isSlow+0 
-L_LearnManual620:
-;FirmV_0_7_0.c,2429 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2431 :: 		case 11: //check for Remote press and slow down
-L_LearnManual621:
-;FirmV_0_7_0.c,2432 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual622
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t3_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t3_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t3_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t3_L0+3 
-	MOVF        _Motor1FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
-	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	MOVLW       1
-	MOVWF       _M2isSlow+0 
-L_LearnManual622:
-;FirmV_0_7_0.c,2433 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2435 :: 		case 12: //check for Remote press and stop
-L_LearnManual623:
-;FirmV_0_7_0.c,2436 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual624
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t4_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t4_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t4_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t4_L0+3 
-	MOVLW       2
-	MOVWF       FARG_StopMotor_Mx+0 
-	CALL        _StopMotor+0, 0
-;FirmV_0_7_0.c,2437 :: 		RawData.D2OpenTime=(char)(t4-t1);
-	MOVF        LearnManual_t1_L0+0, 0 
-	SUBWF       LearnManual_t4_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+3 
-;FirmV_0_7_0.c,2438 :: 		RawData.D2OpenSoftStart=(char)(t2-t1);
-	MOVF        LearnManual_t1_L0+0, 0 
-	SUBWF       LearnManual_t2_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+8 
-;FirmV_0_7_0.c,2439 :: 		RawData.D2OpenSoftStop=(char)(t4-t3);
-	MOVF        LearnManual_t3_L0+0, 0 
-	SUBWF       LearnManual_t4_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+9 
-;FirmV_0_7_0.c,2440 :: 		}
-L_LearnManual624:
-;FirmV_0_7_0.c,2441 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2443 :: 		case 13: //Wait for remote to start D2 and slow down
-L_LearnManual625:
-;FirmV_0_7_0.c,2444 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(2,_Close);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual626
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t1_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t1_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t1_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t1_L0+3 
-	MOVLW       2
-	MOVWF       FARG_StartMotor_Mx+0 
-	CLRF        FARG_StartMotor_Dir+0 
-	CALL        _StartMotor+0, 0
-	MOVF        _Motor1FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
-	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	MOVLW       1
-	MOVWF       _M2isSlow+0 
-	INCF        _LearnPhase+0, 1 
-L_LearnManual626:
-;FirmV_0_7_0.c,2445 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2447 :: 		case 14: //check for Remote press and fast up
-L_LearnManual627:
-;FirmV_0_7_0.c,2448 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual628
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t2_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t2_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t2_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t2_L0+3 
-	MOVF        _Motor1FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
-	MOVLW       1
-	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	CLRF        _M2isSlow+0 
-L_LearnManual628:
-;FirmV_0_7_0.c,2449 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2451 :: 		case 15: //check for Remote press and slow down
-L_LearnManual629:
-;FirmV_0_7_0.c,2452 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual630
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t3_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t3_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t3_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t3_L0+3 
-	MOVF        _Motor1FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
-	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	MOVLW       1
-	MOVWF       _M2isSlow+0 
-L_LearnManual630:
-;FirmV_0_7_0.c,2453 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2455 :: 		case 16: //check for Remote press and stop
-L_LearnManual631:
-;FirmV_0_7_0.c,2456 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual632
-	INCF        _LearnPhase+0, 1 
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t4_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t4_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t4_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t4_L0+3 
-	MOVLW       2
-	MOVWF       FARG_StopMotor_Mx+0 
-	CALL        _StopMotor+0, 0
-;FirmV_0_7_0.c,2457 :: 		RawData.D2CloseTime=(char)(t4-t1);
-	MOVF        LearnManual_t1_L0+0, 0 
-	SUBWF       LearnManual_t4_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+2 
-;FirmV_0_7_0.c,2458 :: 		RawData.D2CloseSoftStart=(char)(t2-t1);
-	MOVF        LearnManual_t1_L0+0, 0 
-	SUBWF       LearnManual_t2_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+10 
-;FirmV_0_7_0.c,2459 :: 		RawData.D2CloseSoftStop=(char)(t4-t3);
-	MOVF        LearnManual_t3_L0+0, 0 
-	SUBWF       LearnManual_t4_L0+0, 0 
-	MOVWF       R0 
-	MOVF        R0, 0 
-	MOVWF       LearnManual_RawData_L0+11 
-;FirmV_0_7_0.c,2460 :: 		}
-L_LearnManual632:
-;FirmV_0_7_0.c,2461 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2463 :: 		case 17: //Wait for remote to start D1 and slow down
-L_LearnManual633:
-;FirmV_0_7_0.c,2464 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(1,_Close);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
-	MOVF        _Events+4, 0 
-	XORLW       0
-	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual634
-	MOVF        _ms500+0, 0 
-	MOVWF       LearnManual_t1_L0+0 
-	MOVF        _ms500+1, 0 
-	MOVWF       LearnManual_t1_L0+1 
-	MOVF        _ms500+2, 0 
-	MOVWF       LearnManual_t1_L0+2 
-	MOVF        _ms500+3, 0 
-	MOVWF       LearnManual_t1_L0+3 
-	MOVLW       1
-	MOVWF       FARG_StartMotor_Mx+0 
-	CLRF        FARG_StartMotor_Dir+0 
-	CALL        _StartMotor+0, 0
-	CLRF        FARG_SetMotorSpeed_M1FullSpeed+0 
-	MOVF        _Motor2FullSpeed+0, 0 
-	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
-	CALL        _SetMotorSpeed+0, 0
-	MOVLW       1
-	MOVWF       _M1isSlow+0 
-	INCF        _LearnPhase+0, 1 
 L_LearnManual634:
-;FirmV_0_7_0.c,2465 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2467 :: 		case 18: //check for Remote press and fast up
+;FirmV_0_7_0.c,2438 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2440 :: 		case 10: //check for Remote press and fast up
 L_LearnManual635:
-;FirmV_0_7_0.c,2468 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
+;FirmV_0_7_0.c,2441 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
@@ -12959,22 +12822,262 @@ L_LearnManual635:
 	MOVWF       LearnManual_t2_L0+2 
 	MOVF        _ms500+3, 0 
 	MOVWF       LearnManual_t2_L0+3 
+	MOVF        _Motor1FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
+	MOVLW       1
+	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	CLRF        _M2isSlow+0 
+L_LearnManual636:
+;FirmV_0_7_0.c,2442 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2444 :: 		case 11: //check for Remote press and slow down
+L_LearnManual637:
+;FirmV_0_7_0.c,2445 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual638
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t3_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t3_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t3_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t3_L0+3 
+	MOVF        _Motor1FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
+	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	MOVLW       1
+	MOVWF       _M2isSlow+0 
+L_LearnManual638:
+;FirmV_0_7_0.c,2446 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2448 :: 		case 12: //check for Remote press and stop
+L_LearnManual639:
+;FirmV_0_7_0.c,2449 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual640
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t4_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t4_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t4_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t4_L0+3 
+	MOVLW       2
+	MOVWF       FARG_StopMotor_Mx+0 
+	CALL        _StopMotor+0, 0
+;FirmV_0_7_0.c,2450 :: 		RawData.D2OpenTime=(char)(t4-t1);
+	MOVF        LearnManual_t1_L0+0, 0 
+	SUBWF       LearnManual_t4_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+3 
+;FirmV_0_7_0.c,2451 :: 		RawData.D2OpenSoftStart=(char)(t2-t1);
+	MOVF        LearnManual_t1_L0+0, 0 
+	SUBWF       LearnManual_t2_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+8 
+;FirmV_0_7_0.c,2452 :: 		RawData.D2OpenSoftStop=(char)(t4-t3);
+	MOVF        LearnManual_t3_L0+0, 0 
+	SUBWF       LearnManual_t4_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+9 
+;FirmV_0_7_0.c,2453 :: 		}
+L_LearnManual640:
+;FirmV_0_7_0.c,2454 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2456 :: 		case 13: //Wait for remote to start D2 and slow down
+L_LearnManual641:
+;FirmV_0_7_0.c,2457 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(2,_Close);SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;LearnPhase=LearnPhase+1;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual642
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t1_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t1_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t1_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t1_L0+3 
+	MOVLW       2
+	MOVWF       FARG_StartMotor_Mx+0 
+	CLRF        FARG_StartMotor_Dir+0 
+	CALL        _StartMotor+0, 0
+	MOVF        _Motor1FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
+	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	MOVLW       1
+	MOVWF       _M2isSlow+0 
+	INCF        _LearnPhase+0, 1 
+L_LearnManual642:
+;FirmV_0_7_0.c,2458 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2460 :: 		case 14: //check for Remote press and fast up
+L_LearnManual643:
+;FirmV_0_7_0.c,2461 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(Motor1FullSpeed,1);M2isSlow=0;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual644
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t2_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t2_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t2_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t2_L0+3 
+	MOVF        _Motor1FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
+	MOVLW       1
+	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	CLRF        _M2isSlow+0 
+L_LearnManual644:
+;FirmV_0_7_0.c,2462 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2464 :: 		case 15: //check for Remote press and slow down
+L_LearnManual645:
+;FirmV_0_7_0.c,2465 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(Motor1FullSpeed,0);M2isSlow=1;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual646
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t3_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t3_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t3_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t3_L0+3 
+	MOVF        _Motor1FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
+	CLRF        FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	MOVLW       1
+	MOVWF       _M2isSlow+0 
+L_LearnManual646:
+;FirmV_0_7_0.c,2466 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2468 :: 		case 16: //check for Remote press and stop
+L_LearnManual647:
+;FirmV_0_7_0.c,2469 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(2);
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual648
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t4_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t4_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t4_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t4_L0+3 
+	MOVLW       2
+	MOVWF       FARG_StopMotor_Mx+0 
+	CALL        _StopMotor+0, 0
+;FirmV_0_7_0.c,2470 :: 		RawData.D2CloseTime=(char)(t4-t1);
+	MOVF        LearnManual_t1_L0+0, 0 
+	SUBWF       LearnManual_t4_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+2 
+;FirmV_0_7_0.c,2471 :: 		RawData.D2CloseSoftStart=(char)(t2-t1);
+	MOVF        LearnManual_t1_L0+0, 0 
+	SUBWF       LearnManual_t2_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+10 
+;FirmV_0_7_0.c,2472 :: 		RawData.D2CloseSoftStop=(char)(t4-t3);
+	MOVF        LearnManual_t3_L0+0, 0 
+	SUBWF       LearnManual_t4_L0+0, 0 
+	MOVWF       R0 
+	MOVF        R0, 0 
+	MOVWF       LearnManual_RawData_L0+11 
+;FirmV_0_7_0.c,2473 :: 		}
+L_LearnManual648:
+;FirmV_0_7_0.c,2474 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2476 :: 		case 17: //Wait for remote to start D1 and slow down
+L_LearnManual649:
+;FirmV_0_7_0.c,2477 :: 		if(Events.Remote!=0){t1=ms500;StartMotor(1,_Close);SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;LearnPhase=LearnPhase+1;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual650
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t1_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t1_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t1_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t1_L0+3 
+	MOVLW       1
+	MOVWF       FARG_StartMotor_Mx+0 
+	CLRF        FARG_StartMotor_Dir+0 
+	CALL        _StartMotor+0, 0
+	CLRF        FARG_SetMotorSpeed_M1FullSpeed+0 
+	MOVF        _Motor2FullSpeed+0, 0 
+	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
+	CALL        _SetMotorSpeed+0, 0
+	MOVLW       1
+	MOVWF       _M1isSlow+0 
+	INCF        _LearnPhase+0, 1 
+L_LearnManual650:
+;FirmV_0_7_0.c,2478 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2480 :: 		case 18: //check for Remote press and fast up
+L_LearnManual651:
+;FirmV_0_7_0.c,2481 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t2=ms500;SetMotorSpeed(1,Motor2FullSpeed);M1isSlow=0;}
+	MOVF        _Events+4, 0 
+	XORLW       0
+	BTFSC       STATUS+0, 2 
+	GOTO        L_LearnManual652
+	INCF        _LearnPhase+0, 1 
+	MOVF        _ms500+0, 0 
+	MOVWF       LearnManual_t2_L0+0 
+	MOVF        _ms500+1, 0 
+	MOVWF       LearnManual_t2_L0+1 
+	MOVF        _ms500+2, 0 
+	MOVWF       LearnManual_t2_L0+2 
+	MOVF        _ms500+3, 0 
+	MOVWF       LearnManual_t2_L0+3 
 	MOVLW       1
 	MOVWF       FARG_SetMotorSpeed_M1FullSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed_M2FullSpeed+0 
 	CALL        _SetMotorSpeed+0, 0
 	CLRF        _M1isSlow+0 
-L_LearnManual636:
-;FirmV_0_7_0.c,2469 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2471 :: 		case 19: //check for Remote press and slow down
-L_LearnManual637:
-;FirmV_0_7_0.c,2472 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
+L_LearnManual652:
+;FirmV_0_7_0.c,2482 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2484 :: 		case 19: //check for Remote press and slow down
+L_LearnManual653:
+;FirmV_0_7_0.c,2485 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t3=ms500;SetMotorSpeed(0,Motor2FullSpeed);M1isSlow=1;}
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual638
+	GOTO        L_LearnManual654
 	INCF        _LearnPhase+0, 1 
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t3_L0+0 
@@ -12990,16 +13093,16 @@ L_LearnManual637:
 	CALL        _SetMotorSpeed+0, 0
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
-L_LearnManual638:
-;FirmV_0_7_0.c,2473 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2475 :: 		case 20: //check for Remote press and stop
-L_LearnManual639:
-;FirmV_0_7_0.c,2476 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(1);
+L_LearnManual654:
+;FirmV_0_7_0.c,2486 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2488 :: 		case 20: //check for Remote press and stop
+L_LearnManual655:
+;FirmV_0_7_0.c,2489 :: 		if(Events.Remote!=0){LearnPhase=LearnPhase+1;t4=ms500;StopMotor(1);
 	MOVF        _Events+4, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual640
+	GOTO        L_LearnManual656
 	INCF        _LearnPhase+0, 1 
 	MOVF        _ms500+0, 0 
 	MOVWF       LearnManual_t4_L0+0 
@@ -13012,31 +13115,31 @@ L_LearnManual639:
 	MOVLW       1
 	MOVWF       FARG_StopMotor_Mx+0 
 	CALL        _StopMotor+0, 0
-;FirmV_0_7_0.c,2477 :: 		RawData.D1CloseTime=(char)(t4-t1);
+;FirmV_0_7_0.c,2490 :: 		RawData.D1CloseTime=(char)(t4-t1);
 	MOVF        LearnManual_t1_L0+0, 0 
 	SUBWF       LearnManual_t4_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+0 
-;FirmV_0_7_0.c,2478 :: 		RawData.D1CloseSoftStart=(char)(t2-t1);
+;FirmV_0_7_0.c,2491 :: 		RawData.D1CloseSoftStart=(char)(t2-t1);
 	MOVF        LearnManual_t1_L0+0, 0 
 	SUBWF       LearnManual_t2_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+6 
-;FirmV_0_7_0.c,2479 :: 		RawData.D1CloseSoftStop=(char)(t4-t3);
+;FirmV_0_7_0.c,2492 :: 		RawData.D1CloseSoftStop=(char)(t4-t3);
 	MOVF        LearnManual_t3_L0+0, 0 
 	SUBWF       LearnManual_t4_L0+0, 0 
 	MOVWF       R0 
 	MOVF        R0, 0 
 	MOVWF       LearnManual_RawData_L0+7 
-;FirmV_0_7_0.c,2480 :: 		}
-L_LearnManual640:
-;FirmV_0_7_0.c,2481 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2483 :: 		case 21:
-L_LearnManual641:
-;FirmV_0_7_0.c,2484 :: 		SaveLearnData(&RawData,DoorNo);
+;FirmV_0_7_0.c,2493 :: 		}
+L_LearnManual656:
+;FirmV_0_7_0.c,2494 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2496 :: 		case 21:
+L_LearnManual657:
+;FirmV_0_7_0.c,2497 :: 		SaveLearnData(&RawData,DoorNo);
 	MOVLW       LearnManual_RawData_L0+0
 	MOVWF       FARG_SaveLearnData_d+0 
 	MOVLW       hi_addr(LearnManual_RawData_L0+0)
@@ -13044,7 +13147,7 @@ L_LearnManual641:
 	MOVF        LearnManual_DoorNo_L0+0, 0 
 	MOVWF       FARG_SaveLearnData_DCount+0 
 	CALL        _SaveLearnData+0, 0
-;FirmV_0_7_0.c,2485 :: 		memcpy(LCDLine1," Learn Complete ",16);
+;FirmV_0_7_0.c,2498 :: 		memcpy(LCDLine1," Learn Complete ",16);
 	MOVLW       _LCDLine1+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine1+0)
@@ -13073,7 +13176,7 @@ L_LearnManual641:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2486 :: 		memcpy(LCDLine2,"     Ready      ",16);
+;FirmV_0_7_0.c,2499 :: 		memcpy(LCDLine2,"     Ready      ",16);
 	MOVLW       _LCDLine2+0
 	MOVWF       FARG_memcpy_d1+0 
 	MOVLW       hi_addr(_LCDLine2+0)
@@ -13102,117 +13205,117 @@ L_LearnManual641:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-;FirmV_0_7_0.c,2487 :: 		LCDLines=2;
+;FirmV_0_7_0.c,2500 :: 		LCDLines=2;
 	MOVLW       2
 	MOVWF       _LCDLines+0 
-;FirmV_0_7_0.c,2488 :: 		LCDUpdateFlag=1;
+;FirmV_0_7_0.c,2501 :: 		LCDUpdateFlag=1;
 	MOVLW       1
 	MOVWF       _LCDUpdateFlag+0 
-;FirmV_0_7_0.c,2489 :: 		Flasher=0;
+;FirmV_0_7_0.c,2502 :: 		Flasher=0;
 	BCF         PORTD+0, 7 
-;FirmV_0_7_0.c,2490 :: 		State=0;
+;FirmV_0_7_0.c,2503 :: 		State=0;
 	CLRF        _State+0 
-;FirmV_0_7_0.c,2491 :: 		break;
-	GOTO        L_LearnManual591
-;FirmV_0_7_0.c,2492 :: 		}
-L_LearnManual590:
+;FirmV_0_7_0.c,2504 :: 		break;
+	GOTO        L_LearnManual607
+;FirmV_0_7_0.c,2505 :: 		}
+L_LearnManual606:
 	MOVF        _LearnPhase+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual592
+	GOTO        L_LearnManual608
 	MOVF        _LearnPhase+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual595
+	GOTO        L_LearnManual611
 	MOVF        _LearnPhase+0, 0 
 	XORLW       2
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual596
+	GOTO        L_LearnManual612
 	MOVF        _LearnPhase+0, 0 
 	XORLW       3
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual601
+	GOTO        L_LearnManual617
 	MOVF        _LearnPhase+0, 0 
 	XORLW       4
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual602
+	GOTO        L_LearnManual618
 	MOVF        _LearnPhase+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual607
+	GOTO        L_LearnManual623
 	MOVF        _LearnPhase+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual609
+	GOTO        L_LearnManual625
 	MOVF        _LearnPhase+0, 0 
 	XORLW       7
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual611
+	GOTO        L_LearnManual627
 	MOVF        _LearnPhase+0, 0 
 	XORLW       8
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual613
+	GOTO        L_LearnManual629
 	MOVF        _LearnPhase+0, 0 
 	XORLW       9
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual617
+	GOTO        L_LearnManual633
 	MOVF        _LearnPhase+0, 0 
 	XORLW       10
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual619
+	GOTO        L_LearnManual635
 	MOVF        _LearnPhase+0, 0 
 	XORLW       11
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual621
+	GOTO        L_LearnManual637
 	MOVF        _LearnPhase+0, 0 
 	XORLW       12
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual623
+	GOTO        L_LearnManual639
 	MOVF        _LearnPhase+0, 0 
 	XORLW       13
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual625
+	GOTO        L_LearnManual641
 	MOVF        _LearnPhase+0, 0 
 	XORLW       14
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual627
+	GOTO        L_LearnManual643
 	MOVF        _LearnPhase+0, 0 
 	XORLW       15
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual629
+	GOTO        L_LearnManual645
 	MOVF        _LearnPhase+0, 0 
 	XORLW       16
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual631
+	GOTO        L_LearnManual647
 	MOVF        _LearnPhase+0, 0 
 	XORLW       17
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual633
+	GOTO        L_LearnManual649
 	MOVF        _LearnPhase+0, 0 
 	XORLW       18
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual635
+	GOTO        L_LearnManual651
 	MOVF        _LearnPhase+0, 0 
 	XORLW       19
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual637
+	GOTO        L_LearnManual653
 	MOVF        _LearnPhase+0, 0 
 	XORLW       20
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual639
+	GOTO        L_LearnManual655
 	MOVF        _LearnPhase+0, 0 
 	XORLW       21
 	BTFSC       STATUS+0, 2 
-	GOTO        L_LearnManual641
-L_LearnManual591:
-;FirmV_0_7_0.c,2493 :: 		}
+	GOTO        L_LearnManual657
+L_LearnManual607:
+;FirmV_0_7_0.c,2506 :: 		}
 	RETURN      0
 ; end of _LearnManual
 
 _charValueToStr:
 
-;FirmV_0_7_0.c,2514 :: 		void charValueToStr(char val, char * string)
-;FirmV_0_7_0.c,2516 :: 		bytetostr(val>>1,string);
+;FirmV_0_7_0.c,2527 :: 		void charValueToStr(char val, char * string)
+;FirmV_0_7_0.c,2529 :: 		bytetostr(val>>1,string);
 	MOVF        FARG_charValueToStr_val+0, 0 
 	MOVWF       FARG_ByteToStr_input+0 
 	RRCF        FARG_ByteToStr_input+0, 1 
@@ -13222,15 +13325,15 @@ _charValueToStr:
 	MOVF        FARG_charValueToStr_string+1, 0 
 	MOVWF       FARG_ByteToStr_output+1 
 	CALL        _ByteToStr+0, 0
-;FirmV_0_7_0.c,2517 :: 		if((val%2)==1)
+;FirmV_0_7_0.c,2530 :: 		if((val%2)==1)
 	MOVLW       1
 	ANDWF       FARG_charValueToStr_val+0, 0 
 	MOVWF       R1 
 	MOVF        R1, 0 
 	XORLW       1
 	BTFSS       STATUS+0, 2 
-	GOTO        L_charValueToStr642
-;FirmV_0_7_0.c,2518 :: 		memcpy(string+3,".5s",4);
+	GOTO        L_charValueToStr658
+;FirmV_0_7_0.c,2531 :: 		memcpy(string+3,".5s",4);
 	MOVLW       3
 	ADDWF       FARG_charValueToStr_string+0, 0 
 	MOVWF       FARG_memcpy_d1+0 
@@ -13253,9 +13356,9 @@ _charValueToStr:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-	GOTO        L_charValueToStr643
-L_charValueToStr642:
-;FirmV_0_7_0.c,2520 :: 		memcpy(string+3,"s  ",4);
+	GOTO        L_charValueToStr659
+L_charValueToStr658:
+;FirmV_0_7_0.c,2533 :: 		memcpy(string+3,"s  ",4);
 	MOVLW       3
 	ADDWF       FARG_charValueToStr_string+0, 0 
 	MOVWF       FARG_memcpy_d1+0 
@@ -13278,15 +13381,15 @@ L_charValueToStr642:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_charValueToStr643:
-;FirmV_0_7_0.c,2521 :: 		}
+L_charValueToStr659:
+;FirmV_0_7_0.c,2534 :: 		}
 	RETURN      0
 ; end of _charValueToStr
 
 _intValueToStr:
 
-;FirmV_0_7_0.c,2534 :: 		void intValueToStr(unsigned val, char * string)
-;FirmV_0_7_0.c,2536 :: 		wordtostr(val>>1,string);
+;FirmV_0_7_0.c,2547 :: 		void intValueToStr(unsigned val, char * string)
+;FirmV_0_7_0.c,2549 :: 		wordtostr(val>>1,string);
 	MOVF        FARG_intValueToStr_val+0, 0 
 	MOVWF       FARG_WordToStr_input+0 
 	MOVF        FARG_intValueToStr_val+1, 0 
@@ -13299,7 +13402,7 @@ _intValueToStr:
 	MOVF        FARG_intValueToStr_string+1, 0 
 	MOVWF       FARG_WordToStr_output+1 
 	CALL        _WordToStr+0, 0
-;FirmV_0_7_0.c,2537 :: 		if((val%2)==1)
+;FirmV_0_7_0.c,2550 :: 		if((val%2)==1)
 	MOVLW       1
 	ANDWF       FARG_intValueToStr_val+0, 0 
 	MOVWF       R1 
@@ -13310,13 +13413,13 @@ _intValueToStr:
 	MOVLW       0
 	XORWF       R2, 0 
 	BTFSS       STATUS+0, 2 
-	GOTO        L__intValueToStr792
+	GOTO        L__intValueToStr817
 	MOVLW       1
 	XORWF       R1, 0 
-L__intValueToStr792:
+L__intValueToStr817:
 	BTFSS       STATUS+0, 2 
-	GOTO        L_intValueToStr644
-;FirmV_0_7_0.c,2538 :: 		memcpy(string+5,".5s",4);
+	GOTO        L_intValueToStr660
+;FirmV_0_7_0.c,2551 :: 		memcpy(string+5,".5s",4);
 	MOVLW       5
 	ADDWF       FARG_intValueToStr_string+0, 0 
 	MOVWF       FARG_memcpy_d1+0 
@@ -13339,9 +13442,9 @@ L__intValueToStr792:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-	GOTO        L_intValueToStr645
-L_intValueToStr644:
-;FirmV_0_7_0.c,2540 :: 		memcpy(string+5,"s  ",4);
+	GOTO        L_intValueToStr661
+L_intValueToStr660:
+;FirmV_0_7_0.c,2553 :: 		memcpy(string+5,"s  ",4);
 	MOVLW       5
 	ADDWF       FARG_intValueToStr_string+0, 0 
 	MOVWF       FARG_memcpy_d1+0 
@@ -13364,147 +13467,147 @@ L_intValueToStr644:
 	MOVLW       0
 	MOVWF       FARG_memcpy_n+1 
 	CALL        _memcpy+0, 0
-L_intValueToStr645:
-;FirmV_0_7_0.c,2541 :: 		}
+L_intValueToStr661:
+;FirmV_0_7_0.c,2554 :: 		}
 	RETURN      0
 ; end of _intValueToStr
 
 _SetOverloadParams:
 
-;FirmV_0_7_0.c,2553 :: 		void SetOverloadParams(char p)
-;FirmV_0_7_0.c,2556 :: 		switch(p)
-	GOTO        L_SetOverloadParams646
-;FirmV_0_7_0.c,2558 :: 		case 0: OverloadTreshold=0;OverloadDuration=255; break;
-L_SetOverloadParams648:
+;FirmV_0_7_0.c,2566 :: 		void SetOverloadParams(char p)
+;FirmV_0_7_0.c,2569 :: 		switch(p)
+	GOTO        L_SetOverloadParams662
+;FirmV_0_7_0.c,2571 :: 		case 0: OverloadTreshold=0;OverloadDuration=255; break;
+L_SetOverloadParams664:
 	CLRF        _OverloadTreshold+0 
 	CLRF        _OverloadTreshold+1 
 	MOVLW       255
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2560 :: 		case 1: OverloadTreshold=580;OverloadDuration=200; break;
-L_SetOverloadParams649:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2573 :: 		case 1: OverloadTreshold=580;OverloadDuration=200; break;
+L_SetOverloadParams665:
 	MOVLW       68
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       200
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2562 :: 		case 2: OverloadTreshold=600;OverloadDuration=150; break;
-L_SetOverloadParams650:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2575 :: 		case 2: OverloadTreshold=600;OverloadDuration=150; break;
+L_SetOverloadParams666:
 	MOVLW       88
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       150
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2564 :: 		case 3: OverloadTreshold=650;OverloadDuration=100; break;
-L_SetOverloadParams651:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2577 :: 		case 3: OverloadTreshold=650;OverloadDuration=100; break;
+L_SetOverloadParams667:
 	MOVLW       138
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       100
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2566 :: 		case 4: OverloadTreshold=650;OverloadDuration=80; break;
-L_SetOverloadParams652:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2579 :: 		case 4: OverloadTreshold=650;OverloadDuration=80; break;
+L_SetOverloadParams668:
 	MOVLW       138
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       80
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2568 :: 		case 5: OverloadTreshold=680;OverloadDuration=150; break;
-L_SetOverloadParams653:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2581 :: 		case 5: OverloadTreshold=680;OverloadDuration=150; break;
+L_SetOverloadParams669:
 	MOVLW       168
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       150
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2570 :: 		case 6: OverloadTreshold=680;OverloadDuration=100; break;
-L_SetOverloadParams654:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2583 :: 		case 6: OverloadTreshold=680;OverloadDuration=100; break;
+L_SetOverloadParams670:
 	MOVLW       168
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       100
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2572 :: 		case 7: OverloadTreshold=680;OverloadDuration=50; break;
-L_SetOverloadParams655:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2585 :: 		case 7: OverloadTreshold=680;OverloadDuration=50; break;
+L_SetOverloadParams671:
 	MOVLW       168
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       50
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2574 :: 		case 8: OverloadTreshold=720;OverloadDuration=100; break;
-L_SetOverloadParams656:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2587 :: 		case 8: OverloadTreshold=720;OverloadDuration=100; break;
+L_SetOverloadParams672:
 	MOVLW       208
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       100
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2576 :: 		case 9: OverloadTreshold=750;OverloadDuration=50; break;
-L_SetOverloadParams657:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2589 :: 		case 9: OverloadTreshold=750;OverloadDuration=50; break;
+L_SetOverloadParams673:
 	MOVLW       238
 	MOVWF       _OverloadTreshold+0 
 	MOVLW       2
 	MOVWF       _OverloadTreshold+1 
 	MOVLW       50
 	MOVWF       _OverloadDuration+0 
-	GOTO        L_SetOverloadParams647
-;FirmV_0_7_0.c,2578 :: 		}
-L_SetOverloadParams646:
+	GOTO        L_SetOverloadParams663
+;FirmV_0_7_0.c,2591 :: 		}
+L_SetOverloadParams662:
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       0
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams648
+	GOTO        L_SetOverloadParams664
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       1
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams649
+	GOTO        L_SetOverloadParams665
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       2
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams650
+	GOTO        L_SetOverloadParams666
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       3
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams651
+	GOTO        L_SetOverloadParams667
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       4
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams652
+	GOTO        L_SetOverloadParams668
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       5
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams653
+	GOTO        L_SetOverloadParams669
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       6
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams654
+	GOTO        L_SetOverloadParams670
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       7
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams655
+	GOTO        L_SetOverloadParams671
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       8
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams656
+	GOTO        L_SetOverloadParams672
 	MOVF        FARG_SetOverloadParams_p+0, 0 
 	XORLW       9
 	BTFSC       STATUS+0, 2 
-	GOTO        L_SetOverloadParams657
-L_SetOverloadParams647:
-;FirmV_0_7_0.c,2579 :: 		}
+	GOTO        L_SetOverloadParams673
+L_SetOverloadParams663:
+;FirmV_0_7_0.c,2592 :: 		}
 	RETURN      0
 ; end of _SetOverloadParams

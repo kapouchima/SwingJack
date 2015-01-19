@@ -258,6 +258,8 @@ brgh
 brgh_bit
 bsr
 button
+buzzcounter
+buzzflag
 byte2double
 bytetohex
 bytetostr
@@ -778,6 +780,7 @@ lockforce
 log
 log10
 logger
+longbuzzflag
 longint2double
 longinttohex
 longinttostrwithzeros
