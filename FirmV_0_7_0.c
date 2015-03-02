@@ -87,23 +87,23 @@ unsigned char D2CloseSoftStop;
 
 
 //--------Consts
- char _opening[]="     Opening    ";
- char _closing[]="     Closing    ";
- char _open[]=   " Door is Opened ";
- char _close[]=  " Door is Closed ";
- char _stop[]=   "  Door Stoped   ";
- char _autoclose[]="Autoclose Enable";
- char _errRemote[]="   Err Remote   ";
- char _errPhoto[]= " Err Photocell  ";
- char _errOverload[]="  Err Overload  ";
- char _errLimit[]=   "Err Limit Switch";
- char _Blank[]=   "                ";
+ char _opening[]=     "     Opening    ";
+ char _closing[]=     "     Closing    ";
+ char _open[]=        " Door is Opened ";
+ char _close[]=       " Door is Closed ";
+ char _stop[]=        "  Door Stoped   ";
+ char _autoclose[]=   "Autoclose Enable";
+ char _errRemote[]=   "   Err Remote   ";
+ char _errPhoto[]=    " Err Photocell  ";
+ char _errOverload[]= "  Err Overload  ";
+ char _errLimit[]=    "Err Limit Switch";
+ char _Blank[]=       "                ";
  char crypto[6][16]={{0x20,0x20,0x46,0x69,0x72,0x6D,0x77,0x61,0x72,0x65,0x20,0x20,0x62,0x79,0x20,0x20},
-                {0x20,0x20,0x20,0x53,0x69,0x6E,0x61,0x20,0x42,0x61,0x67,0x68,0x69,0x20,0x20,0x20},
-                {0x20,0x20,0x4D,0x65,0x63,0x68,0x20,0x20,0x44,0x65,0x73,0x69,0x67,0x6E,0x20,0x20},
-                {0x59,0x61,0x53,0x48,0x61,0x52,0x20,0x20,0x41,0x72,0x64,0x61,0x68,0x61,0x6E,0x69},
-                {0x20,0x20,0x45,0x6C,0x65,0x63,0x20,0x20,0x44,0x65,0x73,0x69,0x67,0x6E,0x20,0x20},
-                {0x20,0x20,0x48,0x61,0x6D,0x69,0x64,0x20,0x41,0x6E,0x73,0x61,0x72,0x69,0x20,0x20}};
+                     {0x20,0x20,0x20,0x53,0x69,0x6E,0x61,0x20,0x42,0x61,0x67,0x68,0x69,0x20,0x20,0x20},
+                     {0x20,0x20,0x4D,0x65,0x63,0x68,0x20,0x20,0x44,0x65,0x73,0x69,0x67,0x6E,0x20,0x20},
+                     {0x59,0x61,0x53,0x48,0x61,0x52,0x20,0x20,0x41,0x72,0x64,0x61,0x68,0x61,0x6E,0x69},
+                     {0x20,0x20,0x45,0x6C,0x65,0x63,0x20,0x20,0x44,0x65,0x73,0x69,0x67,0x6E,0x20,0x20},
+                     {0x20,0x20,0x48,0x61,0x6D,0x69,0x64,0x20,0x41,0x6E,0x73,0x61,0x72,0x69,0x20,0x20}};
  char Sipher[16];
 
 
@@ -270,7 +270,7 @@ void interrupt()
  {
    ZCCounter=ZCCounter+1;
    if(ZCCounter==255)
-     ZCCounter=0;
+     ZCCounter=2;
    if(ZCCounter%3==1)
    {
      if(Motor1Start)
@@ -521,8 +521,6 @@ void State00()
     StartMotor(1,_Close);
     StartMotor(2,_Close);
 
-
-
   if(Events.Remote.b0==1)
   {Flasher=0;StopMotor(1);StopMotor(2);
   State=1;                }
@@ -537,9 +535,8 @@ void State00()
 
 void State1()
 {
-  char delay=3;
+  char delay=3,AutoCloseTemp=0;
 
-  //unsigned long temp;
   Flasher=0;
 
   if(Events.Keys==2)
@@ -569,6 +566,7 @@ void State1()
       {temp=ms500+Door1OpenTime-OpenSoftStopTime+delay;AddTask(temp,7);}//Speed down for soft stop
     temp=ms500+Door1OpenTime+delay;
     AddTask(temp,3);//Stop motor
+    AutoCloseTemp=ms500+Door1OpenTime+delay;
 
     if((Door2OpenTime!=0)&&(ActiveDoors==2))
     {
@@ -586,10 +584,11 @@ void State1()
         {temp=ms500+ActionTimeDiff+Door2OpenTime-OpenSoftStopTime+delay;AddTask(temp,8);}//Speed down for soft stop
       temp=ms500+Door2OpenTime+ActionTimeDiff+delay;
       AddTask(temp,4);//Stop motor
+      AutoCloseTemp=ms500+Door2OpenTime+ActionTimeDiff+delay;
     }
 
     if(AutoCloseTime!=0)
-      {temp=ms500+AutoCloseTime+delay;AddTask(ms500+AutoCloseTime+delay,9);}
+      {temp=AutoCloseTemp+AutoCloseTime;AddTask(ms500+AutoCloseTime+delay,9);}
 
     OpenDone=3;
     OverloadCheckFlag1=0;
@@ -1492,11 +1491,13 @@ RemoteAFlag=0;
 RemoteBFlag=0;
 res.b0=res.b0;
 res.b1=res.b1;
+
 if(State<20)
 {
   res.b0=res.b0|Events.Keys.b2;//up key
   res.b1=res.b1|Events.Keys.b0;//down key
 }
+
 return res;
 }
 
@@ -1511,14 +1512,9 @@ return res;
 char GetOverloadState()
 {
 char res=0;
-//char text[6];
 unsigned VCapM1,VCapM2;
 VCapM1=ADC_Read(0);
 VCapM2=ADC_Read(1);
-//wordtostr(VCapM1,text);
-
-//memcpy(LCDLine2,text,6);
-LCDUpdateFlag=1;
 
 if(Motor1FullSpeed!=0)
 {
