@@ -131,13 +131,15 @@ void StartMotor(char,char);
 void StopMotor(char);
 char CheckTask(char);
 char GetAutocloseTime();
+char ReturnAutoclose();
 void FactorySettings();
 void Logger(char *);
 void ClearTasks(char);
 void charValueToStr(char,char*);
+void charValueToStr_AC(char, char *);
 void intValueToStr(unsigned,char*);
 void SetOverloadParams(char);
-#line 205 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 207 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void interrupt()
 {
  if(TMR0IF_bit)
@@ -232,7 +234,7 @@ void interrupt()
  INT0F_bit=0;
  }
 }
-#line 311 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 313 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void ResetTaskEvents()
 {
  Events.Task1=0;
@@ -266,7 +268,7 @@ void Decrypt()
  Sipher[14]=Crypto[1][14]+0x0D;
  Sipher[15]=Crypto[1][15]+0x0D;
 }
-#line 355 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 357 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void Logger(char* text)
 {
  char time[11];
@@ -277,7 +279,7 @@ void Logger(char* text)
  uart1_write(10);
  uart1_write(13);
 }
-#line 381 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 383 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void main() {
 
 
@@ -330,7 +332,7 @@ while(1)
 }
 
 }
-#line 457 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 459 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void StateManager()
 {
 
@@ -412,8 +414,8 @@ void State00()
 
 void State1()
 {
- char delay=3,AutoCloseTemp=0;
-
+ char delay=3;
+ unsigned long AutoCloseTemp=0;
   portd.b7 =0;
 
  if(Events.Keys==2)
@@ -465,7 +467,7 @@ void State1()
  }
 
  if(AutoCloseTime!=0)
- {temp=AutoCloseTemp+AutoCloseTime;AddTask(ms500+AutoCloseTime+delay,9);}
+ {temp=AutoCloseTemp+AutoCloseTime;AddTask(temp,9);}
 
  OpenDone=3;
  OverloadCheckFlag1=0;
@@ -474,17 +476,28 @@ void State1()
  PassFlag=0;
  }
 }
-#line 613 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 615 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State2()
 {
- char delay=2;
+ char delay=2,PrevAC=0;
 
   portd.b7 =0;
 
- if((Events.Remote!=0)||(CheckTask(9)==1))
+
+ if(ReturnAutoclose()!=PrevAC)
+ {
+ LCDFlashFlag=0;
+ PrevAC=ReturnAutoclose();
+ charValueToStr_AC(PrevAC,LCDLine2+11);
+ memcpy(LCDLine2,"Close after",11);
+ LCDUpdateFlag=1;
+ }
+
+
+ if((Events.Remote!=0)||(CheckTask(9)))
  {
 
- ClearTasks(9);
+ ClearTasks(0);
  if((Door2CloseTime==0)||(ActiveDoors==1))
  {
  temp=ms500+delay;
@@ -562,7 +575,7 @@ void State2()
  {temp=ms500+CloseAfterPass;AddTask(temp,9);PassFlag=0;longwordtostrwithzeros(temp,t);Logger("S2 Insert 9 at:");Logger(t);}
 
 }
-#line 714 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 727 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State3()
 {
   portd.b7 =1;
@@ -624,13 +637,13 @@ void State3()
  memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 
  if(OpenDone==0)
- {State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=1;}
+ {State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=2;}
 
  if((State==5)||(State==6))
  {ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S3 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 
 }
-#line 794 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 807 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State4()
 {
  portd.b7 =1;
@@ -696,7 +709,7 @@ void State4()
  {ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S4 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
 
 }
-#line 873 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 886 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State5()
 {
  char delay=2;
@@ -758,7 +771,7 @@ void State5()
  }
 
 }
-#line 953 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 966 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State6()
 {
 
@@ -833,7 +846,7 @@ void State6()
  }
 
 }
-#line 1048 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1061 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State7()
 {
   portd.b7 =1;
@@ -885,7 +898,7 @@ void State7()
 
 
 }
-#line 1115 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1128 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void State8()
 {
   portd.b7 =1;
@@ -977,7 +990,7 @@ void LCDUpdater()
 
 
 }
-#line 1225 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1238 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void Init()
 {
 char i=0;
@@ -1056,7 +1069,7 @@ LoadConfigs();
 
 
 }
-#line 1316 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1329 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void TaskManager()
 {
 char i=0;
@@ -1064,7 +1077,7 @@ for(i=0;i<20;i++)
  if((Tasks[i].Expired==0)&&(Tasks[i].Time==ms500)&&(Tasks[i].Fired==0))
  Tasks[i].Fired=1;
 }
-#line 1334 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1347 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void AddTask(unsigned long OccTime,char tcode)
 {
 char i;
@@ -1189,7 +1202,7 @@ char GetExternalKeysState()
  out.b1=1;
  return out;
 }
-#line 1470 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1483 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 char GetLimitSwitchState()
 {
  if(( portd.b0 ==0)||( portd.b1 ==0))
@@ -1283,7 +1296,7 @@ if (OverloadCounter2>OverloadDuration)
 
 return res;
 }
-#line 1575 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1588 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 char GetPhotocellState()
 {
 if( portd.b3 ==0)
@@ -1295,7 +1308,7 @@ if(PhotocellCount>=20)
 else
  return 0;
 }
-#line 1597 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1610 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void SetMotorSpeed(char M1FullSpeed,char M2FullSpeed)
 {
 if((M1FullSpeed==0)||(M2FullSpeed==0))
@@ -1362,7 +1375,7 @@ void SaveConfigs()
  EEPROM_Write(16,LimiterEnable);
 
 }
-#line 1675 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1688 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void LoadConfigs()
 {
  Door1OpenTime=EEPROM_Read(1);
@@ -1385,7 +1398,7 @@ void LoadConfigs()
  LimiterEnable=EEPROM_Read(16);
 
 }
-#line 1709 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1722 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void FactorySettings()
 {
  Door1OpenTime=20;
@@ -1446,7 +1459,7 @@ void StopMotor(char Mx)
   portb.b4 =0;
  }
 }
-#line 1780 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1793 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 char CheckTask(char TaskCode)
 {
  if(Events.Task1==TaskCode)
@@ -1468,6 +1481,29 @@ char CheckTask(char TaskCode)
 
 
 
+char ReturnAutoclose()
+{
+ char i;
+ unsigned long t;
+ for(i=0;i<20;i++)
+ {
+ if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
+ {t=Tasks[i].Time;break;}
+ }
+
+ if(i>=20) i=0;
+ else i=t-ms500;
+ return i;
+}
+
+
+
+
+
+
+
+
+
 char GetAutocloseTime()
 {
  char i;
@@ -1475,13 +1511,13 @@ char GetAutocloseTime()
  for(i=0;i<20;i++)
  {
  if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
- t=Tasks[i].Time;
- Tasks[i].Expired=1;
+ {t=Tasks[i].Time;Tasks[i].Expired=1;break;}
  }
  i=t-ms500;
+ if(i>=20) i=0;
  return i;
 }
-#line 1830 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1866 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void ClearTasks(char except)
 {
  char i;
@@ -1489,7 +1525,7 @@ void ClearTasks(char except)
  if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode!=except))
  Tasks[i].Expired=1;
 }
-#line 1851 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 1887 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void Menu0()
 {
  LCDLines=2;
@@ -1818,13 +1854,13 @@ void Menu2()
  LongBuzzFlag=1;
  }
 }
-#line 2190 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2226 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void Menu3()
 {
  SaveConfigs();
  State=0;
 }
-#line 2208 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2244 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void LearnAuto()
 {
  static unsigned long startT,stopT;
@@ -1909,7 +1945,7 @@ void LearnAuto()
 
 
 }
-#line 2311 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2347 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void AutoLearnCalculator(Learn *raw)
 {
 
@@ -1929,7 +1965,7 @@ void AutoLearnCalculator(Learn *raw)
  (*raw).D2CloseSoftStop=10;
 
 }
-#line 2341 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2377 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void SaveLearnData(Learn *d,char DCount)
 {
  Door1OpenTime=(*d).D1OpenTime;
@@ -1955,7 +1991,7 @@ void SaveLearnData(Learn *d,char DCount)
 
  SaveConfigs();
 }
-#line 2380 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2416 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void LearnManual()
 {
 
@@ -2079,7 +2115,7 @@ void LearnManual()
  break;
  }
 }
-#line 2523 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2559 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void charValueToStr(char val, char * string)
 {
  bytetostr(val>>1,string);
@@ -2088,7 +2124,20 @@ void charValueToStr(char val, char * string)
  else
  memcpy(string+3,"s  ",4);
 }
-#line 2543 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+
+
+
+
+
+
+
+
+void charValueToStr_AC(char val, char * string)
+{
+ bytetostr(val>>1,string);
+ memcpy(string+3,"s  ",4);
+}
+#line 2592 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void intValueToStr(unsigned val, char * string)
 {
  wordtostr(val>>1,string);
@@ -2097,7 +2146,7 @@ void intValueToStr(unsigned val, char * string)
  else
  memcpy(string+5,"s  ",4);
 }
-#line 2562 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
+#line 2611 "C:/Users/baghi/Desktop/Sina/SwingJack/FirmV_0_7_0.c"
 void SetOverloadParams(char p)
 {
 

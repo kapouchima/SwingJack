@@ -183,10 +183,12 @@ void StartMotor(char,char);
 void StopMotor(char);
 char CheckTask(char);
 char GetAutocloseTime();
+char ReturnAutoclose();
 void FactorySettings();
 void Logger(char *);
 void ClearTasks(char);
 void charValueToStr(char,char*);
+void charValueToStr_AC(char, char *);
 void intValueToStr(unsigned,char*);
 void SetOverloadParams(char);
 
@@ -535,8 +537,8 @@ void State00()
 
 void State1()
 {
-  char delay=3,AutoCloseTemp=0;
-
+  char delay=3;
+  unsigned long AutoCloseTemp=0;
   Flasher=0;
 
   if(Events.Keys==2)
@@ -588,7 +590,7 @@ void State1()
     }
 
     if(AutoCloseTime!=0)
-      {temp=AutoCloseTemp+AutoCloseTime;AddTask(ms500+AutoCloseTime+delay,9);}
+      {temp=AutoCloseTemp+AutoCloseTime;AddTask(temp,9);}
 
     OpenDone=3;
     OverloadCheckFlag1=0;
@@ -612,14 +614,25 @@ void State1()
 
 void State2()
 {
-  char delay=2;
+  char delay=2,PrevAC=0;
 
   Flasher=0;
 
-  if((Events.Remote!=0)||(CheckTask(9)==1))
+
+  if(ReturnAutoclose()!=PrevAC)
+  {
+    LCDFlashFlag=0;
+    PrevAC=ReturnAutoclose();
+    charValueToStr_AC(PrevAC,LCDLine2+11);
+    memcpy(LCDLine2,"Close after",11);
+    LCDUpdateFlag=1;
+  }
+  
+  
+  if((Events.Remote!=0)||(CheckTask(9)))
   {
 
-    ClearTasks(9);
+    ClearTasks(0);
     if((Door2CloseTime==0)||(ActiveDoors==1))
     {
       temp=ms500+delay;
@@ -772,7 +785,7 @@ void State3()
     memcpy(LCDLine1,_stop,16);memcpy(LCDLine2,_ErrLimit,16);LCDUpdateFlag=1;LCDLines=2;}
 
   if(OpenDone==0)
-    {State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=1;}
+    {State=2; PassFlag=0;ClearTasks(9);memcpy(LCDLine1,_open,16);memcpy(LCDLine2,_blank,16);LCDUpdateFlag=1;LCDLines=2;}
 
   if((State==5)||(State==6))
     {ClearTasks(0);if(AutoCloseTime!=0){AddTask(ms500+AutoCloseTime,9);Logger("S3 Autoclose Renewed");memcpy(LCDLine2,_autoclose,16);LCDUpdateFlag=1;LCDLines=2;}}
@@ -1798,6 +1811,29 @@ char CheckTask(char TaskCode)
 
 
 
+char ReturnAutoclose()
+{
+  char i;
+  unsigned long t;
+  for(i=0;i<20;i++)
+  {
+    if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
+      {t=Tasks[i].Time;break;}
+  }
+
+  if(i>=20) i=0;
+  else i=t-ms500;
+  return i;
+}
+
+
+
+
+
+
+
+
+
 char GetAutocloseTime()
 {
   char i;
@@ -1805,10 +1841,10 @@ char GetAutocloseTime()
   for(i=0;i<20;i++)
   {
     if((Tasks[i].Expired==0)&&(Tasks[i].TaskCode==9))
-      t=Tasks[i].Time;
-      Tasks[i].Expired=1;
+      {t=Tasks[i].Time;Tasks[i].Expired=1;break;}
   }
   i=t-ms500;
+  if(i>=20) i=0;
   return i;
 }
 
@@ -2526,6 +2562,19 @@ void charValueToStr(char val, char * string)
   if((val%2)==1)
     memcpy(string+3,".5s",4);
   else
+    memcpy(string+3,"s  ",4);
+}
+
+
+
+
+
+
+
+
+void charValueToStr_AC(char val, char * string)
+{
+  bytetostr(val>>1,string);
     memcpy(string+3,"s  ",4);
 }
 

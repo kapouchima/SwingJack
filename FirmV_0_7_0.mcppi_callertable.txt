@@ -60,6 +60,13 @@ main
 			AddTask
 				Mul_16x16_U
 		State2
+			ReturnAutoclose
+				Mul_16x16_U
+			charValueToStr_AC
+				ByteToStr
+					Div_8x8_U
+				memcpy
+			memcpy
 			CheckTask
 			ClearTasks
 				Mul_16x16_U

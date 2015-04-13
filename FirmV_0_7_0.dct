@@ -359,6 +359,7 @@ cfgs
 cfgs_bit
 character8x7
 charvaluetostr
+charvaluetostr_ac
 checktask
 chs0
 chs0_bit
@@ -1160,6 +1161,7 @@ remotepulse1
 remotepulse2
 res032
 resettaskevents
+returnautoclose
 ri
 ri_bit
 rs485master_init
