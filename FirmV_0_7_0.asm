@@ -3900,12 +3900,12 @@ L_State4155:
 	MOVF        R0, 1 
 	BTFSC       STATUS+0, 2 
 	GOTO        L_State4156
-;FirmV_0_7_0.c,815 :: 		{SetMotorSpeed(0,Motor2FullSpeed); OverloadCheckFlag2=0; M1isSlow=1;Logger("S4 M1 Speed Down");}
+;FirmV_0_7_0.c,815 :: 		{SetMotorSpeed(0,Motor2FullSpeed); OverloadCheckFlag1=0; M1isSlow=1;Logger("S4 M1 Speed Down");}
 	CLRF        FARG_SetMotorSpeed+0 
 	MOVF        _Motor2FullSpeed+0, 0 
 	MOVWF       FARG_SetMotorSpeed+0 
 	CALL        _SetMotorSpeed+0, 0
-	CLRF        _OverloadCheckFlag2+0 
+	CLRF        _OverloadCheckFlag1+0 
 	MOVLW       1
 	MOVWF       _M1isSlow+0 
 	MOVLW       ?ICS?lstr27_FirmV_0_7_0+0
