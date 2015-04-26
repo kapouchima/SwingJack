@@ -36,7 +36,7 @@ Version 0.7.0 :
 #define Phcell2 inp5
 #define Phcell1 inp6
 //---- overload delay in 500ms
-#define OverloadDelay 2
+#define OverloadDelay 6
 #define _Open 1
 #define _Close 0
 #define PosErrFix 5
@@ -112,15 +112,16 @@ unsigned char D2CloseSoftStop;
 unsigned long ms500=0;
 char msCounter=0,ms20A=0,ms20B,Flag20ms=1,Flag500ms=1,State=0,LCDUpdateFlag=0,LCDFlashFlag=0,RemotePulse1=0,RemotePulse2=0;
 char PrevRemotePulseTime1=0,PrevRemotePulseTime2=0,RemoteAFlag=0,RemoteBFlag=0,Motor1FullSpeed=1,Motor2FullSpeed=1,BuzzCounter=0;
-char Motor1Start=0,Motor2Start=0,ZCCounter=0,OverloadCounter1=0,OverloadCounter2=0,PhotocellOpenFlag=0,ActiveDoors=0,BuzzFlag=0,LongBuzzFlag=0;
+char Motor1Start=0,Motor2Start=0,ZCCounter=0,PhotocellOpenFlag=0,ActiveDoors=0,BuzzFlag=0,LongBuzzFlag=0;
 char OverloadCheckFlag1=0,OverloadCheckFlag2=0,OpenDone=3,CloseDone=3,M1isSlow=0,M2isSlow=0,PassFlag=0,LearnPhase,AboutCounter=0;
 char _AC=0,PhotocellCount=0,MenuPointer=0,DebouncingDelay=0,LCDFlash=0,Pressed=0,OverloadSens=5,LearningMode=0,KeyFlag=0,LCDLines=1;
-char t[11];
+char t[11],FlashFlag=0;
+unsigned int  OverloadCounter1=0,OverloadCounter2=0;
 unsigned long temp;
 //------Configs
-char Door1OpenTime,Door2OpenTime,Door1CloseTime,Door2CloseTime,OverloadDuration,OpenPhEnable,LimiterEnable;
+char Door1OpenTime,Door2OpenTime,Door1CloseTime,Door2CloseTime,OpenPhEnable,LimiterEnable;
 char OpenSoftStopTime,CloseSoftStopTime,OpenSoftStartTime,CloseSoftStartTime,ActionTimeDiff,LockForce,CloseAfterPass;
-unsigned AutoCloseTime,OverloadTreshold;
+unsigned AutoCloseTime,OverloadTreshold,OverloadDuration;
 //------Configs
 char LCDLine1[17]="                ";
 char LCDLine2[17]="                ";
@@ -423,6 +424,10 @@ while(1)
 
   if(Flag500ms==1)
   {
+    if(FlashFlag)
+      Buzzer=!Buzzer;
+    else
+      if((!BuzzFlag)&&(!LongBuzzFlag))Buzzer=0;
     ResetTaskEvents();
     TaskManager();
     Flag500ms=0;
@@ -520,11 +525,12 @@ void State00()
    //static char i;
 
     Flasher=1;
+    FlashFlag=1;
     StartMotor(1,_Close);
     StartMotor(2,_Close);
 
   if(Events.Remote.b0==1)
-  {Flasher=0;StopMotor(1);StopMotor(2);
+  {Flasher=0;FlashFlag=0;StopMotor(1);StopMotor(2);
   State=1;                }
 }
 
@@ -540,6 +546,7 @@ void State1()
   char delay=3;
   unsigned long AutoCloseTemp=0;
   Flasher=0;
+  FlashFlag=0;
 
   if(Events.Keys==2)
     {State=100;MenuPointer=0;}
@@ -553,6 +560,7 @@ void State1()
 
     ClearTasks(9);
     Flasher=1;
+    FlashFlag=1;
     AddTask(ms500+1,12);
     temp=ms500+delay;
     AddTask(temp,1);
@@ -617,6 +625,7 @@ void State2()
   char delay=2,PrevAC=0;
 
   Flasher=0;
+  FlashFlag=0;
 
 
   if(ReturnAutoclose()!=PrevAC)
@@ -727,6 +736,7 @@ void State2()
 void State3()
 {
   Flasher=1;
+  FlashFlag=1;
 
   if(CheckTask(1))
     {StartMotor(1,_Open);Logger("S3 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
@@ -807,6 +817,7 @@ void State3()
 void State4()
 {
 Flasher=1;
+FlashFlag=1;
 
 
   if(CheckTask(1))
@@ -887,6 +898,7 @@ void State5()
 {
   char delay=2;
   Flasher=0;
+  FlashFlag=0;
   if((Events.Remote!=0)||(CheckTask(9)==1))
   {
     if((Door2CloseTime==0)||(ActiveDoors==1))
@@ -969,10 +981,12 @@ void State6()
   //unsigned long temp;
   char delay=3;
   Flasher=0;
+  FlashFlag=0;
   if((Events.Remote!=0)||(PhotocellOpenFlag))
   {
     PhotocellOpenFlag=0;
     Flasher=1;
+    FlashFlag=1;
     ClearTasks(9);
     AddTask(ms500+1,12);
     temp=ms500+delay;
@@ -1061,6 +1075,7 @@ void State6()
 void State7()
 {
   Flasher=1;
+  FlashFlag=1;
 
   if(CheckTask(1))
     {StartMotor(1,_Close);Logger("S7 Motor1Start");}
@@ -1128,6 +1143,7 @@ void State7()
 void State8()
 {
   Flasher=1;
+  FlashFlag=1;
 
   if(CheckTask(1))
     {StartMotor(1,_Open);Logger("S8 Motor1Start"); Lock=0;memcpy(LCDLine1,_opening,16);memcpy(LCDLine2,_Blank,16);LCDUpdateFlag=1;LCDLines=1;}
@@ -1529,11 +1545,15 @@ unsigned VCapM1,VCapM2;
 VCapM1=ADC_Read(0);
 VCapM2=ADC_Read(1);
 
+
+
 if(Motor1FullSpeed!=0)
 {
+  //wordtostr(OverloadCounter1,LCDLine1);
+  //LCDUpdateFlag=1;
   if(VCapM1<OverloadTreshold)
   {
-    if(OverloadCounter1<255)
+    if(OverloadCounter1<65530)
       OverloadCounter1=OverloadCounter1+1;
   }
   else
@@ -1555,7 +1575,7 @@ if(Motor2FullSpeed!=0)
 {
   if(VCapM2<OverloadTreshold)
   {
-    if(OverloadCounter2<255)
+    if(OverloadCounter2<65530)
       OverloadCounter2=OverloadCounter2+1;
   }
   else
@@ -1666,7 +1686,7 @@ void SaveConfigs()
   EEPROM_Write(10,Hi(AutoCloseTime));
   EEPROM_Write(11,Lo(AutoCloseTime));
   EEPROM_Write(12,OverloadSens);
-  SetOverloadParams(9-OverloadSens);
+  SetOverloadParams(OverloadSens);
   EEPROM_Write(13,CloseAfterPass);
   EEPROM_Write(14,LockForce);
   EEPROM_Write(15,OpenPhEnable);
@@ -1700,7 +1720,7 @@ void LoadConfigs()
   AutoCloseTime=AutoCloseTime<<8;
   AutoCloseTime=AutocloseTime|EEPROM_Read(11);
   OverloadSens=EEPROM_Read(12);
-  SetOverloadParams(9-OverloadSens);
+  SetOverloadParams(OverloadSens);
   CloseAfterPass=EEPROM_Read(13);
   LockForce=EEPROM_Read(14);
   OpenPhEnable=EEPROM_Read(15);
@@ -2032,7 +2052,7 @@ void Menu2()
 
   if(Events.Keys.b1==1)
     {
-      LCDFlash=0;LCDFlashFlag=0;State=101;
+      LCDFlash=0;LCDFlashFlag=0;State=101;;Menu0();
       if(MenuPointer==0)
         {
           LearnPhase=0;
@@ -2121,9 +2141,9 @@ void Menu2()
 
   //overload sensitivity
   if(MenuPointer==9)
-    { if((Events.Keys.b0==1)&&(OverloadSens>0))
+    { if((Events.Keys.b0==1)&&(OverloadSens>1))
         {OverloadSens=OverloadSens-1;Menu0();State=102;}
-      if((Events.Keys.b2==1)&&(OverloadSens<9))
+      if((Events.Keys.b2==1)&&(OverloadSens<15))
         {OverloadSens=OverloadSens+1;Menu0();State=102;}
     }
 
@@ -2251,6 +2271,7 @@ void LearnAuto()
   {
     case 0:
       Flasher=1;
+      FlashFlag=1;
       if(Events.Remote.b0==1) {DoorNo=2; LearnPhase=LearnPhase+1;} if(Events.Remote.b1==1) {DoorNo=1;LearnPhase=3;}
       OverloadCheckFlag1=0;OverloadCheckFlag2=0;
       break;
@@ -2316,6 +2337,7 @@ void LearnAuto()
       LCDLines=2;
       LCDUpdateFlag=1;
       Flasher=0;
+      FlashFlag=0;
       State=0;
       break;
     
@@ -2425,6 +2447,7 @@ void LearnManual()
   {
     case 0:
       Flasher=1;
+      FlashFlag=1;
       if(Events.Remote.b0==1){LearnPhase=LearnPhase+1; DoorNo=2;}if(Events.Remote.b1==1){LearnPhase=3; DoorNo=1;}
       break;
     
@@ -2532,6 +2555,7 @@ void LearnManual()
       LCDLines=2;
       LCDUpdateFlag=1;
       Flasher=0;
+      FlashFlag=0;
       State=0;
       break;
   }
@@ -2613,25 +2637,37 @@ void SetOverloadParams(char p)
 
   switch(p)
   {
-    case 0: OverloadTreshold=0;OverloadDuration=255; break;
+    case 0: OverloadTreshold=750;OverloadDuration=50; break;
 
-    case 1: OverloadTreshold=580;OverloadDuration=200; break;
+    case 1: OverloadTreshold=720;OverloadDuration=50; break;
 
-    case 2: OverloadTreshold=600;OverloadDuration=150; break;
+    case 2: OverloadTreshold=680;OverloadDuration=50; break;
 
-    case 3: OverloadTreshold=650;OverloadDuration=100; break;
+    case 3: OverloadTreshold=650;OverloadDuration=50; break;
 
-    case 4: OverloadTreshold=650;OverloadDuration=80; break;
+    case 4: OverloadTreshold=630;OverloadDuration=50; break;
 
-    case 5: OverloadTreshold=680;OverloadDuration=150; break;
+    case 5: OverloadTreshold=600;OverloadDuration=50; break;
 
-    case 6: OverloadTreshold=680;OverloadDuration=100; break;
+    case 6: OverloadTreshold=550;OverloadDuration=100; break;
 
-    case 7: OverloadTreshold=680;OverloadDuration=50; break;
+    case 7: OverloadTreshold=530;OverloadDuration=100; break;
 
-    case 8: OverloadTreshold=720;OverloadDuration=100; break;
+    case 8: OverloadTreshold=500;OverloadDuration=100; break;
 
-    case 9: OverloadTreshold=750;OverloadDuration=50; break;
+    case 9: OverloadTreshold=490;OverloadDuration=100; break;
+    
+    case 10: OverloadTreshold=490;OverloadDuration=300; break;
+    
+    case 11: OverloadTreshold=490;OverloadDuration=500; break;
+    
+    case 12: OverloadTreshold=480;OverloadDuration=1000; break;
+    
+    case 13: OverloadTreshold=480;OverloadDuration=2000; break;
+    
+    case 14: OverloadTreshold=480;OverloadDuration=3000; break;
+    
+    case 15: OverloadTreshold=0;OverloadDuration=255; break;
 
   }
 }

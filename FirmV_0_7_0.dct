@@ -499,6 +499,7 @@ flash_erase_write_64
 flash_read
 flash_read_n_bytes
 flash_write_8
+flashflag
 floattostr
 floor
 font_glcd_5x7
