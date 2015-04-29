@@ -778,6 +778,7 @@ learnphase
 limiter
 limiterenable
 loadconfigs
+lockenable
 lockforce
 log
 log10
